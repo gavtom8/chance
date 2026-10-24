@@ -1045,6 +1045,147 @@
     z-index:3;
   }
 
+  /* ================= CHESS: GALAXY LAYOUT ================= */
+  #chess{background:
+    radial-gradient(60% 35% at 90% 0%, rgba(123,110,246,0.30) 0%, transparent 70%),
+    radial-gradient(50% 30% at 0% 60%, rgba(63,169,245,0.18) 0%, transparent 70%),
+    linear-gradient(180deg,#141C3C 0%, #0B1020 100%);}
+  .chess-tabs{gap:8px; margin:10px auto 0; max-width:560px;}
+  .chess-tab{display:flex; align-items:center; justify-content:center; gap:6px; padding:12px 6px; border-radius:18px; font-size:1.05rem;}
+  .chess-tab span{font-size:1rem;}
+  #chess.in-game .chess-tabs{display:none;}
+
+  /* ---- bot ladder ---- */
+  .bot-map{max-width:560px; margin:14px auto 0; width:100%; padding-bottom:30px;}
+  .bot-map-head{text-align:center; margin:0 0 14px;}
+  .bot-map-head h3{font-family:'Baloo 2',sans-serif; margin:0; font-size:1.3rem;}
+  .bot-map-head p{margin:2px 0 0; font-size:.82rem; font-weight:700; opacity:.65;}
+  .bot-row{display:flex; gap:12px;}
+  .bot-rail{display:flex; flex-direction:column; align-items:center; width:16px; flex-shrink:0;}
+  .bot-dot{width:16px; height:16px; border-radius:50%; background:rgba(255,255,255,0.15); border:3px solid rgba(255,255,255,0.25); margin-top:38px; flex-shrink:0;}
+  .bot-dot.beaten{background:var(--mint); border-color:#c9f6e8; box-shadow:0 0 10px rgba(127,224,196,0.8);}
+  .bot-dot.next{background:var(--gold); border-color:#fff1c9; box-shadow:0 0 12px rgba(255,200,87,0.9);}
+  .bot-line{width:4px; flex:1; background:rgba(255,255,255,0.12); border-radius:2px; margin:4px 0 -38px;}
+  .bot-line.beaten{background:var(--mint);}
+  .bot-card{
+    position:relative; flex:1; display:flex; align-items:center; gap:14px;
+    border-radius:22px; padding:12px 14px; margin-bottom:12px; cursor:pointer;
+    border:1px solid var(--stroke); box-shadow:var(--shadow);
+    transition:transform .12s ease;
+  }
+  .bot-card:active{transform:scale(0.97);}
+  .bot-card.locked{filter:grayscale(80%) brightness(.65); cursor:default;}
+  .bot-card.locked:active{transform:none;}
+  .bot-card.next{box-shadow:0 0 0 2px var(--gold), 0 0 22px rgba(255,200,87,0.35), var(--shadow);}
+  .bot-face{width:72px; height:72px; flex-shrink:0; border-radius:50%; background:rgba(0,0,0,0.22); box-shadow:inset 0 0 0 2px rgba(255,255,255,0.18); overflow:hidden;}
+  .bot-face svg, .pb-avatar svg, .bot-end-avatar svg{width:100%; height:100%; display:block;}
+  .bot-info{flex:1; min-width:0;}
+  .bot-level{font-size:.68rem; font-weight:800; letter-spacing:1px; text-transform:uppercase; opacity:.7;}
+  .bot-name{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.2rem; line-height:1.1;}
+  .bot-blurb{font-size:.78rem; font-weight:700; opacity:.75; margin-top:2px; line-height:1.25;}
+  .bot-meter{display:flex; gap:3px; margin-top:6px;}
+  .bot-meter i{width:14px; height:6px; border-radius:3px; background:rgba(255,255,255,0.2);}
+  .bot-meter i.on{background:var(--gold);}
+  .bot-badge{position:absolute; top:-6px; right:-4px; font-size:.7rem; font-weight:800; padding:3px 8px; border-radius:10px; background:var(--mint); color:#0c332a;}
+  .bot-badge.next{background:var(--gold); color:#3a2b17; animation:bubblePulse 1.6s ease-in-out infinite;}
+  .bot-badge.lock{background:rgba(0,0,0,0.55); color:#fff;}
+  .bot-wins{font-size:.7rem; font-weight:800; opacity:.8; margin-top:4px;}
+  .mode-card{
+    display:flex; align-items:center; gap:14px; padding:14px; border-radius:20px; cursor:pointer;
+    background:rgba(255,255,255,0.08); border:1px dashed rgba(255,255,255,0.25); margin:6px 0 0 28px;
+  }
+  .mode-card:active{transform:scale(0.97);}
+  .mode-card .bot-face{width:56px; height:56px; display:flex; align-items:center; justify-content:center; font-size:1.9rem;}
+
+  /* ---- game screen ---- */
+  #gameArea{max-width:560px; margin:6px auto 0; width:100%;}
+  .game-main{display:flex; flex-direction:column; gap:8px;}
+  .game-side{display:flex; flex-direction:column;}
+  .game-side .coach, .game-side .chess-actions, .game-side .mate-explain-bar, .game-side .move-ribbon{max-width:none;}
+  .player-bar{
+    position:relative; display:flex; align-items:center; gap:10px;
+    background:rgba(255,255,255,0.07); border:1px solid var(--stroke);
+    border-radius:18px; padding:8px 10px; min-height:62px;
+    transition:border-color .2s ease, box-shadow .2s ease;
+  }
+  .player-bar.turn{border-color:rgba(255,200,87,0.7); box-shadow:0 0 0 2px rgba(255,200,87,0.25);}
+  .player-bar.in-check{border-color:var(--coral); box-shadow:0 0 0 3px rgba(255,107,107,0.35);}
+  .pb-avatar{width:46px; height:46px; flex-shrink:0; border-radius:50%; background:rgba(0,0,0,0.25); display:flex; align-items:center; justify-content:center; font-size:1.6rem; overflow:hidden;}
+  .pb-body{flex:1; min-width:0;}
+  .pb-name{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1rem; line-height:1.1; display:flex; align-items:center; gap:8px;}
+  .pb-check{display:none; font-family:'Nunito',sans-serif; font-size:.7rem; font-weight:800; background:var(--coral); color:#fff; padding:2px 7px; border-radius:8px;}
+  .player-bar.in-check .pb-check{display:inline-block; animation:matePulse .8s ease-in-out infinite;}
+  .pb-captured{display:flex; flex-wrap:wrap; align-items:center; min-height:20px; margin-top:2px;}
+  .pb-captured .captured-icon{width:18px; height:18px; margin-right:-3px;}
+  .lead-chip{flex-shrink:0; font-family:'Baloo 2',sans-serif; font-weight:800; font-size:.9rem; padding:5px 10px; border-radius:12px; background:rgba(255,255,255,0.1);}
+  .lead-chip.ahead{background:rgba(127,224,196,0.25); color:#9df0d6;}
+  .lead-chip.behind{background:rgba(255,107,107,0.22); color:#ffb3b3;}
+  .lead-chip:empty{display:none;}
+  .speech{
+    position:absolute; left:64px; right:8px; top:50%; z-index:12;
+    background:#fff; color:#1B2A4A; border-radius:14px; padding:8px 12px;
+    font-weight:800; font-size:.9rem; line-height:1.25;
+    box-shadow:0 8px 20px rgba(0,0,0,0.35);
+    opacity:0; transform:translateY(-50%) scale(.92); pointer-events:none;
+    transition:opacity .2s ease, transform .2s ease;
+  }
+  .speech::before{content:''; position:absolute; left:-7px; top:50%; margin-top:-8px; border:8px solid transparent; border-left:0; border-right-color:#fff;}
+  .speech.show{opacity:1; transform:translateY(-50%);}
+  .thinking-dots{display:inline-flex; gap:4px; vertical-align:middle;}
+  .thinking-dots i{width:7px; height:7px; border-radius:50%; background:#1B2A4A; animation:dotBounce 1s ease-in-out infinite;}
+  .thinking-dots i:nth-child(2){animation-delay:.15s;} .thinking-dots i:nth-child(3){animation-delay:.3s;}
+  @keyframes dotBounce{0%,100%{transform:translateY(0); opacity:.4;} 50%{transform:translateY(-4px); opacity:1;}}
+  .board-wrap{max-width:560px; margin:0 auto; border-radius:16px; box-shadow:0 0 0 4px rgba(255,255,255,0.08), 0 12px 32px rgba(0,0,0,0.45);}
+  .sq .coord{position:absolute; font-size:.58rem; font-weight:800; opacity:.7; pointer-events:none; z-index:0; line-height:1;}
+  .sq .coord.rank{top:3px; left:3px;}
+  .sq .coord.file{bottom:2px; right:4px;}
+  .sq.light .coord{color:#5F8168;} .sq.dark .coord{color:#EDE3CC;}
+  .turn-banner{margin:0;}
+  #gameArea.vs .turn-banner{display:none;}
+  #gameArea:not(.vs) .player-bar{display:none;}
+  .safety-bar{
+    display:flex; flex-direction:column; gap:10px; margin:10px 0 0;
+    background:rgba(255,107,107,0.16); border:2px solid var(--coral);
+    border-radius:18px; padding:12px 14px; animation:emojiPop .35s ease;
+  }
+  .safety-text{font-family:'Baloo 2',sans-serif; font-weight:700; font-size:1.02rem; line-height:1.25;}
+  .safety-bar .safety-back{background:var(--mint); color:#0c332a;}
+  .chess-actions button:disabled{opacity:.35;}
+  .chess-actions button .cnt{font-size:.72rem; opacity:.75; margin-left:2px;}
+  .game-side .move-ribbon{margin-top:6px; min-height:26px;}
+  @media (max-width:480px){
+    #playActions button{display:flex; flex-direction:column; align-items:center; gap:2px; padding:9px 2px; font-size:.78rem; line-height:1.1;}
+    #playActions button .cnt{margin:0;}
+  }
+
+  /* tablets in landscape: board on the left, coach + buttons on the right */
+  @media (min-width:820px) and (orientation:landscape){
+    #gameArea{max-width:1100px; display:grid; grid-template-columns:auto minmax(300px,380px); gap:22px; align-items:start; justify-content:center;}
+    .game-main{width:min(calc(100vh - 250px), 640px);}
+    #chess.in-game{padding-bottom:12px;}
+    .board-wrap{max-width:none; width:100%;}
+    .game-side .coach, .game-side .chess-actions, .game-side .mate-explain-bar, .game-side .move-ribbon{max-width:none;}
+    .game-side .chess-actions{flex-wrap:wrap;}
+    .game-side .chess-actions button{flex:1 1 45%;}
+  }
+
+  /* ---- game-over card ---- */
+  .bot-end-card{padding-top:24px;}
+  .bot-end-avatar{width:120px; height:120px; margin:0 auto 6px;}
+  .bot-end-quote{display:inline-block; background:#fff; color:#1B2A4A; font-weight:800; font-size:.9rem; padding:7px 12px; border-radius:14px; margin-bottom:12px;}
+  .bot-unlock{
+    display:flex; align-items:center; gap:12px; text-align:left;
+    background:rgba(255,200,87,0.16); border:1px solid rgba(255,200,87,0.5);
+    border-radius:16px; padding:10px 12px; margin:-6px 0 16px;
+    animation:emojiPop .6s ease;
+  }
+  .bot-unlock .bot-face{width:54px; height:54px;}
+  .bot-unlock b{font-family:'Baloo 2',sans-serif; display:block; font-size:1rem;}
+  .bot-unlock span{font-size:.78rem; font-weight:700; opacity:.8;}
+
+  /* ---- puzzle map ---- */
+  .lesson-bubble .pz-num{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.3rem;}
+
 </style>
 </head>
 <body>
@@ -1173,72 +1314,108 @@
 <div id="chess" class="screen">
   <div class="routine-header">
     <div class="back-btn" onclick="chessBack()">←</div>
-    <h2 class="routine-title">♟️ Chess</h2>
+    <h2 class="routine-title" id="chessTitle">♟️ Chess</h2>
     <div class="edit-btn icon-btn" onclick="openGuide()" title="How pieces move">📖</div>
     <div class="edit-btn icon-btn" id="voiceToggleBtn" onclick="toggleVoice()" title="Voice on/off">🔊</div>
     <div class="edit-btn" onclick="openEditChessPoints()" title="Parent settings">✏️</div>
   </div>
   <div class="time-badge" id="chessTimeBadge" style="display:none;"></div>
 
-  <div class="chess-tabs">
-    <div class="chess-tab active" id="tab-learn" onclick="setChessSection('learn')">🎓 Learn</div>
-    <div class="chess-tab" id="tab-play" onclick="setChessSection('play')">♟️ Play</div>
-  </div>
-
-  <div class="chess-mode-row" id="playModes" style="display:none;">
-    <div class="mode-btn" id="mode-easy" onclick="setMode('easy')">🐣 Easy</div>
-    <div class="mode-btn" id="mode-normal" onclick="setMode('normal')">🤖 Normal</div>
-    <div class="mode-btn" id="mode-parent" onclick="setMode('parent')">🤝 vs Parent</div>
-    <div class="mode-btn" id="mode-puzzle" onclick="setMode('puzzle')">🧩 Puzzles</div>
+  <div class="chess-tabs" id="chessTabs">
+    <div class="chess-tab active" id="tab-learn" onclick="setChessSection('learn')">🎓<span>Learn</span></div>
+    <div class="chess-tab" id="tab-battle" onclick="setChessSection('battle')">🚀<span>Battle</span></div>
+    <div class="chess-tab" id="tab-puzzles" onclick="setChessSection('puzzles')">🧩<span>Puzzles</span></div>
   </div>
 
   <div class="lesson-map" id="lessonMap"></div>
+  <div class="bot-map" id="botMap" style="display:none;"></div>
+  <div class="lesson-map" id="puzzleMap" style="display:none;"></div>
 
   <div id="gameArea" style="display:none;">
-    <div class="turn-banner" id="turnBanner">
-      <div class="turn-dot" id="turnDot" style="background:#fff;"></div>
-      <span id="turnText">White's turn</span>
-    </div>
-
-    <div class="chess-score-bar even" id="chessScoreBar"></div>
-    <div class="captured-row top" id="capturedBlack"></div>
-    <div class="board-wrap" id="boardWrap"><div class="board" id="board"></div><svg id="moveLines" class="move-lines-svg" viewBox="0 0 800 800" preserveAspectRatio="none"></svg></div>
-    <div class="captured-row bottom" id="capturedWhite"></div>
-
-    <div class="mate-explain-bar" id="mateExplainBar" style="display:none;">
-      <div class="mate-result">
-        <div class="mate-result-title" id="mateResultTitle"></div>
-        <div class="mate-result-sub" id="mateResultSub"></div>
+    <div class="game-main">
+      <div class="player-bar opp" id="oppBar">
+        <div class="pb-avatar" id="oppAvatar"></div>
+        <div class="pb-body">
+          <div class="pb-name"><span id="oppName">Computer</span><span class="pb-check" id="oppCheck">⚡ Check!</span></div>
+          <div class="pb-captured" id="capturedWhite"></div>
+        </div>
+        <div class="speech" id="oppSpeech"></div>
       </div>
-      <div class="mate-caption" id="mateCaption"></div>
-      <div class="mate-actions">
-        <button type="button" onclick="replayMateWalkthrough()">🔁 Show again</button>
-        <button type="button" onclick="stopMateWalkthrough(); resetOrNewGame();">▶️ Play again</button>
+
+      <div class="turn-banner" id="turnBanner">
+        <div class="turn-dot" id="turnDot" style="background:#fff;"></div>
+        <span id="turnText">White's turn</span>
       </div>
-    </div>
 
-    <div class="move-ribbon" id="moveRibbon"></div>
+      <div class="board-wrap" id="boardWrap"><div class="board" id="board"></div><svg id="moveLines" class="move-lines-svg" viewBox="0 0 800 800" preserveAspectRatio="none"></svg></div>
 
-    <div class="coach" id="coachBar">
-      <div class="coach-icon" id="coachIcon">💡</div>
-      <div class="coach-body">
-        <div class="coach-text" id="chessTip">Tap a piece to see where it can go!</div>
-        <div class="coach-sub" id="coachSub"></div>
-        <div class="coach-pips" id="coachPips"></div>
+      <div class="player-bar me" id="meBar">
+        <div class="pb-avatar" id="meAvatar"></div>
+        <div class="pb-body">
+          <div class="pb-name"><span id="meName">You</span><span class="pb-check" id="meCheck">⚡ Check!</span></div>
+          <div class="pb-captured" id="capturedBlack"></div>
+        </div>
+        <div class="lead-chip" id="chessScoreBar"></div>
       </div>
     </div>
 
-    <div class="chess-actions" id="playActions">
-      <button onclick="resetOrNewGame()">🔄 New</button>
-      <button onclick="undoChessMove()">↩️ Undo</button>
-      <button id="dangerBtn" onclick="toggleChessDanger()">👀 Danger</button>
-    </div>
+    <div class="game-side">
+      <div class="mate-explain-bar" id="mateExplainBar" style="display:none;">
+        <div class="mate-result">
+          <div class="mate-result-title" id="mateResultTitle"></div>
+          <div class="mate-result-sub" id="mateResultSub"></div>
+        </div>
+        <div class="mate-caption" id="mateCaption"></div>
+        <div class="mate-actions">
+          <button type="button" onclick="replayMateWalkthrough()">🔁 Show again</button>
+          <button type="button" onclick="stopMateWalkthrough(); resetOrNewGame();">▶️ Play again</button>
+        </div>
+      </div>
 
-    <div class="chess-actions" id="lessonActions" style="display:none;">
-      <button onclick="backToLessonMap()">⬅️ Lessons</button>
-      <button onclick="showChessHint()">💡 Show me</button>
-      <button onclick="restartChessLesson()">🔄 Again</button>
+      <div class="safety-bar" id="safetyBar" style="display:none;">
+        <div class="safety-text" id="safetyText"></div>
+        <div class="mate-actions">
+          <button type="button" class="safety-back" onclick="cancelRiskyMove()">↩️ Pick another</button>
+          <button type="button" onclick="confirmRiskyMove()">Do it anyway</button>
+        </div>
+      </div>
+
+      <div class="move-ribbon" id="moveRibbon"></div>
+
+      <div class="coach" id="coachBar">
+        <div class="coach-icon" id="coachIcon">💡</div>
+        <div class="coach-body">
+          <div class="coach-text" id="chessTip">Tap a piece to see where it can go!</div>
+          <div class="coach-sub" id="coachSub"></div>
+          <div class="coach-pips" id="coachPips"></div>
+        </div>
+      </div>
+
+      <div class="chess-actions" id="playActions">
+        <button onclick="undoChessMove()" id="undoBtn">↩️ Undo</button>
+        <button onclick="showGameHint()" id="hintBtn">💡 Hint</button>
+        <button id="dangerBtn" onclick="toggleChessDanger()">👀 Danger</button>
+        <button onclick="resetOrNewGame()">🔄 New</button>
+      </div>
+
+      <div class="chess-actions" id="lessonActions" style="display:none;">
+        <button onclick="backToLessonMap()">⬅️ Lessons</button>
+        <button onclick="showChessHint()">💡 Show me</button>
+        <button onclick="restartChessLesson()">🔄 Again</button>
+      </div>
     </div>
+  </div>
+</div>
+
+<div class="celebration-overlay" id="botEndOverlay">
+  <div class="celebration-card bot-end-card">
+    <div class="bot-end-avatar" id="botEndAvatar"></div>
+    <div class="bot-end-quote" id="botEndQuote"></div>
+    <h3 id="botEndTitle">You win!</h3>
+    <p id="botEndSub"></p>
+    <div class="bot-unlock" id="botEndUnlock" style="display:none;"></div>
+    <button id="botEndPrimary" style="width:100%;">Rematch</button>
+    <button id="botEndSecondary" class="cancel-btn" style="width:100%;">🌌 Galaxy map</button>
   </div>
 </div>
 
@@ -1263,7 +1440,7 @@
   <div class="celebration-card" style="text-align:left;">
     <h3 style="text-align:center; margin-bottom:14px;">✏️ Edit Chess Points</h3>
     <div style="display:flex; gap:8px; align-items:center; margin:8px 0 14px;">
-      <span style="flex:1; font-weight:700; font-size:.9rem;">Points for winning a game</span>
+      <span style="flex:1; font-weight:700; font-size:.9rem;">Points for a repeat win</span>
       <input type="number" min="0" id="editChessWinBonus" class="reward-input" style="width:70px; margin-bottom:0; text-align:center; padding:8px;">
     </div>
 
@@ -1283,7 +1460,7 @@
       <input type="number" min="0" id="editPuzzlePoints" class="reward-input" style="width:70px; margin-bottom:0; text-align:center; padding:8px;">
     </div>
     <div style="display:flex; gap:8px; align-items:center; margin:0 0 14px;">
-      <span style="flex:1; font-weight:700; font-size:.9rem;">Max puzzle points per day</span>
+      <span style="flex:1; font-weight:700; font-size:.9rem;">Max chess points per day<br><small style="opacity:.6">lessons, puzzles &amp; repeat wins</small></span>
       <input type="number" min="0" id="editPuzzleDailyCap" class="reward-input" style="width:70px; margin-bottom:0; text-align:center; padding:8px;">
     </div>
 
@@ -1292,14 +1469,16 @@
       <button id="pieceStyleBtn" onclick="togglePieceStyle()" style="flex:1; padding:10px; border-radius:12px; border:none; background:rgba(255,255,255,0.12); color:var(--text); font-family:'Nunito',sans-serif; font-weight:800; font-size:.8rem; cursor:pointer;">♞ Classic pieces</button>
     </div>
 
-    <div class="endday-label" style="margin-top:4px;">🐣 Easy Mode Strength</div>
-    <div class="slip-row">
-      <button type="button" class="slip-btn" data-slip="playful" onclick="pickEasySlip('playful')">Playful</button>
-      <button type="button" class="slip-btn" data-slip="gentle"  onclick="pickEasySlip('gentle')">Gentle</button>
-      <button type="button" class="slip-btn" data-slip="easy"    onclick="pickEasySlip('easy')">Easy</button>
-      <button type="button" class="slip-btn" data-slip="sharp"   onclick="pickEasySlip('sharp')">Tricky</button>
+    <div class="endday-label" style="margin-top:4px;">🚀 Battle Opponents</div>
+    <div style="display:flex; gap:8px; align-items:center; margin:8px 0;">
+      <span style="flex:1; font-weight:700; font-size:.9rem;">🛡️ Safety check before risky moves</span>
+      <button type="button" class="slip-btn" id="safetyToggleBtn" style="flex:0 0 74px;" onclick="toggleSafetySetting()">On</button>
     </div>
-    <div class="bonus-note" style="margin-bottom:14px;"><b>Playful</b> wanders around and only sometimes takes a piece — a beginner can win. Move it up as he gets better.</div>
+    <div style="display:flex; gap:8px; margin:0 0 6px;">
+      <button type="button" class="slip-btn" style="flex:1;" onclick="unlockAllBots()">🔓 Unlock all</button>
+      <button type="button" class="slip-btn danger-btn" style="flex:1;" onclick="resetBotProgress()">↩️ Reset ladder</button>
+    </div>
+    <div class="bonus-note" style="margin-bottom:14px;">Beating an opponent for the first time pays its own bonus and unlocks the next one. Repeat wins pay the "winning a game" points above, up to the daily chess max.</div>
 
     <div class="endday-label" style="margin-top:4px;">Screen Time</div>
     <div style="display:flex; gap:8px; align-items:center; margin:8px 0 4px;">
@@ -2200,6 +2379,8 @@ function goHome(){
     chessClockHandle = null;
   }
   chessGameId++;   // drop any pending robot move / puzzle timer from the chess screen
+  if(typeof mateWalk !== 'undefined' && mateWalk) stopMateWalkthrough();
+  if(typeof hideSpeech === 'function'){ hideSpeech(); hideSafetyBar(); }
   updateLockedPads();
   updateSkippedPads();
   checkAllDoneForToday();
@@ -2286,6 +2467,10 @@ function togglePieceStyle(){
   updatePieceStyleBtn();
   if(board) renderBoard();
   if(mode === 'learn' && !lesson) renderLessonMap();
+}
+function refreshChessMaps(){
+  if(document.getElementById('botMap').style.display !== 'none') renderBotMap();
+  if(document.getElementById('puzzleMap').style.display !== 'none') renderPuzzleMap();
 }
 function updatePieceStyleBtn(){
   const btn = document.getElementById('pieceStyleBtn');
@@ -2435,7 +2620,6 @@ const GENERAL_TIPS = [
 ];
 
 let voiceOn = chessStore.get('chessVoiceOn') !== 'off';
-let chessDifficulty = chessStore.get('chessDifficulty') || 'easy';
 
 function speak(text){
   if(!voiceOn) return;
@@ -2497,6 +2681,14 @@ function newChessGame(){
   pendingAnim = null; pendingBurst = null;
   clearMoveRibbon();
   closeChessEnd();
+  closeBotEnd();
+  hideSafetyBar();
+  hideSpeech();
+  undosLeft = UNDO_LIMIT; hintsLeft = HINT_LIMIT;
+  setChessPips(0, 0);
+  lastPraise = false; quietMoves = 0;
+  if(mode === 'robot') document.getElementById('oppAvatar').innerHTML = botFaceSVG(BOTS[currentBotIdx].face, 'happy');
+  updateActionButtons();
   setChessCoach('👋', 'Your turn — tap a piece to start!', 'Arrows show everywhere it can go.');
   renderBoard();
   updateTurnBanner();
@@ -2581,11 +2773,63 @@ const PUZZLES = [
   },
   { // 8: queen lands next to the king, protected by the knight
     board: makePuzzleBoard([
-      ['bK',0,7], ['wN',3,5], ['wQ',5,2], ['wK',7,0],
+      ['bK',0,7], ['wN',3,5], ['wQ',6,6], ['wK',7,0],
     ]),
-    hint: "Slide the queen on the slant until she is right next to him. Your knight is guarding her!",
+    hint: "Slide the queen straight up until she is right next to him. Your knight is guarding her!",
     why: "The queen sits beside him and your knight protects her, so he can't take her — and every escape square is covered.",
     hintPieceName: "queen"
+  },
+  { // 9: back-rank mate with the queen
+    board: makePuzzleBoard([
+      ['bK',0,6], ['bP',1,5], ['bP',1,6], ['bP',1,7],
+      ['wQ',6,4], ['wK',7,6],
+    ]),
+    hint: "His pawns are a wall in front of him. Send the queen all the way to the back row!",
+    why: "Your queen covers the whole back row, and his own pawns block every other way out.",
+    hintPieceName: "queen"
+  },
+  { // 10: queen takes on g7, protected by the long bishop
+    board: makePuzzleBoard([
+      ['bK',0,7], ['bP',1,6], ['bP',1,7],
+      ['wB',6,1], ['wQ',5,6], ['wK',7,6],
+    ]),
+    hint: "Your bishop is aiming at that pawn from far away. Can the queen eat it?",
+    why: "The bishop protects your queen, so the king can't take her — and she covers every escape square.",
+    hintPieceName: "queen"
+  },
+  { // 11: queen lands on h7, guarded by the knight
+    board: makePuzzleBoard([
+      ['bK',0,7], ['bR',0,0], ['bP',1,0], ['bP',1,1],
+      ['wN',3,6], ['wQ',5,3], ['wK',7,6],
+    ]),
+    hint: "The knight is guarding a square right next to the king. Slide the queen there!",
+    why: "The queen is right next to him, but the knight protects her. Every square around him is covered.",
+    hintPieceName: "queen"
+  },
+  { // 12: a pawn gives checkmate
+    board: makePuzzleBoard([
+      ['bK',0,7], ['bB',0,6], ['bP',1,7],
+      ['wP',2,6], ['wK',2,5],
+    ]),
+    hint: "Even a tiny pawn can say checkmate! March it one step.",
+    why: "The pawn attacks the king slanted, your king protects the pawn, and his own pieces box him in.",
+    hintPieceName: "pawn"
+  },
+  { // 13: Arabian mate — rook and knight
+    board: makePuzzleBoard([
+      ['bK',0,7], ['wN',2,5], ['wR',1,0], ['wK',7,0],
+    ]),
+    hint: "The knight guards two of his escape squares. Slide the rook right next to the king!",
+    why: "The knight protects your rook AND covers the last square. The king is completely stuck!",
+    hintPieceName: "rook"
+  },
+  { // 14: rook to the edge while the king guards the middle
+    board: makePuzzleBoard([
+      ['bK',3,0], ['wK',3,2], ['wR',7,7],
+    ]),
+    hint: "Your king blocks his way to the middle. Send the rook to his edge!",
+    why: "Your rook covers his whole column, and your king takes away every square in front of him.",
+    hintPieceName: "rook"
   },
 ];
 
@@ -2795,6 +3039,7 @@ function explainCheckmate(){
     puzzleLocked = false;
     renderBoard();
 
+    markPuzzleSolved(puzzleIndex);
     const dailyLog = loadPuzzleDaily();
     const room = Math.max(0, getPuzzleDailyCap() - dailyLog.earned);
     const award = Math.min(getPuzzleWinPoints(), room);
@@ -2819,25 +3064,10 @@ function handleChessEndPrimary(){
 function resetOrNewGame(){
   if(mode==='learn'){ restartChessLesson(); }
   else if(mode==='puzzle'){ loadPuzzle(puzzleIndex); }
-  else { newChessGame(); }
-}
-
-function setMode(m){
-  showChessPlayLayout();
-  if(m==='easy' || m==='normal'){
-    mode = 'robot';
-    chessDifficulty = m;
-    chessStore.set('chessDifficulty', m);
-  } else if(m==='puzzle'){
-    mode = 'puzzle';
-  } else {
-    mode = 'parent';
+  else {
+    newChessGame();
+    if(mode==='robot') botSay(escapeHtml(pickLine(BOTS[currentBotIdx].greet, BOTS[currentBotIdx])));
   }
-  document.getElementById('mode-easy').classList.toggle('active', m==='easy');
-  document.getElementById('mode-normal').classList.toggle('active', m==='normal');
-  document.getElementById('mode-parent').classList.toggle('active', m==='parent');
-  document.getElementById('mode-puzzle').classList.toggle('active', m==='puzzle');
-  if(m==='puzzle'){ loadPuzzle(0); } else { newChessGame(); }
 }
 
 let chessClockHandle = null;
@@ -2928,20 +3158,9 @@ function addPuzzlePointsToday(amount){
   chessStore.set('puzzlePointsToday', JSON.stringify(log));
 }
 
-function pickEasySlip(level){
-  setEasySlip(level);
-  refreshEasySlipUI();
-}
-function refreshEasySlipUI(){
-  const cur = getEasySlip();
-  document.querySelectorAll('.slip-btn').forEach(b=>{
-    b.classList.toggle('on', b.dataset.slip === cur);
-  });
-}
-
 function openEditChessPoints(){
   requirePasscode('Parent Passcode', 'Enter the code to edit chess points.', ()=>{
-    refreshEasySlipUI();
+    updateSafetyBtn();
     document.getElementById('editChessWinBonus').value = getChessWinBonus();
     document.getElementById('editLessonPoints').value = getLessonWinPoints();
     updatePieceStyleBtn();
@@ -2962,6 +3181,7 @@ function closeEditChessPoints(){
   document.getElementById('editChessPointsOverlay').classList.remove('show');
   updateLockedPads();
   if(mode==='learn' && !lesson) renderLessonMap();
+  refreshChessMaps();
   if(document.getElementById('chess').classList.contains('active')) updateChessTimeBadge();
 }
 
@@ -3187,6 +3407,10 @@ function renderBoard(){
         sq.appendChild(bolt);
       }
 
+      // Coordinates on the edge squares, like a real board — "e4" starts to mean something.
+      if(c===0){ const k = document.createElement('span'); k.className = 'coord rank'; k.textContent = 8-r; sq.appendChild(k); }
+      if(r===7){ const k = document.createElement('span'); k.className = 'coord file'; k.textContent = CHESS_FILES[c]; sq.appendChild(k); }
+
       const piece = board[r][c];
       if(piece){
         const span = document.createElement('span');
@@ -3374,6 +3598,7 @@ function handleSquareClick(r,c){
   if(mode==='puzzle' && puzzleLocked) return; // wrong attempt is resetting, ignore taps briefly
   if(mode==='learn' && lessonBusy) return;
   if(mode==='robot' && turn==='b') return; // robot's turn, ignore taps
+  if(pendingRisky){ cancelRiskyMove(); return; }   // tapping the board answers the warning with "pick another"
 
   const piece = board[r][c];
 
@@ -3386,11 +3611,11 @@ function handleSquareClick(r,c){
       } else if(mode==='learn'){
         handleLessonMove(fr,fc,r,c);
       } else {
-        pushChessHistory();
-        clearMoveRibbon();
-        applyMove(fr,fc,r,c);
-        selected = null; legalForSelected = [];
-        afterMove();
+        // Safety check: before a move that hands black free material, stop and
+        // show him why — the single best habit a beginner can learn.
+        const risk = (mode==='robot' && safetyEnabled()) ? moveRisk(fr,fc,r,c) : null;
+        if(risk) showRiskWarning(fr,fc,r,c,risk);
+        else doPlayerMove(fr,fc,r,c);
       }
       return;
     }
@@ -3410,6 +3635,7 @@ function handleSquareClick(r,c){
 
 function selectSquare(r,c){
   selected = [r,c];
+  if(mode==='robot' || mode==='parent'){ attackMarks = []; attackTarget = null; }
   const piece = board[r][c];
   const color = piece[0], type = piece[1];
   const rawMoves = legalMoves(board, r, c);
@@ -3439,44 +3665,48 @@ function afterMove(){
   updateTurnBanner();
   updateScoreBar();
 
+  const vs = mode === 'robot' || mode === 'parent';
   const moves = allLegalMoves(board, turn);
-  if(moves.length===0){
+  const deadDraw = moves.length > 0 && insufficientMaterial(board);
+  if(moves.length===0 || deadDraw){
     gameOver = true;
-    if(isInCheck(board, turn)){
+    setPlayerBars();
+    hideSpeech();
+    const gid = chessGameId;
+    if(moves.length===0 && isInCheck(board, turn)){
       const winner = opponent(turn);
-      // Points only when he (white) wins — the computer winning used to pay out too.
-      const award = (winner==='w' && !chessWinAwarded) ? getChessWinBonus() : 0;
-      if(award > 0){ addPoints(award); chessWinAwarded = true; }
+      const res = vs ? settleGame(winner==='w' ? 'win' : 'loss') : {award:0};
       if(mode==='robot'){
-        speak(winner==='w' ? 'Checkmate! You win! Great job!' : 'Checkmate! The computer won this time. Try again!');
+        speak(winner==='w' ? 'Checkmate! You win! Great job!' : 'Checkmate! '+BOTS[currentBotIdx].name+' wins this time. Try again!');
+        setOppMood(winner==='w' ? 'sad' : 'happy');
       } else {
         speak('Checkmate! '+(winner==='w'?'White':'Black')+' wins!');
       }
-      // Keep the board visible and walk through WHY it's mate, with a small
-      // result strip instead of a full-screen popup.
+      // Keep the board visible and walk through WHY it's mate, then show the
+      // result card once the walkthrough is done.
       document.getElementById('turnText').textContent = '🏆 Checkmate!';
       mateLoserColor = turn;
       showMateResultBar(
         '🏆 Checkmate!',
-        (mode==='robot' ? (winner==='w' ? 'You win!' : 'Computer wins') : (winner==='w'?'White':'Black')+' wins')
-          + (award > 0 ? ' · +'+award+' pts' : '')
+        (mode==='robot' ? (winner==='w' ? 'You win!' : BOTS[currentBotIdx].name+' wins') : (winner==='w'?'White':'Black')+' wins')
+          + (res.award > 0 ? ' · +'+res.award+' pts' : '')
       );
-      startMateWalkthrough(turn, ()=>{});
+      startMateWalkthrough(turn, ()=>{
+        if(gid === chessGameId && mode==='robot') setTimeout(()=>{ if(gid === chessGameId) showBotEnd(res); }, 700);
+      });
     } else {
+      const res = vs ? settleGame('draw') : null;
       document.getElementById('turnBanner').classList.remove('check');
       document.getElementById('turnText').textContent = '🤝 Draw!';
       mateLoserColor = turn;
-      showMateResultBar('🤝 Draw', "No legal moves left — that's a stalemate.");
+      showMateResultBar('🤝 Draw', deadDraw ? 'Not enough pieces left for anyone to checkmate.' : "No legal moves left — that's a stalemate.");
       speak("It's a draw! Good game!");
+      if(mode==='robot') setTimeout(()=>{ if(gid === chessGameId) showBotEnd(res); }, 1800);
     }
     return;
   }
 
-  if(mode==='robot' && turn==='b'){
-    document.getElementById('turnText').textContent = "Computer is thinking…";
-    const gid = chessGameId;
-    setTimeout(()=>{ if(gid === chessGameId && mode === 'robot') robotMove(); }, 550);
-  }
+  if(mode==='robot' && turn==='b') botTurn();
 }
 
 /* ---------- computer opponent ----------
@@ -3571,95 +3801,9 @@ function rankRootMoves(bd, color, depth){
   return scored;
 }
 
-/* How often Easy deliberately plays a weaker move. Parent-adjustable, because
-   the right level depends entirely on the child and moves as they improve. */
-// How often the computer deliberately plays a weaker move. Tuned by simulating
-// games against a careless opponent — see the note in chooseRobotMove.
-// 'playful' is special-cased below: it doesn't search at all, it wanders and
-// only sometimes notices a free piece. The rest are slip rates against a real
-// 3-ply search — how often the engine deliberately plays a weaker move.
-const EASY_SLIP_PRESETS = {playful:1.0, gentle:0.45, easy:0.10, sharp:0.0};
-
-// Chance the playful robot bothers to take an available capture.
-const PLAYFUL_CAPTURE_CHANCE = 0.4;
-function getEasySlip(){
-  const v = chessStore.get('easySlipLevel');
-  // Default to the gentlest tier — measured at 0 checkmates against a beginner
-  // over 40 games, where 'gentle' mated them in 14.
-  return (v && EASY_SLIP_PRESETS[v] !== undefined) ? v : 'playful';
-}
-function setEasySlip(level){
-  if(EASY_SLIP_PRESETS[level] !== undefined) chessStore.set('easySlipLevel', level);
-}
-
-function chooseRobotMove(bd, color, difficulty){
-  // Playful: the gentlest setting. No search at all — it moves almost at
-  // random and only sometimes takes a capture, so a beginner can march a pawn
-  // down the board and actually win. It will still take a free queen now and
-  // then, which keeps it from feeling completely mindless.
-  if(difficulty !== 'normal' && getEasySlip() === 'playful'){
-    const all = allLegalMoves(bd, color);
-    if(!all.length) return null;
-    const caps = all.filter(m => bd[m.tr][m.tc]);
-    if(caps.length && Math.random() < PLAYFUL_CAPTURE_CHANCE){
-      // take the most valuable thing on offer, but only when it bothers to look
-      caps.sort((a,b) => PIECE_VALUE[bd[b.tr][b.tc][1]] - PIECE_VALUE[bd[a.tr][a.tc][1]]);
-      return caps[0];
-    }
-    return all[Math.floor(Math.random()*all.length)];
-  }
-
-  // Easy searches 3 ply, Normal 4. Measured on this engine: depth 3 is ~250ms
-  // and depth 4 ~1.2s on a slow tablet, which the "thinking..." pause covers.
-  let depth = (difficulty === 'normal') ? 4 : 3;
-  // Busy positions blow up the search on a slow tablet. Cap the branching so
-  // the child never sits watching "thinking..." for several seconds.
-  const width = allLegalMoves(bd, color).length;
-  if(depth === 4 && width > 26) depth = 3;
-  if(depth === 3 && width > 38) depth = 2;
-  const ranked = rankRootMoves(bd, color, depth);
-  if(!ranked.length) return null;
-
-  // Always finish the game if mate is available.
-  if(ranked[0].score >= 100000) return ranked[0].m;
-
-  if(difficulty === 'normal'){
-    // play best, breaking ties randomly so games aren't identical
-    const top = ranked.filter(x => x.score === ranked[0].score);
-    return top[Math.floor(Math.random()*top.length)].m;
-  }
-
-  // EASY: usually sensible, sometimes deliberately looser so he can win.
-  const slip = EASY_SLIP_PRESETS[getEasySlip()];
-  const roll = Math.random();
-  if(roll < slip && ranked.length > 1){
-    // pick from the weaker half — a visible slip, not a total blunder
-    const from = Math.floor(ranked.length/2);
-    const pool = ranked.slice(from);
-    return pool[Math.floor(Math.random()*pool.length)].m;
-  }
-  // otherwise choose among moves close to the best. A tighter window than
-  // before, so "close to best" no longer means "quietly gives away a pawn".
-  const cutoff = ranked[0].score - 25;
-  const good = ranked.filter(x => x.score >= cutoff);
-  return good[Math.floor(Math.random()*good.length)].m;
-}
-
-function robotMove(){
-  if(gameOver || turn !== 'b') return;
-  const moves = allLegalMoves(board, 'b');
-  if(moves.length===0) return;
-  const pick = chooseRobotMove(board, 'b', chessDifficulty) || moves[Math.floor(Math.random()*moves.length)];
-  const moved = board[pick.fr][pick.fc];
-  const taken = board[pick.tr][pick.tc];
-  applyMove(pick.fr, pick.fc, pick.tr, pick.tc);
-  showMoveRibbon(moved, taken, pick.tr, pick.tc);
-  setTip(randomTip());
-  afterMove();
-}
-
 function updateTurnBanner(){
   if(mode==='learn'){ if(lesson) updateLessonBanner(); return; }
+  setPlayerBars();
   const banner = document.getElementById('turnBanner');
   const dot = document.getElementById('turnDot');
   const text = document.getElementById('turnText');
@@ -3696,18 +3840,11 @@ function materialScore(bd){
 function updateScoreBar(){
   const el = document.getElementById('chessScoreBar');
   if(!el || !board) return;
-  const {w, b, diff} = materialScore(board);
-  const youName = (mode==='robot') ? 'You' : 'White';
-  const themName = (mode==='robot') ? 'Computer' : 'Black';
-  let verdict, cls;
-  if(diff > 0){ verdict = youName+' ahead by '+diff; cls='ahead'; }
-  else if(diff < 0){ verdict = themName+' ahead by '+(-diff); cls='behind'; }
-  else { verdict = 'Even'; cls='even'; }
-  el.className = 'chess-score-bar ' + cls;
-  el.innerHTML =
-    '<span class="score-side">⚪ '+w+'</span>'
-    + '<span class="score-verdict">'+verdict+'</span>'
-    + '<span class="score-side">'+b+' ⚫</span>';
+  // A small "+3" / "−2" chip on his bar: who's ahead on material.
+  const {diff} = materialScore(board);
+  el.className = 'lead-chip' + (diff > 0 ? ' ahead' : (diff < 0 ? ' behind' : ''));
+  el.textContent = diff > 0 ? '+'+diff : (diff < 0 ? '−'+(-diff) : '');
+  el.title = diff === 0 ? '' : (diff > 0 ? 'You are ahead by '+diff+' points of pieces' : 'You are behind by '+(-diff)+' points of pieces');
 }
 
 // Compact result strip that leaves the board on screen, so the mate can be
@@ -3878,7 +4015,8 @@ function chessSquareName(r,c){ return CHESS_FILES[c] + (8-r); }
 function showMoveRibbon(moved, taken, tr, tc){
   const el = document.getElementById('moveRibbon');
   if(!el || !moved) return;
-  let html = `<span>🤖</span><span class="mini">${pieceIconSVG(moved[1], moved[0])}</span>`;
+  const who = mode==='robot' ? botFaceSVG(BOTS[currentBotIdx].face, 'happy') : '';
+  let html = `<span class="mini">${who}</span><span class="mini">${pieceIconSVG(moved[1], moved[0])}</span>`;
   html += `<span>→</span><span class="sqname">${chessSquareName(tr,tc)}</span>`;
   if(taken) html += `<span>💥</span><span class="mini">${pieceIconSVG(taken[1], taken[0])}</span>`;
   el.innerHTML = html;
@@ -3982,6 +4120,11 @@ function restoreChessHistory(snap){
   pendingAnim = null; pendingBurst = null;
   clearMoveRibbon();
   closeChessEnd();
+  closeBotEnd();
+  hideSafetyBar();
+  hideSpeech();
+  attackMarks = []; attackTarget = null; hintArrow = null;
+  if(mode === 'robot') setOppMood('happy');
   renderBoard();
   updateTurnBanner();
 }
@@ -3989,6 +4132,13 @@ function undoChessMove(){
   if(mode==='learn'){ restartChessLesson(); return; }
   if(mode==='puzzle'){ loadPuzzle(puzzleIndex); return; }
   if(!chessUndoStack.length){ setTip('Nothing to undo yet.'); return; }
+  // Against a bot, undos are limited — otherwise beating the ladder is just
+  // a matter of taking every bad move back.
+  if(mode==='robot'){
+    if(undosLeft <= 0){ setChessCoach('🤔', 'No undos left this game.', 'Think carefully before each move!'); return; }
+    undosLeft--;
+    updateActionButtons();
+  }
   // In robot mode one tap should rewind the pair, back to the child's own turn.
   let snap = chessUndoStack.pop();
   if(mode==='robot' && snap.turn !== 'w' && chessUndoStack.length) snap = chessUndoStack.pop();
@@ -4334,43 +4484,38 @@ function renderLessonMap(){
 
 /* ---------- sections ---------- */
 function showChessSection(which){
-  document.getElementById('tab-learn').classList.toggle('active', which==='learn');
-  document.getElementById('tab-play').classList.toggle('active', which==='play');
-  document.getElementById('playModes').style.display = which==='play' ? 'flex' : 'none';
+  ['learn','battle','puzzles'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.toggle('active', which===t);
+  });
+  document.getElementById('chess').classList.remove('in-game');
+  document.getElementById('gameArea').style.display = 'none';
+  document.getElementById('lessonMap').style.display = which==='learn' ? 'block' : 'none';
+  document.getElementById('botMap').style.display = which==='battle' ? 'block' : 'none';
+  document.getElementById('puzzleMap').style.display = which==='puzzles' ? 'block' : 'none';
   chessStore.set('chessSection', which);
 }
+// Leaves any game in progress and shows one of the three maps.
 function setChessSection(which){
-  showChessSection(which);
-  if(which === 'learn'){
-    mode = 'learn';
-    backToLessonMap();
-  } else {
-    setMode(chessDifficulty);
-  }
-}
-function showChessPlayLayout(){
-  showChessSection('play');
-  lesson = null;
-  starSquares = []; glowSquares = []; attackMarks = []; attackTarget = null; hintArrow = null;
-  document.getElementById('lessonMap').style.display = 'none';
-  document.getElementById('gameArea').style.display = 'block';
-  document.getElementById('playActions').style.display = 'flex';
-  document.getElementById('lessonActions').style.display = 'none';
-  document.getElementById('turnBanner').style.display = 'flex';
-}
-function backToLessonMap(){
+  if(which === 'play') which = 'battle';                 // older saved value
+  if(!['learn','battle','puzzles'].includes(which)) which = 'learn';
+  stopMateWalkthrough();
   chessGameId++;
+  hideSafetyBar(); hideSpeech(); closeBotEnd(); closeChessEnd();
   lesson = null;
-  mode = 'learn';
   starSquares = []; glowSquares = []; attackMarks = []; attackTarget = null; hintArrow = null;
-  document.getElementById('gameArea').style.display = 'none';
-  document.getElementById('lessonMap').style.display = 'block';
-  renderLessonMap();
+  showChessSection(which);
+  if(which === 'learn'){ mode = 'learn'; renderLessonMap(); }
+  else if(which === 'battle'){ mode = 'map'; renderBotMap(); }
+  else { mode = 'map'; renderPuzzleMap(); }
   document.getElementById('chess').scrollTop = 0;
 }
+function backToLessonMap(){ setChessSection('learn'); }
 function chessBack(){
   stopMateWalkthrough();
-  if(mode === 'learn' && lesson){ backToLessonMap(); return; }
+  if(document.getElementById('chess').classList.contains('in-game')){
+    setChessSection(mode==='learn' ? 'learn' : (mode==='puzzle' ? 'puzzles' : 'battle'));
+    return;
+  }
   goHome();
 }
 
@@ -4388,12 +4533,7 @@ function startChessLesson(i){
   lessonIdx = ((i % CHESS_LESSONS.length) + CHESS_LESSONS.length) % CHESS_LESSONS.length;
   lesson = CHESS_LESSONS[lessonIdx];
   mode = 'learn';
-  showChessSection('learn');
-  document.getElementById('lessonMap').style.display = 'none';
-  document.getElementById('gameArea').style.display = 'block';
-  document.getElementById('playActions').style.display = 'none';
-  document.getElementById('lessonActions').style.display = 'flex';
-  document.getElementById('turnBanner').style.display = 'flex';
+  enterGameLayout('learn');
   document.getElementById('capturedWhite').innerHTML = '';
   document.getElementById('capturedBlack').innerHTML = '';
   clearMoveRibbon();
@@ -4739,6 +4879,650 @@ function nextChessLesson(){
   closeChessEnd();
   if(lessonIdx < CHESS_LESSONS.length - 1) startChessLesson(lessonIdx + 1);
   else backToLessonMap();
+}
+
+/* ================= CHESS — GALAXY BATTLE =================
+   A ladder of space opponents. Each one is a little stronger than the last,
+   and beating one for the first time unlocks the next planet. The weakest
+   bots don't search at all (they wander and only sometimes grab a piece);
+   from Beep-Boop up they use the alpha-beta search with a deliberate "slip"
+   rate so a win always feels reachable but never free. */
+const BOTS = [
+  {id:'pip', name:'Pip', title:'Baby Astronaut', planet:'The Moon', level:1,
+   bg:'linear-gradient(135deg,#34457A,#5F74B0)',
+   face:{kind:'astro', helmet:'#F4F6FB', visor:'#7FD3FF', skin:'#FFD9B3', light:'#FF6B6B'},
+   brain:{style:'wander', capture:0.15}, reward:5,
+   blurb:'Just learned how the pieces move!', sound:'Wheee!',
+   greet:["Hi! I'm Pip! Is this the horsey?", "Wheee, chess in space!"],
+   win:["I won?! Wow! Let's play again!"], lose:["You got me! Good game, buddy!"]},
+  {id:'zorp', name:'Zorp', title:'Moon Blob', planet:'Crater Valley', level:2,
+   bg:'linear-gradient(135deg,#1F5E4A,#3FA97A)',
+   face:{kind:'alien', skin:'#86E58F', eyes:1, spots:'#5BC46A'},
+   brain:{style:'wander', capture:0.55}, reward:6,
+   blurb:'Loves to munch pieces. Keep yours safe!', sound:'Blorp!',
+   greet:["Blorp! Zorp is hungry for pieces!", "Zorp greets you, Earthling!"],
+   win:["Blorp blorp! Zorp wins!"], lose:["Glorp... you are strong, Earthling!"]},
+  {id:'beep', name:'Beep-Boop', title:'Rover Robot', planet:'Mars', level:3,
+   bg:'linear-gradient(135deg,#7A3A2A,#C4623E)',
+   face:{kind:'robot', metal:'#C9D3E0', screen:'#14263F', glow:'#5CF2FF'},
+   brain:{style:'search', depth:1, slip:0.3, window:60}, reward:8,
+   blurb:'Grabs any free piece — but forgets to look back!', sound:'BEEP!',
+   greet:["BEEP BOOP. CHESS MODE: ON.", "GREETINGS, HUMAN. LET US COMPUTE."],
+   win:["BEEP! VICTORY CALCULATED."], lose:["ERROR... ERROR... YOU WIN!"]},
+  {id:'luna', name:'Luna', title:'Space Explorer', planet:"Saturn's Rings", level:4,
+   bg:'linear-gradient(135deg,#5A3A7A,#9C6BC4)',
+   face:{kind:'astro', helmet:'#FFE3F0', visor:'#B58CFF', skin:'#C68B59', light:'#FFC857', hair:'#3A2416'},
+   brain:{style:'search', depth:2, slip:0.3, window:40}, reward:10,
+   blurb:'Looks one move ahead. Guard your pieces!', sound:'Ooh!',
+   greet:["Ready to explore the board?", "Let's have a stellar game!"],
+   win:["Ha! The rings of Saturn are mine!"], lose:["Wow, you're a real space explorer!"]},
+  {id:'glorp', name:'Glorp', title:'Three-Eyed Alien', planet:'Planet Glorp', level:5,
+   bg:'linear-gradient(135deg,#3A2A6A,#7B4FD0)',
+   face:{kind:'alien', skin:'#B98CFF', eyes:3, spots:'#9A6BE8'},
+   brain:{style:'search', depth:2, slip:0.12, window:25}, reward:12,
+   blurb:'Three eyes see a lot. Never leave a piece alone!', sound:'Zzzorp!',
+   greet:["Glorp sees everything with three eyes!", "Three eyes, zero mistakes. Maybe."],
+   win:["Glorp's eyes saw it all!"], lose:["All three of my eyes missed that!"]},
+  {id:'orion', name:'Captain Orion', title:'Star Pilot', planet:'Orion Station', level:6,
+   bg:'linear-gradient(135deg,#1E3F7A,#3A7BD5)',
+   face:{kind:'astro', helmet:'#FFD36B', visor:'#2E3A59', skin:'#FFE0BD', light:'#7FE0C4', star:true},
+   brain:{style:'search', depth:3, slip:0.18, window:25}, reward:15,
+   blurb:'Plans attacks. Think before every move!', sound:'Roger!',
+   greet:["Captain Orion reporting for battle!", "Engines ready. Your move, cadet!"],
+   win:["Mission complete! Train hard, cadet!"], lose:["Outstanding flying, cadet! You win!"]},
+  {id:'nebula', name:'Nebula Queen', title:'Ruler of the Stars', planet:'Crystal Nebula', level:7,
+   bg:'linear-gradient(135deg,#0F5C6B,#2FB5B5)',
+   face:{kind:'queen', skin:'#7FE0D8', eyes:2, spots:'#5CCBC2'},
+   brain:{style:'search', depth:3, slip:0.05, window:12}, reward:20,
+   blurb:'Royal and tricky. Only true champions win here.', sound:'Hmph!',
+   greet:["Kneel before the Nebula Queen... just kidding! Let's play!", "My crown sparkles. My moves sparkle more."],
+   win:["The stars bow to me!"], lose:["You have earned my crown's respect!"]},
+  {id:'vortex', name:'Vortex', title:'The Black Hole', planet:'Edge of the Galaxy', level:8,
+   bg:'linear-gradient(135deg,#140A26,#4A1F5C)',
+   face:{kind:'hole'},
+   brain:{style:'search', depth:4, slip:0, window:0}, reward:30,
+   blurb:'The final boss. Nothing escapes... or does it?', sound:'Whoooosh!',
+   greet:["Nothing escapes the Vortex...", "I will swallow your pieces whole!"],
+   win:["Sucked into the Vortex! Whoooosh!"], lose:["IMPOSSIBLE! You escaped the black hole!"]},
+];
+const KID_FACE = {kind:'astro', helmet:'#F4F6FB', visor:'#FFC857', skin:'#FFE0BD', light:'#7FE0C4'};
+const PARENT_FACE = {kind:'astro', helmet:'#B9C4D9', visor:'#7FE0C4', skin:'#E0AC69', light:'#FF6B6B', hair:'#4A3222'};
+const PIECE_NAMES = {P:'pawn', N:'knight', B:'bishop', R:'rook', Q:'queen', K:'king'};
+const BOT_LINES = {
+  took:['Yum! I took your {piece}!', 'Got your {piece}! {sound}', 'My {piece} now!'],
+  lost:['Hey! My {piece}!', 'Oh no, not my {piece}!', 'Nice grab! {sound}'],
+  check:['Check! Watch your king!', 'Check! {sound}'],
+  checked:['Eek! My king!', 'Uh oh, check!'],
+};
+const UNDO_LIMIT = 3, HINT_LIMIT = 3;
+
+/* ---------- faces (inline SVG, so they scale and need no image files) ---------- */
+function faceMouth(cx, cy, w, mood, color){
+  if(mood === 'wow') return `<ellipse cx="${cx}" cy="${cy+2}" rx="${w*0.42}" ry="${w*0.55}" fill="${color}"/>`;
+  if(mood === 'sad') return `<path d="M${cx-w} ${cy+w*0.45} Q${cx} ${cy-w*0.5} ${cx+w} ${cy+w*0.45}" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round"/>`;
+  if(mood === 'think') return `<path d="M${cx-w*0.7} ${cy+1} L${cx+w*0.7} ${cy-1}" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round"/>`;
+  return `<path d="M${cx-w} ${cy-1} Q${cx} ${cy+w*0.95} ${cx+w} ${cy-1}" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round"/>`;
+}
+function faceBrows(xs, y, mood, color){
+  if(mood !== 'sad' && mood !== 'think') return '';
+  return xs.map((x,i)=>{
+    const tilt = mood === 'sad' ? (i ? -3 : 3) : (i ? 2 : -2);
+    return `<path d="M${x-5} ${y+tilt} L${x+5} ${y-tilt}" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/>`;
+  }).join('');
+}
+function botFaceSVG(f, mood){
+  mood = mood || 'happy';
+  iconUid++;
+  const id = 'bf'+iconUid;
+  const line = 'rgba(0,0,0,0.28)';
+  let s = `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">`;
+  if(f.kind === 'astro'){
+    s += `<defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".55"/><stop offset=".45" stop-color="${f.visor}"/><stop offset="1" stop-color="${f.visor}"/></linearGradient></defs>`;
+    s += `<line x1="50" y1="15" x2="50" y2="6" stroke="${line}" stroke-width="3"/><circle cx="50" cy="6" r="4.5" fill="${f.light}"/>`;
+    s += `<rect x="4" y="46" width="12" height="20" rx="5" fill="${f.helmet}" stroke="${line}" stroke-width="3"/>`;
+    s += `<rect x="84" y="46" width="12" height="20" rx="5" fill="${f.helmet}" stroke="${line}" stroke-width="3"/>`;
+    s += `<circle cx="50" cy="55" r="39" fill="${f.helmet}" stroke="${line}" stroke-width="3"/>`;
+    if(f.star) s += `<path d="M50 18 l2.6 5.4 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z" fill="#fff"/>`;
+    s += `<ellipse cx="50" cy="58" rx="29" ry="24" fill="url(#${id})" stroke="${line}" stroke-width="3"/>`;
+    s += `<circle cx="50" cy="62" r="17" fill="${f.skin}"/>`;
+    if(f.hair) s += `<path d="M33 60 Q34 44 50 44 Q66 44 67 60 Q60 52 50 52 Q40 52 33 60Z" fill="${f.hair}"/>`;
+    s += faceBrows([43,57], 55, mood, '#2a2a2a');
+    s += `<circle cx="43" cy="61" r="2.7" fill="#1d1d1d"/><circle cx="57" cy="61" r="2.7" fill="#1d1d1d"/>`;
+    s += `<ellipse cx="38.5" cy="67" rx="3" ry="2" fill="#ff7b9c" opacity=".45"/><ellipse cx="61.5" cy="67" rx="3" ry="2" fill="#ff7b9c" opacity=".45"/>`;
+    s += faceMouth(50, 69, 5.5, mood, '#5a2a1a');
+    s += `<path d="M28 52 Q31 40 44 37" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".55"/>`;
+  } else if(f.kind === 'alien' || f.kind === 'queen'){
+    if(f.kind === 'alien'){
+      s += `<line x1="38" y1="24" x2="28" y2="8" stroke="${line}" stroke-width="3"/><circle cx="28" cy="8" r="5" fill="${f.skin}" stroke="${line}" stroke-width="2"/>`;
+      s += `<line x1="62" y1="24" x2="72" y2="8" stroke="${line}" stroke-width="3"/><circle cx="72" cy="8" r="5" fill="${f.skin}" stroke="${line}" stroke-width="2"/>`;
+    }
+    s += `<path d="M50 20 C78 20 90 40 88 60 C86 82 68 95 50 95 C32 95 14 82 12 60 C10 40 22 20 50 20Z" fill="${f.skin}" stroke="${line}" stroke-width="3"/>`;
+    s += `<circle cx="25" cy="50" r="4" fill="${f.spots}"/><circle cx="76" cy="46" r="3" fill="${f.spots}"/><circle cx="72" cy="76" r="3.5" fill="${f.spots}"/>`;
+    if(f.kind === 'queen'){
+      s += `<path d="M22 30 L28 8 L39 22 L50 4 L61 22 L72 8 L78 30 Z" fill="#FFC857" stroke="#C9952F" stroke-width="2.5" stroke-linejoin="round"/>`;
+      s += `<circle cx="50" cy="18" r="3.5" fill="#FF6B9C"/><circle cx="33" cy="22" r="2.5" fill="#7FD3FF"/><circle cx="67" cy="22" r="2.5" fill="#7FD3FF"/>`;
+    }
+    const eyes = f.eyes || 2;
+    if(eyes === 1){
+      s += `<ellipse cx="50" cy="53" rx="16" ry="17" fill="#fff" stroke="${line}" stroke-width="2"/>`;
+      s += mood === 'sad' ? `<path d="M36 46 L64 42" stroke="#1d1d1d" stroke-width="3" stroke-linecap="round"/>` : '';
+      s += `<circle cx="${mood==='think'?55:50}" cy="56" r="8.5" fill="#1d1d1d"/><circle cx="${mood==='think'?52:47}" cy="52" r="3" fill="#fff"/>`;
+    } else if(eyes === 3){
+      [[33,54],[50,45],[67,54]].forEach(([x,y])=>{
+        s += `<circle cx="${x}" cy="${y}" r="8" fill="#fff" stroke="${line}" stroke-width="2"/><circle cx="${x}" cy="${y+1.5}" r="4" fill="#1d1d1d"/><circle cx="${x-1.5}" cy="${y-1}" r="1.4" fill="#fff"/>`;
+      });
+    } else {
+      s += `<ellipse cx="37" cy="55" rx="9" ry="12" fill="#1d1d1d" transform="rotate(-12 37 55)"/><ellipse cx="63" cy="55" rx="9" ry="12" fill="#1d1d1d" transform="rotate(12 63 55)"/>`;
+      s += `<circle cx="34" cy="50" r="3" fill="#fff"/><circle cx="60" cy="50" r="3" fill="#fff"/>`;
+      s += faceBrows([37,63], 40, mood, '#1d1d1d');
+    }
+    s += faceMouth(50, 78, 8, mood, '#1d1d1d');
+  } else if(f.kind === 'robot'){
+    s += `<line x1="50" y1="18" x2="50" y2="7" stroke="#8a96a8" stroke-width="3"/><circle cx="50" cy="7" r="5" fill="#FF6B6B"/>`;
+    s += `<rect x="5" y="42" width="11" height="22" rx="3" fill="${f.metal}" stroke="${line}" stroke-width="2.5"/><rect x="84" y="42" width="11" height="22" rx="3" fill="${f.metal}" stroke="${line}" stroke-width="2.5"/>`;
+    s += `<rect x="14" y="18" width="72" height="72" rx="16" fill="${f.metal}" stroke="${line}" stroke-width="3"/>`;
+    s += `<circle cx="21" cy="25" r="2.5" fill="#8a96a8"/><circle cx="79" cy="25" r="2.5" fill="#8a96a8"/><circle cx="21" cy="83" r="2.5" fill="#8a96a8"/><circle cx="79" cy="83" r="2.5" fill="#8a96a8"/>`;
+    s += `<rect x="22" y="30" width="56" height="46" rx="10" fill="${f.screen}"/>`;
+    if(mood === 'happy') s += `<path d="M31 50 Q37 42 43 50 M57 50 Q63 42 69 50" fill="none" stroke="${f.glow}" stroke-width="4" stroke-linecap="round"/>`;
+    else if(mood === 'sad') s += `<path d="M31 46 L43 50 M57 50 L69 46" fill="none" stroke="${f.glow}" stroke-width="4" stroke-linecap="round"/>`;
+    else s += `<circle cx="37" cy="48" r="6" fill="${f.glow}"/><circle cx="63" cy="48" r="6" fill="${f.glow}"/>`;
+    s += faceMouth(50, 63, 9, mood, f.glow);
+  } else if(f.kind === 'hole'){
+    s += `<defs><radialGradient id="${id}" cx="50%" cy="45%" r="55%"><stop offset="0" stop-color="#000"/><stop offset=".7" stop-color="#1a0b2e"/><stop offset="1" stop-color="#5b2a86"/></radialGradient></defs>`;
+    s += `<ellipse cx="50" cy="56" rx="47" ry="13" fill="none" stroke="#FF9F43" stroke-width="5" opacity=".75"/>`;
+    s += `<circle cx="50" cy="50" r="33" fill="url(#${id})" stroke="#A79CFF" stroke-width="2"/>`;
+    s += `<path d="M3 56 A47 13 0 0 0 97 56" fill="none" stroke="#FFC857" stroke-width="5"/>`;
+    s += `<ellipse cx="39" cy="44" rx="7" ry="5" fill="#FF4D6D" opacity=".3"/><ellipse cx="61" cy="44" rx="7" ry="5" fill="#FF4D6D" opacity=".3"/>`;
+    s += mood === 'sad'
+      ? `<path d="M34 41 L44 45 M56 45 L66 41" stroke="#FF4D6D" stroke-width="4" stroke-linecap="round"/>`
+      : `<ellipse cx="39" cy="44" rx="4.5" ry="3" fill="#FF4D6D"/><ellipse cx="61" cy="44" rx="4.5" ry="3" fill="#FF4D6D"/>`;
+    s += mood === 'happy'
+      ? `<path d="M37 58 Q50 70 63 58 L59 62 L55 59 L50 63 L45 59 L41 62 Z" fill="#FF4D6D"/>`
+      : faceMouth(50, 62, 8, mood, '#FF4D6D');
+  }
+  return s + '</svg>';
+}
+
+/* ---------- ladder progress ---------- */
+function getBotsBeaten(){
+  try{ const a = JSON.parse(chessStore.get('chessBotsBeaten')); return Array.isArray(a) ? a : []; }catch(e){ return []; }
+}
+function markBotBeaten(id){
+  const a = getBotsBeaten();
+  if(a.includes(id)) return false;
+  a.push(id);
+  chessStore.set('chessBotsBeaten', JSON.stringify(a));
+  return true;
+}
+function getBotWins(){
+  try{ const o = JSON.parse(chessStore.get('chessBotWins')); return (o && typeof o === 'object') ? o : {}; }catch(e){ return {}; }
+}
+function recordBotWin(id){
+  const o = getBotWins();
+  o[id] = (o[id] || 0) + 1;
+  chessStore.set('chessBotWins', JSON.stringify(o));
+}
+function allBotsUnlocked(){ return chessStore.get('chessBotsUnlocked') === 'yes'; }
+function botUnlocked(i){
+  if(i === 0 || allBotsUnlocked()) return true;
+  return getBotsBeaten().includes(BOTS[i-1].id);
+}
+function unlockAllBots(){
+  chessStore.set('chessBotsUnlocked', 'yes');
+  if(document.getElementById('botMap').style.display !== 'none') renderBotMap();
+  showConfirm('🔓', 'All opponents unlocked', 'He can now battle any planet.', null);
+}
+function resetBotProgress(){
+  showConfirm('↩️', 'Reset the battle ladder?', 'Every opponent locks again except Pip, and win counts go back to zero. Points already earned are kept.', ()=>{
+    chessStore.remove('chessBotsBeaten');
+    chessStore.remove('chessBotWins');
+    chessStore.remove('chessBotsUnlocked');
+    if(document.getElementById('botMap').style.display !== 'none') renderBotMap();
+  });
+}
+function safetyEnabled(){ return chessStore.get('chessSafetyCheck') !== 'off'; }
+function toggleSafetySetting(){
+  chessStore.set('chessSafetyCheck', safetyEnabled() ? 'off' : 'on');
+  updateSafetyBtn();
+}
+function updateSafetyBtn(){
+  const b = document.getElementById('safetyToggleBtn');
+  if(!b) return;
+  b.textContent = safetyEnabled() ? 'On' : 'Off';
+  b.classList.toggle('on', safetyEnabled());
+}
+
+/* ---------- maps ---------- */
+function renderBotMap(){
+  const map = document.getElementById('botMap');
+  const beaten = getBotsBeaten();
+  const wins = getBotWins();
+  const nextIdx = BOTS.findIndex(b=>!beaten.includes(b.id));
+  const count = BOTS.filter(b=>beaten.includes(b.id)).length;
+  let html = `<div class="bot-map-head"><h3>🌌 Galaxy Battle</h3>
+    <p>${count === BOTS.length ? '🏆 You beat the whole galaxy! Play anyone again.' : 'Beat each opponent to unlock the next planet · '+count+'/'+BOTS.length}</p></div>`;
+  BOTS.forEach((b,i)=>{
+    const isBeaten = beaten.includes(b.id);
+    const open = botUnlocked(i);
+    const isNext = i === nextIdx && open;
+    const last = i === BOTS.length - 1;
+    const badge = isBeaten ? '<span class="bot-badge">✓ Beaten</span>'
+      : isNext ? '<span class="bot-badge next">NEXT!</span>'
+      : open ? '' : '<span class="bot-badge lock">🔒</span>';
+    let meter = '';
+    for(let k=1;k<=BOTS.length;k++) meter += `<i class="${k<=b.level?'on':''}"></i>`;
+    html += `<div class="bot-row">
+      <div class="bot-rail">
+        <div class="bot-dot ${isBeaten?'beaten':(isNext?'next':'')}"></div>
+        ${last ? '' : `<div class="bot-line ${isBeaten?'beaten':''}"></div>`}
+      </div>
+      <div class="bot-card ${open?'':'locked'} ${isNext?'next':''}" style="background:${b.bg};" ${open?`onclick="startBotGame(${i})"`:''}>
+        ${badge}
+        <div class="bot-face">${botFaceSVG(b.face, open ? 'happy' : 'think')}</div>
+        <div class="bot-info">
+          <div class="bot-level">Level ${b.level} · ${escapeHtml(b.planet)}</div>
+          <div class="bot-name">${open ? escapeHtml(b.name) : '???'}</div>
+          <div class="bot-blurb">${open ? escapeHtml(b.blurb) : 'Beat '+escapeHtml(BOTS[i-1].name)+' to unlock!'}</div>
+          <div class="bot-meter">${meter}</div>
+          ${isBeaten ? `<div class="bot-wins">🏆 ${wins[b.id]||0} win${(wins[b.id]||0)===1?'':'s'}</div>` : (open ? `<div class="bot-wins">⭐ First win: +${b.reward} pts</div>` : '')}
+        </div>
+      </div>
+    </div>`;
+  });
+  html += `<div class="mode-card" onclick="startParentGame()">
+      <div class="bot-face">🤝</div>
+      <div class="bot-info"><div class="bot-name">Play a grown-up</div><div class="bot-blurb">Two players, one tablet. Take turns!</div></div>
+    </div>`;
+  map.innerHTML = html;
+}
+
+function getPuzzlesSolved(){
+  try{ const a = JSON.parse(chessStore.get('chessPuzzlesSolved')); return Array.isArray(a) ? a : []; }catch(e){ return []; }
+}
+function markPuzzleSolved(i){
+  const a = getPuzzlesSolved();
+  if(a.includes(i)) return;
+  a.push(i);
+  chessStore.set('chessPuzzlesSolved', JSON.stringify(a));
+}
+function renderPuzzleMap(){
+  const solved = getPuzzlesSolved();
+  const n = PUZZLES.filter((_,i)=>solved.includes(i)).length;
+  let html = `<div class="map-progress">
+      <div class="mp-star">${n >= PUZZLES.length ? '🏆' : '🧩'}</div>
+      <div class="mp-body">
+        <div class="mp-top"><span class="mp-title">Checkmate puzzles</span><span class="mp-count">${n}/${PUZZLES.length}</span></div>
+        <div class="level-track"><div class="level-fill" style="width:${Math.round(n/PUZZLES.length*100)}%"></div></div>
+      </div>
+    </div>
+    <div class="chapter-head"><div class="chapter-badge">👑</div><h4>Find checkmate in one move</h4></div>
+    <div class="lesson-grid">`;
+  PUZZLES.forEach((p,i)=>{
+    const done = solved.includes(i);
+    html += `<div class="lesson-bubble ${done?'done':''}" onclick="startPuzzle(${i})">
+        <span class="pz-num">${i+1}</span>
+        ${done ? '<span class="bub-star">⭐</span>' : ''}
+      </div>`;
+  });
+  document.getElementById('puzzleMap').innerHTML = html + '</div>';
+}
+
+/* ---------- entering games ---------- */
+function enterGameLayout(kind){
+  const chess = document.getElementById('chess');
+  chess.classList.add('in-game');
+  ['lessonMap','botMap','puzzleMap'].forEach(id=>{ document.getElementById(id).style.display = 'none'; });
+  const area = document.getElementById('gameArea');
+  area.style.display = '';
+  area.classList.toggle('vs', kind === 'vs');
+  document.getElementById('playActions').style.display = kind === 'learn' ? 'none' : 'flex';
+  document.getElementById('lessonActions').style.display = kind === 'learn' ? 'flex' : 'none';
+  document.getElementById('turnBanner').style.display = '';   // CSS hides it in vs games
+  setChessPips(0, 0);
+  document.getElementById('hintBtn').style.display = kind === 'vs' ? '' : 'none';
+  document.getElementById('dangerBtn').style.display = kind === 'vs' ? '' : 'none';
+  hideSafetyBar();
+  hideSpeech();
+  chess.scrollTop = 0;
+}
+function startBotGame(i){
+  if(!botUnlocked(i)) return;
+  currentBotIdx = i;
+  mode = 'robot';
+  enterGameLayout('vs');
+  const bot = BOTS[i];
+  document.getElementById('oppName').textContent = bot.name;
+  document.getElementById('meName').textContent = 'You';
+  document.getElementById('meAvatar').innerHTML = botFaceSVG(KID_FACE, 'happy');
+  newChessGame();
+  const hello = pickLine(bot.greet, bot);
+  botSay(hello);
+  speak(hello);
+}
+function startParentGame(){
+  mode = 'parent';
+  enterGameLayout('vs');
+  document.getElementById('oppName').textContent = 'Grown-up (black)';
+  document.getElementById('meName').textContent = 'You (white)';
+  document.getElementById('oppAvatar').innerHTML = botFaceSVG(PARENT_FACE, 'happy');
+  document.getElementById('meAvatar').innerHTML = botFaceSVG(KID_FACE, 'happy');
+  newChessGame();
+}
+function startPuzzle(i){
+  mode = 'puzzle';
+  enterGameLayout('puzzle');
+  loadPuzzle(i);
+}
+
+/* ---------- opponent speech + bars ---------- */
+let speechTimer = null;
+function pickLine(list, bot){
+  const s = list[Math.floor(Math.random()*list.length)];
+  return s.replace('{sound}', bot ? bot.sound : '');
+}
+function setOppMood(mood){
+  if(mode !== 'robot') return;
+  document.getElementById('oppAvatar').innerHTML = botFaceSVG(BOTS[currentBotIdx].face, mood);
+}
+function botSay(html, sticky, mood){
+  if(mode !== 'robot') return;
+  const el = document.getElementById('oppSpeech');
+  el.innerHTML = html;
+  el.classList.add('show');
+  setOppMood(mood || 'happy');
+  clearTimeout(speechTimer);
+  if(!sticky) speechTimer = setTimeout(()=>{ hideSpeech(); setOppMood('happy'); }, 2800);
+}
+function botReact(kind, piece){
+  if(mode !== 'robot') return;
+  const bot = BOTS[currentBotIdx];
+  const text = pickLine(BOT_LINES[kind], bot).replace('{piece}', piece ? PIECE_NAMES[piece[1]] : 'piece');
+  const mood = (kind === 'lost' || kind === 'checked') ? 'wow' : 'happy';
+  botSay(escapeHtml(text), false, mood);
+}
+function hideSpeech(){
+  clearTimeout(speechTimer);
+  const el = document.getElementById('oppSpeech');
+  if(el) el.classList.remove('show');
+}
+function setPlayerBars(){
+  if(mode !== 'robot' && mode !== 'parent') return;
+  const opp = document.getElementById('oppBar'), me = document.getElementById('meBar');
+  opp.classList.toggle('turn', !gameOver && turn === 'b');
+  me.classList.toggle('turn', !gameOver && turn === 'w');
+  opp.classList.toggle('in-check', isInCheck(board, 'b'));
+  me.classList.toggle('in-check', isInCheck(board, 'w'));
+}
+function updateActionButtons(){
+  const u = document.getElementById('undoBtn'), h = document.getElementById('hintBtn');
+  if(mode === 'robot'){
+    u.innerHTML = `↩️ Undo <span class="cnt">${undosLeft}</span>`;
+    h.innerHTML = `💡 Hint <span class="cnt">${hintsLeft}</span>`;
+    u.disabled = undosLeft <= 0;
+    h.disabled = hintsLeft <= 0;
+  } else {
+    u.innerHTML = '↩️ Undo'; h.innerHTML = '💡 Hint';
+    u.disabled = false; h.disabled = false;
+  }
+}
+
+/* ---------- the computer's move ---------- */
+let currentBotIdx = 0;
+let undosLeft = UNDO_LIMIT, hintsLeft = HINT_LIMIT;
+let lastPraise = false, quietMoves = 0;
+
+function chooseBotMove(bd, color, bot){
+  const all = allLegalMoves(bd, color);
+  if(!all.length) return null;
+  const b = bot.brain;
+  if(b.style === 'wander'){
+    const caps = all.filter(m=>bd[m.tr][m.tc]);
+    if(caps.length && Math.random() < b.capture){
+      caps.sort((x,y)=>PIECE_VALUE[bd[y.tr][y.tc][1]] - PIECE_VALUE[bd[x.tr][x.tc][1]]);
+      return caps[0];
+    }
+    // Wanderers mostly make quiet moves, so how often they eat is set by `capture`.
+    const quiet = all.filter(m=>!bd[m.tr][m.tc]);
+    const pool = quiet.length ? quiet : all;
+    return pool[Math.floor(Math.random()*pool.length)];
+  }
+  let depth = b.depth;
+  // Busy positions blow up the search on a slow tablet; trim depth so the
+  // child never watches "thinking..." for several seconds.
+  if(depth >= 4 && all.length > 26) depth = 3;
+  if(depth >= 3 && all.length > 38) depth = 2;
+  const ranked = rankRootMoves(bd, color, depth);
+  if(depth >= 2 && ranked[0].score >= 100000) return ranked[0].m;   // always take a mate it can see
+  if(Math.random() < b.slip && ranked.length > 1){
+    const pool = ranked.slice(Math.floor(ranked.length/2));
+    return pool[Math.floor(Math.random()*pool.length)].m;
+  }
+  const good = ranked.filter(x=>x.score >= ranked[0].score - b.window);
+  return good[Math.floor(Math.random()*good.length)].m;
+}
+
+function botTurn(){
+  botSay('<span class="thinking-dots"><i></i><i></i><i></i></span>', true, 'think');
+  const gid = chessGameId;
+  setTimeout(()=>{ if(gid === chessGameId && mode === 'robot') robotMove(); }, 650);
+}
+
+function robotMove(){
+  if(gameOver || turn !== 'b') return;
+  const bot = BOTS[currentBotIdx];
+  const pick = chooseBotMove(board, 'b', bot);
+  if(!pick) return;
+  const moved = board[pick.fr][pick.fc];
+  const taken = board[pick.tr][pick.tc];
+  applyMove(pick.fr, pick.fc, pick.tr, pick.tc);
+  showMoveRibbon(moved, taken, pick.tr, pick.tc);
+  hideSpeech(); setOppMood('happy');
+  afterMove();
+  if(gameOver) return;
+  if(isInCheck(board, 'w')) botReact('check');
+  else if(taken) botReact('took', taken);
+  coachAfterBotMove();
+}
+
+/* ---------- teaching: threats, risky moves, praise, hints ---------- */
+// The best capture `byColor` has right now, scored as material won after a
+// recapture (a simple exchange check: good enough to spot hanging pieces).
+function bestCaptureFor(bd, byColor){
+  let best = null;
+  for(const m of allLegalMoves(bd, byColor)){
+    const victim = bd[m.tr][m.tc];
+    if(!victim) continue;
+    const attacker = bd[m.fr][m.fc];
+    const after = applyMoveTo(bd, m);
+    const defended = isSquareAttacked(after, m.tr, m.tc, opponent(byColor));
+    const gain = PIECE_VALUE[victim[1]] - (defended ? PIECE_VALUE[attacker[1]] : 0);
+    if(!best || gain > best.gain) best = Object.assign({}, m, {gain, victim, attacker});
+  }
+  return best;
+}
+// Would this move let black win material? Returns the threat, or null.
+function moveRisk(fr, fc, tr, tc){
+  const gained = board[tr][tc] ? PIECE_VALUE[board[tr][tc][1]] : 0;
+  const after = chessSimulateMove(board, fr, fc, tr, tc);
+  if(!allLegalMoves(after, 'b').length) return null;        // mate or stalemate: nothing to fear
+  const t = bestCaptureFor(after, 'b');
+  if(!t || t.gain - gained < 2) return null;
+  return t;
+}
+let pendingRisky = null;
+function showRiskWarning(fr, fc, tr, tc, t){
+  pendingRisky = {fr, fc, tr, tc};
+  selected = null; legalForSelected = [];
+  attackMarks = [[t.fr, t.fc]];
+  attackTarget = [t.tr, t.tc];
+  const victim = PIECE_NAMES[t.victim[1]], by = PIECE_NAMES[t.attacker[1]];
+  document.getElementById('safetyText').textContent =
+    `🛡️ Wait! After that move, the black ${by} can eat your ${victim}. See the red arrow?`;
+  document.getElementById('safetyBar').style.display = 'flex';
+  speak(`Wait! The black ${by} could eat your ${victim}.`);
+  renderBoard();
+  // A board half-hidden behind a warning is no use — make sure it's in view.
+  document.getElementById('safetyBar').scrollIntoView({block:'nearest', behavior:'smooth'});
+}
+function hideSafetyBar(){
+  pendingRisky = null;
+  const el = document.getElementById('safetyBar');
+  if(el) el.style.display = 'none';
+}
+function cancelRiskyMove(){
+  const p = pendingRisky;
+  hideSafetyBar();
+  attackMarks = []; attackTarget = null;
+  if(p && board[p.fr][p.fc]) selectSquare(p.fr, p.fc); else renderBoard();
+  setChessCoach('👍', 'Good thinking! Pick a safer square.', 'Green dots are safe, red ones are risky.', 'good');
+}
+function confirmRiskyMove(){
+  const p = pendingRisky;
+  hideSafetyBar();
+  attackMarks = []; attackTarget = null;
+  if(p) doPlayerMove(p.fr, p.fc, p.tr, p.tc);
+}
+
+function doPlayerMove(fr, fc, tr, tc){
+  const before = cloneBoard(board);
+  pushChessHistory();
+  clearMoveRibbon();
+  hintArrow = null; attackMarks = []; attackTarget = null;
+  applyMove(fr, fc, tr, tc);
+  selected = null; legalForSelected = [];
+  if(mode === 'robot') praiseMove(before, fr, fc, tr, tc);
+  afterMove();
+}
+
+function praiseMove(before, fr, fc, tr, tc){
+  const piece = before[fr][fc], took = before[tr][tc];
+  let icon = null, text = null;
+  if(piece[1] === 'K' && Math.abs(tc-fc) === 2){ icon = '🏰'; text = 'Castled! Your king is tucked in safe.'; }
+  else if(piece[1] === 'P' && tr === 0){ icon = '👑'; text = 'Promotion! Your pawn became a QUEEN!'; }
+  const targets = pseudoMoves(board, tr, tc).filter(([r,c])=>{
+    const p = board[r][c];
+    return p && p[0] === 'b' && (p[1] === 'K' || PIECE_VALUE[p[1]] >= 3);
+  });
+  if(!text && targets.length >= 2){ icon = '🍴'; text = 'FORK! You attack two pieces at once!'; }
+  if(!text && isInCheck(board, 'b')){ icon = '⚡'; text = 'Check! You attacked the king!'; }
+  if(!text && took){ icon = '😋'; text = `Yum! You took a ${PIECE_NAMES[took[1]]}! (+${PIECE_VALUE[took[1]]})`; }
+  lastPraise = !!text;
+  if(text) setChessCoach(icon, text, '', 'good');
+  if(isInCheck(board, 'b')) botReact('checked');
+  else if(took) botReact('lost', took);
+}
+
+function coachAfterBotMove(){
+  if(isInCheck(board, 'w')){
+    setChessCoach('⚡', "You're in check!", 'Move your king, block the line, or eat the attacker.', 'bad');
+    lastPraise = false;
+    return;
+  }
+  const t = bestCaptureFor(board, 'b');
+  if(t && t.gain >= 2){
+    attackMarks = [[t.fr, t.fc]];
+    attackTarget = [t.tr, t.tc];
+    setChessCoach(pieceIconSVG(t.victim[1], 'w'), `Watch out! Your ${PIECE_NAMES[t.victim[1]]} is in danger!`,
+                  'Move it away, protect it, or trade.', 'bad');
+    renderBoard();
+    lastPraise = false;
+    return;
+  }
+  if(lastPraise){ lastPraise = false; return; }        // let the praise stay up
+  quietMoves++;
+  if(quietMoves % 3 === 0) setTip(randomTip());
+  else setChessCoach('🧑‍🚀', 'Your move!', 'Tap a piece to see where it can go.');
+}
+
+function showGameHint(){
+  if((mode !== 'robot' && mode !== 'parent') || gameOver || pendingRisky) return;
+  if(mode === 'robot' && turn !== 'w') return;
+  if(mode === 'robot' && hintsLeft <= 0){ setChessCoach('🤔', 'No hints left this game.', 'You can do it — look for safe moves!'); return; }
+  const n = allLegalMoves(board, turn).length;
+  const ranked = rankRootMoves(board, turn, n > 38 ? 2 : 3);
+  if(!ranked.length) return;
+  const top = ranked.filter(x=>x.score === ranked[0].score);
+  const m = top[Math.floor(Math.random()*top.length)].m;
+  hintArrow = [m.fr, m.fc, m.tr, m.tc];
+  selected = null; legalForSelected = [];
+  if(mode === 'robot'){ hintsLeft--; updateActionButtons(); }
+  const p = board[m.fr][m.fc];
+  setChessCoach(pieceIconSVG(p[1], p[0]), `Try your ${PIECE_NAMES[p[1]]} → ${chessSquareName(m.tr, m.tc)}!`,
+                'Follow the green arrow.', 'good');
+  speak('Try moving your ' + PIECE_NAMES[p[1]] + '!');
+  renderBoard();
+}
+
+/* ---------- game results ---------- */
+// Kings alone (or a king plus one bishop/knight) can never checkmate.
+function insufficientMaterial(bd){
+  const extra = [];
+  for(let r=0;r<8;r++) for(let c=0;c<8;c++){
+    const p = bd[r][c];
+    if(p && p[1] !== 'K') extra.push(p[1]);
+  }
+  return extra.length === 0 || (extra.length === 1 && (extra[0] === 'B' || extra[0] === 'N'));
+}
+function chessPointsRoomToday(){
+  return Math.max(0, getPuzzleDailyCap() - loadPuzzleDaily().earned);
+}
+function settleGame(outcome){       // outcome is from white's (his) side: win | loss | draw
+  const res = {outcome, award:0, firstBeat:false, unlocked:null};
+  if(outcome === 'win' && !chessWinAwarded){
+    chessWinAwarded = true;
+    if(mode === 'robot'){
+      const bot = BOTS[currentBotIdx];
+      recordBotWin(bot.id);
+      if(markBotBeaten(bot.id)){
+        res.firstBeat = true;
+        res.award = bot.reward;
+        addPoints(res.award);
+        if(currentBotIdx < BOTS.length - 1) res.unlocked = currentBotIdx + 1;
+      }
+    }
+    if(!res.firstBeat){
+      res.award = Math.min(getChessWinBonus(), chessPointsRoomToday());
+      if(res.award > 0){ addPoints(res.award); addPuzzlePointsToday(res.award); }
+    }
+  }
+  return res;
+}
+function showBotEnd(res){
+  if(mode !== 'robot') return;
+  const bot = BOTS[currentBotIdx];
+  const mood = res.outcome === 'win' ? 'sad' : (res.outcome === 'loss' ? 'happy' : 'wow');
+  document.getElementById('botEndAvatar').innerHTML = botFaceSVG(bot.face, mood);
+  const quote = res.outcome === 'win' ? pickLine(bot.lose, bot) : res.outcome === 'loss' ? pickLine(bot.win, bot) : "A draw? Let's play again!";
+  document.getElementById('botEndQuote').textContent = quote;
+  document.getElementById('botEndTitle').textContent =
+    res.outcome === 'win' ? `You beat ${bot.name}! 🏆` : res.outcome === 'loss' ? `${bot.name} wins this time` : "It's a draw!";
+  document.getElementById('botEndSub').textContent =
+    res.outcome === 'win'
+      ? (res.award > 0 ? `+${res.award} points!` : "Great win! (Today's chess point max is reached.)")
+      : res.outcome === 'loss'
+        ? 'Tip: turn on 👀 Danger to see which pieces can be eaten.'
+        : 'Nobody could checkmate. Try to keep more pieces next time!';
+  const un = document.getElementById('botEndUnlock');
+  const primary = document.getElementById('botEndPrimary');
+  if(res.unlocked !== null){
+    const nb = BOTS[res.unlocked];
+    un.innerHTML = `<div class="bot-face" style="background:${nb.bg}">${botFaceSVG(nb.face,'happy')}</div>
+      <div><b>🔓 New opponent unlocked!</b><span>${escapeHtml(nb.name)} · ${escapeHtml(nb.planet)}</span></div>`;
+    un.style.display = 'flex';
+    primary.textContent = `🚀 Battle ${nb.name}`;
+    primary.onclick = ()=>{ closeBotEnd(); startBotGame(res.unlocked); };
+  } else {
+    un.style.display = 'none';
+    primary.textContent = '🔁 Rematch';
+    primary.onclick = ()=>{ closeBotEnd(); resetOrNewGame(); };
+  }
+  document.getElementById('botEndSecondary').onclick = ()=>{ closeBotEnd(); setChessSection('battle'); };
+  document.getElementById('botEndOverlay').classList.add('show');
+  if(res.outcome === 'win') screenConfetti();
+  speak(quote);
+}
+function closeBotEnd(){
+  document.getElementById('botEndOverlay').classList.remove('show');
 }
 
 /* ================= ACTIVITIES ================= */
@@ -5848,6 +6632,33 @@ updateSkippedPads();
 Object.keys(DEFAULT_ROUTINES).forEach(refreshSkipUI);
 checkAllDoneForToday();
 setInterval(checkDayRollover, 60000);
+
+/* ---------- no pull-to-refresh ----------
+   CSS overscroll-behavior isn't honoured everywhere (some Android tablets,
+   kids-mode browsers, older WebViews), so a fast scroll back to the top would
+   reload the page. Block a downward drag whenever nothing under the finger can
+   still scroll up — the gesture that starts pull-to-refresh. */
+let ptrLastY = 0, ptrLastX = 0;
+document.addEventListener('touchstart', e=>{
+  if(e.touches.length !== 1) return;
+  ptrLastY = e.touches[0].clientY;
+  ptrLastX = e.touches[0].clientX;
+}, {passive:true});
+document.addEventListener('touchmove', e=>{
+  if(e.touches.length !== 1) return;
+  const y = e.touches[0].clientY, x = e.touches[0].clientX;
+  const dy = y - ptrLastY, dx = x - ptrLastX;
+  ptrLastY = y; ptrLastX = x;
+  if(dy <= 0 || Math.abs(dx) > Math.abs(dy)) return;      // only a downward pull matters
+  for(let el = e.target; el && el !== document.documentElement; el = el.parentElement){
+    if(el.scrollTop > 0 && el.scrollHeight > el.clientHeight){
+      const oy = getComputedStyle(el).overflowY;
+      if(oy === 'auto' || oy === 'scroll') return;           // something can still scroll up: let it
+    }
+  }
+  if(e.cancelable) e.preventDefault();
+}, {passive:false});
+
 document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) checkDayRollover(); });
 
 </script>

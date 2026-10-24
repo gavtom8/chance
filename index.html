@@ -874,6 +874,123 @@
     .reward-stars span{animation:none; opacity:1;}
   }
 
+  /* ---------- LEARNING GAMES (Math + Letters) ---------- */
+  #math{
+    background:
+      radial-gradient(55% 35% at 90% 4%, rgba(255,159,67,0.30) 0%, transparent 70%),
+      radial-gradient(60% 40% at 0% 45%, rgba(255,79,163,0.22) 0%, transparent 70%),
+      linear-gradient(180deg, #2A1438 0%, #120B22 100%);
+  }
+  #letters{
+    background:
+      radial-gradient(55% 35% at 90% 4%, rgba(79,198,255,0.28) 0%, transparent 70%),
+      radial-gradient(60% 40% at 0% 50%, rgba(61,190,85,0.20) 0%, transparent 70%),
+      linear-gradient(180deg, #0F2340 0%, #0A1324 100%);
+  }
+  #math-pad .pad-icon{background:linear-gradient(135deg,#FFB547,#FF6B3D);}
+  #letters-pad .pad-icon{background:linear-gradient(135deg,#4FC6FF,#2F6BFF);}
+  .learn-wrap{max-width:560px; width:100%; margin:0 auto; padding:8px 0 16px; display:flex; flex-direction:column; gap:14px;}
+  .learn-dots{display:flex; justify-content:center; gap:10px;}
+  .learn-dots i{
+    width:34px; height:34px; border-radius:50%; font-style:normal;
+    display:flex; align-items:center; justify-content:center; font-size:1.1rem;
+    background:rgba(255,255,255,0.10); border:2px dashed rgba(255,255,255,0.25);
+  }
+  .learn-dots i.on{background:rgba(255,200,87,0.22); border:2px solid var(--gold); animation:emojiPop .5s cubic-bezier(.2,.9,.3,1.4);}
+  .learn-dots i.now{border-color:#fff; border-style:solid;}
+  .learn-card{
+    position:relative;
+    background:linear-gradient(160deg, rgba(255,255,255,0.10), rgba(255,255,255,0.04));
+    border:1px solid var(--stroke); border-radius:28px;
+    padding:18px 16px; text-align:center; box-shadow:var(--shadow);
+  }
+  .learn-say{
+    position:absolute; top:12px; right:12px; width:44px; height:44px; border-radius:50%;
+    border:none; background:rgba(255,255,255,0.14); color:#fff; font-size:1.2rem; cursor:pointer;
+  }
+  .learn-say:active{transform:scale(0.92);}
+  .learn-q{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:2.2rem; line-height:1.1; margin:4px 48px 12px;}
+  .learn-hint{font-weight:800; font-size:.85rem; opacity:.6; margin-top:10px;}
+
+  /* math pictures: tap each one to count along */
+  .pics{display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:10px 16px; min-height:70px;}
+  .pic-group{display:grid; grid-template-columns:repeat(5, 46px); gap:4px; justify-content:center;}
+  .pic-group.short{grid-template-columns:repeat(var(--n), 46px);}
+  .pic-op{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:2.4rem; color:var(--gold);}
+  .pic{
+    position:relative; width:46px; height:46px; border:none; background:none; padding:0;
+    font-size:2.1rem; line-height:46px; cursor:pointer; border-radius:12px;
+  }
+  .pic.counted{background:rgba(255,255,255,0.12);}
+  .pic.gone{opacity:.28; filter:grayscale(1); cursor:default;}
+  .pic.gone::after{content:'✕'; position:absolute; inset:0; color:var(--coral); font-size:2rem; font-weight:800; line-height:46px;}
+  .pic b{
+    position:absolute; right:-4px; top:-6px; min-width:20px; height:20px; border-radius:10px; padding:0 4px;
+    background:var(--gold); color:#3a2b17; font-size:.75rem; line-height:20px; font-weight:800;
+  }
+  .pile-row{display:flex; gap:12px;}
+  .pile{
+    flex:1; border:3px solid rgba(255,255,255,0.18); border-radius:22px; background:rgba(255,255,255,0.06);
+    padding:12px 6px; cursor:pointer; color:#fff; min-height:120px;
+    display:flex; flex-wrap:wrap; align-content:center; justify-content:center; gap:2px;
+    font-size:1.7rem; line-height:1.1;
+  }
+  .pile.right{border-color:var(--mint); background:rgba(127,224,196,0.18);}
+  .pile.wrong{animation:wiggle .4s ease; opacity:.45;}
+  .answer-row{display:flex; gap:12px;}
+  .answer-btn{
+    flex:1; padding:14px 0; border:none; border-radius:22px; cursor:pointer;
+    font-family:'Baloo 2',sans-serif; font-weight:800; font-size:2.6rem; line-height:1; color:#3a2b17;
+    background:linear-gradient(180deg, #FFE29A, var(--gold));
+    box-shadow:0 6px 0 #C9952F, 0 10px 20px rgba(0,0,0,0.25);
+    transition:transform .08s ease, box-shadow .08s ease;
+  }
+  .answer-btn:active{transform:translateY(4px); box-shadow:0 2px 0 #C9952F;}
+  .answer-btn.right{background:linear-gradient(180deg, #A6F5DC, var(--mint)); box-shadow:0 6px 0 #3FA58B; animation:emojiPop .5s ease;}
+  .answer-btn.wrong{opacity:.35; animation:wiggle .4s ease; pointer-events:none;}
+  @keyframes wiggle{0%,100%{transform:translateX(0);} 25%{transform:translateX(-8px);} 75%{transform:translateX(8px);}}
+
+  /* letters */
+  .learn-modes{display:flex; gap:10px;}
+  .learn-modes button{
+    flex:1; padding:12px 6px; border-radius:20px; cursor:pointer;
+    border:2px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff;
+    font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.2rem;
+  }
+  .learn-modes button.on{background:linear-gradient(150deg,#4FC6FF,#2F6BFF); border-color:transparent; box-shadow:0 5px 0 rgba(0,0,0,0.3);}
+  .trace-word{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.5rem; margin:0 48px 10px;}
+  .trace-word span{font-size:2.2rem; vertical-align:middle; margin-right:6px;}
+  .trace-box{position:relative; width:100%; max-width:340px; aspect-ratio:1; margin:0 auto; border-radius:24px; background:rgba(0,0,0,0.22); overflow:hidden;}
+  .trace-box canvas{position:absolute; inset:0; width:100%; height:100%; touch-action:none;}
+  .trace-box.win{box-shadow:0 0 0 4px var(--mint), 0 0 30px rgba(127,224,196,0.5);}
+  .trace-box.oops{animation:wiggle .4s ease;}
+  .learn-btn-row{display:flex; gap:10px; justify-content:center; margin-top:12px;}
+  .learn-btn{
+    padding:10px 18px; border-radius:16px; border:none; cursor:pointer;
+    background:rgba(255,255,255,0.14); color:#fff; font-weight:800; font-size:1rem;
+  }
+  .spell-pic{font-size:5rem; line-height:1.1; margin:4px 0 10px;}
+  .spell-slots{display:flex; justify-content:center; gap:10px; margin-bottom:18px;}
+  .spell-slot{
+    width:62px; height:72px; border-radius:16px; border:3px dashed rgba(255,255,255,0.3);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Baloo 2',sans-serif; font-weight:800; font-size:2.6rem; color:rgba(255,255,255,0.22);
+  }
+  .spell-slot.filled{border-style:solid; border-color:var(--mint); background:rgba(127,224,196,0.18); color:#fff; animation:emojiPop .4s ease;}
+  .spell-slot.next{border-color:#fff;}
+  .letter-btns{display:flex; flex-wrap:wrap; justify-content:center; gap:10px;}
+  .letter-btn{
+    width:64px; height:64px; border:none; border-radius:18px; cursor:pointer;
+    font-family:'Baloo 2',sans-serif; font-weight:800; font-size:2.2rem; line-height:1; color:#fff;
+    background:linear-gradient(150deg,#4FC6FF,#2F6BFF); box-shadow:0 5px 0 rgba(0,0,0,0.35);
+  }
+  .letter-btn:active{transform:translateY(3px); box-shadow:0 2px 0 rgba(0,0,0,0.35);}
+  .letter-btn.used{visibility:hidden;}
+  .letter-btn.wrong{animation:wiggle .4s ease;}
+  @media (prefers-reduced-motion: reduce){
+    .learn-dots i.on, .answer-btn.right, .answer-btn.wrong, .pile.wrong, .trace-box.oops, .spell-slot.filled, .letter-btn.wrong{animation:none;}
+  }
+
   /* ---------- END OF DAY ---------- */
   .end-day-link{
     position:relative; z-index:1;
@@ -916,31 +1033,93 @@
   }
   .passcode-input::placeholder{color:rgba(255,255,255,0.35); letter-spacing:normal; font-family:'Nunito',sans-serif; font-size:.9rem;}
 
-  /* ---------- REWARDS ---------- */
-  #rewards{background:linear-gradient(180deg,#4a3418 0%, #7a4f12 55%, #a8720f 100%);}
-  .reward-list{display:flex; flex-direction:column; padding-top:6px;}
-  .reward-row{display:flex; gap:14px;}
-  .reward-node-col{display:flex; flex-direction:column; align-items:center; width:40px; flex-shrink:0;}
-  .reward-node{
-    width:40px; height:40px; border-radius:50%; flex-shrink:0;
-    display:flex; align-items:center; justify-content:center; font-size:1.15rem; font-weight:800;
-    background:rgba(255,255,255,0.08); border:3px solid rgba(255,255,255,0.22);
-  }
-  .reward-node.unlocked{background:var(--gold); border-color:#ffe9b0; color:#3a2b17; box-shadow:0 0 16px rgba(255,200,87,0.8); animation:matePulse 1.4s ease-in-out infinite;}
-  .reward-node.collected{background:#6fcf7a; border-color:#c7f2c9; color:#123a17;}
-  .reward-connector{width:4px; flex:1; min-height:22px; background:rgba(255,255,255,0.18); margin:2px 0; border-radius:2px;}
-  .reward-connector.filled{background:var(--gold);}
-  .reward-card{flex:1; background:rgba(255,255,255,0.10); border:1px solid var(--stroke); box-shadow:0 4px 14px rgba(0,0,0,0.18); border-radius:18px; padding:14px 16px; margin-bottom:18px;}
-  .reward-card.collected{opacity:.65;}
-  .reward-name{font-family:'Baloo 2',sans-serif; font-weight:700; font-size:1.05rem; margin-bottom:2px;}
-  .reward-meta{font-size:.8rem; opacity:.7; font-weight:700; margin-bottom:10px;}
-  .reward-progress-track{height:8px; border-radius:6px; background:rgba(255,255,255,0.15); overflow:hidden; margin-bottom:10px;}
-  .reward-progress-fill{height:100%; background:var(--gold);}
-  .reward-btn{background:var(--gold); color:#3a2b17; border:none; padding:10px 16px; border-radius:12px; font-weight:800; font-size:.85rem; cursor:pointer; font-family:'Nunito',sans-serif;}
-  .reward-status{font-size:.85rem; font-weight:800; color:#bdf2c3;}
-  .reward-remove{font-size:.72rem; opacity:.5; cursor:pointer; text-decoration:underline;}
-  .reward-row-flex{display:flex; justify-content:space-between; align-items:center;}
+  /* ---------- REWARDS ----------
+     Built for a pre-reader: every prize is a big picture and a star count, and
+     the one thing to look at — the next prize — gets the whole top card. */
+  #rewards{background:
+    radial-gradient(ellipse at 50% -10%, rgba(255,143,177,0.22), transparent 55%),
+    radial-gradient(ellipse at 100% 60%, rgba(127,224,196,0.10), transparent 50%),
+    linear-gradient(180deg,#1a1440 0%, #131F38 60%, #0B1020 100%);}
+  .reward-list{max-width:480px; width:100%; margin:12px auto 0; display:flex; flex-direction:column; gap:22px;}
   .reward-empty{text-align:center; opacity:.6; font-weight:700; padding:30px 10px; font-size:.9rem;}
+  .reward-remove{font-size:.72rem; opacity:.5; cursor:pointer; text-decoration:underline;}
+
+  .rw-hero{
+    position:relative; overflow:hidden; border-radius:26px; padding:18px;
+    background:linear-gradient(135deg, rgba(255,143,177,0.20), rgba(123,79,208,0.22));
+    border:1px solid rgba(255,255,255,0.14); box-shadow:var(--shadow);
+    display:flex; align-items:center; gap:16px;
+  }
+  .rw-jar{
+    flex-shrink:0; width:92px; height:92px; border-radius:24px;
+    background:linear-gradient(180deg,#FFE29A,var(--gold)); color:#3a2b17;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    box-shadow:0 0 24px rgba(255,200,87,0.45);
+  }
+  .rw-jar .rw-jar-star{font-size:1.4rem; line-height:1;}
+  .rw-jar b{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:2rem; line-height:1.05;}
+  .rw-jar small{font-size:.6rem; font-weight:800; letter-spacing:.4px; opacity:.75;}
+  .rw-next{flex:1; min-width:0;}
+  .rw-next-label{font-size:.7rem; font-weight:800; letter-spacing:.8px; text-transform:uppercase; opacity:.65;}
+  .rw-next-name{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.2rem; line-height:1.15; margin:2px 0 8px;
+    display:flex; align-items:center; gap:8px;}
+  .rw-next-name span:first-child{font-size:1.9rem; flex-shrink:0;}
+  .rw-bar{height:14px; border-radius:10px; background:rgba(255,255,255,0.14); overflow:hidden;}
+  .rw-bar-fill{height:100%; border-radius:10px; background:linear-gradient(90deg,var(--gold),#FF8FB1); transition:width .5s ease;}
+  .rw-next-more{margin-top:6px; font-weight:800; font-size:.85rem; color:var(--gold);}
+
+  .rw-section-title{display:flex; align-items:center; gap:8px; margin:0 2px 10px;
+    font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.05rem;}
+  .rw-section-title .rw-count{margin-left:auto; font-family:'Nunito',sans-serif; font-size:.75rem; opacity:.55;}
+
+  .rw-ready{display:flex; flex-direction:column; gap:12px;}
+  .rw-ready-card{
+    display:flex; align-items:center; gap:14px; padding:14px; border-radius:22px;
+    background:linear-gradient(135deg, rgba(255,200,87,0.26), rgba(255,143,177,0.18));
+    border:2px solid rgba(255,200,87,0.75); box-shadow:0 0 22px rgba(255,200,87,0.25);
+  }
+  .rw-ready-emoji{
+    flex-shrink:0; width:66px; height:66px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-size:2.3rem;
+    background:rgba(255,255,255,0.14); animation:rwBob 2.2s ease-in-out infinite;
+  }
+  .rw-ready-body{flex:1; min-width:0;}
+  .rw-name{font-family:'Baloo 2',sans-serif; font-weight:700; font-size:1.05rem; line-height:1.2;
+    overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;}
+  .rw-cost{font-size:.82rem; font-weight:800; opacity:.8; margin-top:2px;}
+  .rw-repeat{font-size:.7rem; font-weight:800; opacity:.6;}
+  .rw-redeem{
+    flex-shrink:0; border:none; cursor:pointer; touch-action:manipulation;
+    background:linear-gradient(180deg,#FFD67A,var(--gold)); color:#3a2b17;
+    font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1rem;
+    padding:12px 16px; border-radius:16px; box-shadow:0 4px 0 #c9952f;
+  }
+  .rw-redeem:active{transform:translateY(3px); box-shadow:0 1px 0 #c9952f;}
+
+  .rw-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:12px;}
+  .rw-tile{
+    position:relative; border-radius:22px; padding:14px 10px 12px; text-align:center;
+    background:var(--glass); border:1px solid var(--stroke);
+  }
+  .rw-ring{position:relative; width:84px; height:84px; margin:0 auto 8px;}
+  .rw-ring svg{width:100%; height:100%; transform:rotate(-90deg);}
+  .rw-ring-bg{fill:none; stroke:rgba(255,255,255,0.12); stroke-width:7;}
+  .rw-ring-fg{fill:none; stroke:var(--gold); stroke-width:7; stroke-linecap:round; transition:stroke-dashoffset .5s ease;}
+  .rw-ring-emoji{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:2.3rem;}
+  .rw-tile.far .rw-ring-emoji{filter:grayscale(60%); opacity:.7;}
+  .rw-tile .rw-name{font-size:.95rem;}
+  .rw-tile .rw-more{margin-top:4px; font-size:.78rem; font-weight:800; color:var(--gold);}
+  .rw-lock{position:absolute; top:10px; right:12px; font-size:.95rem; opacity:.6;}
+
+  .rw-done{display:flex; flex-wrap:wrap; gap:8px;}
+  .rw-done-chip{
+    display:flex; align-items:center; gap:6px; padding:7px 12px 7px 8px; border-radius:999px;
+    background:rgba(111,207,122,0.16); border:1px solid rgba(111,207,122,0.45);
+    font-weight:800; font-size:.82rem;
+  }
+  .rw-done-chip span:first-child{font-size:1.15rem;}
+  @keyframes rwBob{0%,100%{transform:translateY(0) rotate(-4deg);} 50%{transform:translateY(-4px) rotate(4deg);}}
+  @media (prefers-reduced-motion: reduce){ .rw-ready-emoji{animation:none;} }
 
   .reward-input{
     width:100%; padding:12px 14px; border-radius:12px; border:none;
@@ -1562,6 +1741,16 @@
       <h2>Activities</h2>
       <span class="tile-sub" id="tileSub-activities">Get moving</span>
     </div>
+    <div class="tile" id="math-pad" onclick="openMath()">
+      <div class="pad-icon">🔢</div>
+      <h2>Math</h2>
+      <span class="tile-sub" id="tileSub-math">Count &amp; add</span>
+    </div>
+    <div class="tile" id="letters-pad" onclick="openLetters()">
+      <div class="pad-icon">✏️</div>
+      <h2>Letters</h2>
+      <span class="tile-sub" id="tileSub-letters">Trace &amp; spell</span>
+    </div>
     <div class="tile" id="rewards-pad" onclick="openRewards()">
       <div class="pad-icon">🎁</div>
       <h2>Rewards</h2>
@@ -1767,6 +1956,40 @@
   <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
     <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE29A"/><stop offset="1" stop-color="#FF7A3D"/></linearGradient>
   </defs></svg>
+</div>
+
+<!-- ================= MATH ================= -->
+<div id="math" class="screen">
+  <div class="routine-header">
+    <div class="back-btn" onclick="goHome()">←</div>
+    <h2 class="routine-title">🔢 Math</h2>
+    <div class="points-chip">⭐ <span id="chip-math">0</span></div>
+    <div class="edit-btn" onclick="openParentZone('learning')">✏️</div>
+  </div>
+  <div class="time-badge" id="mathTimeBadge" style="display:none;"></div>
+  <div class="learn-wrap">
+    <div class="learn-dots" id="mathDots"></div>
+    <div class="learn-card" id="mathCard"></div>
+  </div>
+</div>
+
+<!-- ================= LETTERS ================= -->
+<div id="letters" class="screen">
+  <div class="routine-header">
+    <div class="back-btn" onclick="goHome()">←</div>
+    <h2 class="routine-title">✏️ Letters</h2>
+    <div class="points-chip">⭐ <span id="chip-letters">0</span></div>
+    <div class="edit-btn" onclick="openParentZone('learning')">✏️</div>
+  </div>
+  <div class="time-badge" id="lettersTimeBadge" style="display:none;"></div>
+  <div class="learn-wrap">
+    <div class="learn-modes">
+      <button type="button" id="lettersModeTrace" onclick="setLettersMode('trace')">✏️ Trace</button>
+      <button type="button" id="lettersModeSpell" onclick="setLettersMode('spell')">🔤 Spell</button>
+    </div>
+    <div class="learn-dots" id="lettersDots"></div>
+    <div class="learn-card" id="lettersCard"></div>
+  </div>
 </div>
 
 <!-- ================= REWARDS ================= -->
@@ -2174,7 +2397,7 @@ function formatTimeRemaining(page){
   return '⏱ '+m+':'+String(s).padStart(2,'0')+' left today';
 }
 
-const PAGE_NAMES = {chess:'Chess', activities:'Activities'};
+const PAGE_NAMES = {chess:'Chess', activities:'Activities', math:'Math', letters:'Letters'};
 let timeUpPage = null;
 
 function showTimeUpMessage(page){
@@ -2209,16 +2432,16 @@ function confirmAddTime(){
   updateLockedPads();
   if(page==='chess') openChess();
   else if(page==='activities') openActivities();
+  else if(page==='math') openMath();
+  else if(page==='letters') openLetters();
 }
 
 function updateLockedPads(){
-  const chessPad = document.getElementById('chess-pad');
-  const actPad = document.getElementById('activities-pad');
-  if(chessPad) chessPad.classList.toggle('locked', isPageTimeUp('chess'));
-  if(actPad) actPad.classList.toggle('locked', isPageTimeUp('activities'));
-  // Tile captions double as a "minutes left today" readout.
-  const defaults = {chess:'Learn & play', activities:'Get moving'};
-  ['chess','activities'].forEach(page=>{
+  const defaults = {chess:'Learn & play', activities:'Get moving', math:'Count & add', letters:'Trace & spell'};
+  Object.keys(defaults).forEach(page=>{
+    const pad = document.getElementById(page+'-pad');
+    if(pad) pad.classList.toggle('locked', isPageTimeUp(page));
+    // Tile captions double as a "minutes left today" readout.
     const sub = document.getElementById('tileSub-'+page);
     if(!sub) return;
     if(hasNoTimeLimit(page)) sub.textContent = defaults[page];
@@ -2410,6 +2633,10 @@ function updateAllChips(){
   });
   const actChip = document.getElementById('chip-activities');
   if(actChip) actChip.textContent = spendable;
+  LEARN_PAGES.forEach(g=>{
+    const chip = document.getElementById('chip-'+g);
+    if(chip) chip.textContent = spendable;
+  });
   const rewChip = document.getElementById('chip-rewards');
   if(rewChip) rewChip.textContent = spendable;
 }
@@ -2572,6 +2799,10 @@ function goHome(){
   Object.keys(DEFAULT_ROUTINES).forEach(updateDashboardRing);
   updatePointsBar();
   document.getElementById('dashboard').scrollTop = 0;
+  if(typeof learnClockHandle !== 'undefined' && learnClockHandle){
+    clearInterval(learnClockHandle);
+    learnClockHandle = null;
+  }
   if(typeof activityClockHandle !== 'undefined' && activityClockHandle){
     clearInterval(activityClockHandle);
     activityClockHandle = null;
@@ -6106,8 +6337,14 @@ function showActReward(cfg, title, stars, sub){
     speak('Awesome! You got '+stars+' star'+(stars===1?'':'s')+'!');
   } else speak(sub);
 }
+// Optional follow-up when the reward card closes (the learning games start
+// their next round from here).
+let actRewardAfter = null;
 function closeActReward(){
   document.getElementById('actRewardOverlay').classList.remove('show');
+  const next = actRewardAfter;
+  actRewardAfter = null;
+  if(next) next();
 }
 function noStarsReason(id){
   if(getGlobalRoomLeft() <= 0) return 'Your Star Jar is full today. Great moving!';
@@ -6418,17 +6655,514 @@ function updateActivitiesTimeBadge(){
 
 function openEditActivityPoints(){ openParentZone('activities'); }
 
+/* ================= LEARNING GAMES (Math + Letters) =================
+   Two optional games, hidden from the home screen until a parent switches
+   them on (Parent Zone → Learning). A round is 5 questions; finishing a round
+   pays a set number of stars, up to a daily max per game. Wrong answers never
+   cost anything — the button wiggles and he simply tries again. */
+const LEARN_DEFAULTS = {
+  mathMax:10, mathSub:false, mathStars:3, mathCap:15,
+  lettersCase:'upper', lettersHint:true, lettersStars:3, lettersCap:15,
+};
+const LEARN_ROUND = 5;
+const LEARN_PAGES = ['math','letters'];
+
+function getLearnCfg(){
+  let o = null;
+  try{ o = JSON.parse(localStorage.getItem('learnConfig')); }catch(e){}
+  return Object.assign({}, LEARN_DEFAULTS, (o && typeof o === 'object') ? o : {});
+}
+function setLearnCfg(field, value){
+  const c = getLearnCfg();
+  c[field] = value;
+  localStorage.setItem('learnConfig', JSON.stringify(c));
+}
+function loadLearnState(game){
+  let raw;
+  try{ raw = JSON.parse(localStorage.getItem('learn_'+game)); }catch(e){ raw = null; }
+  if(!raw || raw.date !== todayKey()) raw = {date: todayKey(), rounds:0, stars:0};
+  return raw;
+}
+// Finishing a round: pay the round's stars, trimmed to what's left of today's max.
+function payLearnRound(game){
+  const c = getLearnCfg();
+  const st = loadLearnState(game);
+  const pay = Math.max(0, Math.min(c[game+'Stars'], c[game+'Cap'] - st.stars));
+  st.rounds++;
+  st.stars += pay;
+  localStorage.setItem('learn_'+game, JSON.stringify(st));
+  if(pay > 0) addPoints(pay);
+  return pay;
+}
+function finishLearnRound(game, emoji, title, next){
+  const pay = payLearnRound(game);
+  actRewardAfter = next;
+  showActReward({emoji}, title, pay,
+    pay > 0 ? 'Tap Yay to play again!' : 'You got all your stars today. You can still play for fun!');
+}
+
+function lgRand(a, b){ return a + Math.floor(Math.random()*(b - a + 1)); }
+function lgPick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function lgShuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; }
+  return a;
+}
+function learnDotsHtml(done){
+  return Array.from({length:LEARN_ROUND}, (_, i)=>
+    `<i class="${i < done ? 'on' : (i === done ? 'now' : '')}">${i < done ? '⭐' : ''}</i>`).join('');
+}
+
+/* ---- shared screen plumbing: open, screen-time clock, badge ---- */
+let learnClockHandle = null;
+let learnPage = null;
+
+function openLearn(page){
+  if(isPageTimeUp(page)){
+    showTimeUpMessage(page);
+    return;
+  }
+  document.getElementById('dashboard').classList.remove('active');
+  document.getElementById(page).classList.add('active');
+  document.getElementById(page).scrollTop = 0;
+  document.getElementById('chip-'+page).textContent = getSpendable();
+  learnPage = page;
+  updateLearnTimeBadge(page);
+  if(learnClockHandle) clearInterval(learnClockHandle);
+  learnClockHandle = setInterval(tickLearnClock, 1000);
+}
+function tickLearnClock(){
+  const page = learnPage;
+  if(!page || !document.getElementById(page).classList.contains('active')){
+    clearInterval(learnClockHandle);
+    learnClockHandle = null;
+    return;
+  }
+  if(!screenTimeShouldTick()) return;
+  addPageTimeUsed(page, 1);
+  updateLearnTimeBadge(page);
+  if(isPageTimeUp(page)){
+    clearInterval(learnClockHandle);
+    learnClockHandle = null;
+    actRewardAfter = null;
+    closeActReward();
+    showTimeUpMessage(page);
+    goHome();
+  }
+}
+function updateLearnTimeBadge(page){
+  const el = document.getElementById(page+'TimeBadge');
+  if(!el) return;
+  const text = formatTimeRemaining(page);
+  el.style.display = text ? 'flex' : 'none';
+  if(text) el.textContent = text;
+  el.classList.toggle('low', !!text && getPageTimeRemaining(page) <= 120);
+}
+
+/* ================= MATH =================
+   Pictures first, numbers second: every question shows the things to count,
+   and tapping a picture counts it out loud with a little number badge. */
+const MATH_THINGS = [
+  ['🍎','apples'], ['🐟','fish'], ['⭐','stars'], ['🚗','cars'], ['🐞','ladybugs'],
+  ['🍪','cookies'], ['🎈','balloons'], ['🦆','ducks'], ['🍓','strawberries'], ['⚽','balls'],
+];
+const MATH_PRAISE = ['Yes!', 'You got it!', 'Great counting!', 'Super!', 'Awesome!', 'Way to go!'];
+let math = null;   // {done, q, tapped, locked}
+
+function openMath(){
+  openLearn('math');
+  newMathRound();
+}
+function newMathRound(){
+  math = {done:0, q:null, tapped:0, locked:false};
+  nextMathQuestion();
+}
+function makeMathQuestion(){
+  const c = getLearnCfg();
+  const max = Math.max(5, Math.min(20, c.mathMax));
+  const [emoji, name] = lgPick(MATH_THINGS);
+  const kinds = ['count','count','count','add','add','add','more'];
+  if(c.mathSub) kinds.push('sub','sub');
+  const kind = lgPick(kinds);
+  if(kind === 'count'){
+    const n = lgRand(1, max);
+    return {kind, emoji, a:n, answer:n, text:'How many?', say:'How many '+name+'?'};
+  }
+  if(kind === 'add'){
+    const a = lgRand(1, max - 1), b = lgRand(1, max - a);
+    return {kind, emoji, a, b, answer:a+b, text:a+' + '+b+' = ?', say:a+' plus '+b+'. How many '+name+' in all?'};
+  }
+  if(kind === 'sub'){
+    const a = lgRand(2, max), b = lgRand(1, a - 1);
+    return {kind, emoji, a, b, answer:a-b, text:a+' − '+b+' = ?', say:a+' take away '+b+'. How many '+name+' are left?'};
+  }
+  // "more": two piles, tap the bigger one
+  let a = lgRand(1, Math.min(max, 10)), b;
+  do{ b = lgRand(1, Math.min(max, 10)); }while(b === a);
+  return {kind, emoji, a, b, answer: a > b ? 0 : 1, text:'Which has MORE?', say:'Which side has more '+name+'?'};
+}
+// The right answer plus two nearby wrong ones, smallest first.
+function mathChoices(answer, max){
+  const set = new Set([answer]);
+  let tries = 0;
+  while(set.size < 3 && tries++ < 50){
+    const v = answer + lgPick([-3,-2,-1,1,2,3]);
+    if(v >= 0 && v <= max + 3) set.add(v);
+  }
+  return [...set].sort((x,y)=>x-y);
+}
+function nextMathQuestion(){
+  math.q = makeMathQuestion();
+  math.q.choices = math.q.kind === 'more' ? null : mathChoices(math.q.answer, getLearnCfg().mathMax);
+  math.tapped = 0;
+  math.locked = false;
+  renderMath();
+  speak(math.q.say);
+}
+function picGroupHtml(emoji, n, startIdx, goneFrom){
+  const cls = n < 5 ? 'pic-group short' : 'pic-group';
+  let h = `<div class="${cls}" style="--n:${n}">`;
+  for(let i=0;i<n;i++){
+    const idx = startIdx + i;
+    const gone = goneFrom !== undefined && i >= goneFrom;
+    h += `<button type="button" class="pic${gone ? ' gone' : ''}" id="mpic${idx}" ${gone ? 'disabled' : `onclick="mathCountTap(${idx})"`}>${emoji}</button>`;
+  }
+  return h + '</div>';
+}
+function renderMath(){
+  const q = math.q;
+  document.getElementById('mathDots').innerHTML = learnDotsHtml(math.done);
+  let pics, answers, hint = 'Tap the pictures to count them!';
+  if(q.kind === 'more'){
+    const pile = (n, side) => `<button type="button" class="pile" id="mpile${side}" onclick="mathAnswer(${side}, this)">${q.emoji.repeat(n)}</button>`;
+    pics = `<div class="pile-row">${pile(q.a, 0)}${pile(q.b, 1)}</div>`;
+    answers = '';
+    hint = 'Tap the side with more!';
+  } else {
+    if(q.kind === 'count') pics = picGroupHtml(q.emoji, q.a, 0);
+    else if(q.kind === 'add') pics = picGroupHtml(q.emoji, q.a, 0) + '<span class="pic-op">+</span>' + picGroupHtml(q.emoji, q.b, q.a);
+    else pics = picGroupHtml(q.emoji, q.a, 0, q.a - q.b);
+    pics = `<div class="pics">${pics}</div>`;
+    answers = `<div class="answer-row" style="margin-top:18px;">${q.choices.map(v=>
+      `<button type="button" class="answer-btn" onclick="mathAnswer(${v}, this)">${v}</button>`).join('')}</div>`;
+    if(q.kind === 'sub') hint = 'The ✕ ones went away. Count the ones left!';
+  }
+  document.getElementById('mathCard').innerHTML = `
+    <button type="button" class="learn-say" onclick="speak(math.q.say)" aria-label="say it again">🔊</button>
+    <div class="learn-q">${q.text}</div>
+    ${pics}${answers}
+    <div class="learn-hint">${hint}</div>`;
+}
+function mathCountTap(idx){
+  const el = document.getElementById('mpic'+idx);
+  if(!el || el.classList.contains('counted') || math.locked) return;
+  math.tapped++;
+  el.classList.add('counted');
+  el.insertAdjacentHTML('beforeend', `<b>${math.tapped}</b>`);
+  speak(String(math.tapped));
+}
+function mathAnswer(val, btn){
+  if(math.locked) return;
+  const q = math.q;
+  if(val === q.answer){
+    math.locked = true;
+    btn.classList.add('right');
+    math.done++;
+    document.getElementById('mathDots').innerHTML = learnDotsHtml(math.done);
+    speak(lgPick(MATH_PRAISE) + (q.kind === 'more' ? '' : ' '+q.answer+'!'));
+    setTimeout(()=>{
+      if(!document.getElementById('math').classList.contains('active')) return;
+      if(math.done >= LEARN_ROUND) finishLearnRound('math', '🔢', 'You did 5 math questions!', newMathRound);
+      else nextMathQuestion();
+    }, 1300);
+  } else {
+    btn.classList.add('wrong');
+    speak(q.kind === 'more' ? 'Look again! Which side has more?' : 'Try again! Tap the pictures to count.');
+  }
+}
+
+/* ================= LETTERS =================
+   Trace: drag a finger over a big letter until most of it is coloured in.
+   Spell: tap the letters of a picture word in order. */
+const LETTER_WORDS = {
+  A:['🍎','Apple'], B:['🏀','Ball'], C:['🐱','Cat'], D:['🐶','Dog'], E:['🥚','Egg'], F:['🐟','Fish'],
+  G:['🍇','Grapes'], H:['🎩','Hat'], I:['🍦','Ice cream'], J:['🧃','Juice'], K:['🪁','Kite'], L:['🦁','Lion'],
+  M:['🌙','Moon'], N:['👃','Nose'], O:['🐙','Octopus'], P:['🐷','Pig'], Q:['👑','Queen'], R:['🌈','Rainbow'],
+  S:['☀️','Sun'], T:['🐯','Tiger'], U:['☂️','Umbrella'], V:['🎻','Violin'], W:['🐋','Whale'], X:['❌','X marks the spot'],
+  Y:['🪀','Yo-yo'], Z:['🦓','Zebra'],
+};
+const SPELL_WORDS = [
+  ['CAT','🐱'], ['DOG','🐶'], ['SUN','☀️'], ['PIG','🐷'], ['BUS','🚌'], ['HAT','🎩'], ['BED','🛏️'], ['CUP','☕'],
+  ['FOX','🦊'], ['BEE','🐝'], ['CAR','🚗'], ['EGG','🥚'], ['ANT','🐜'], ['OWL','🦉'], ['COW','🐮'], ['BOX','📦'],
+  ['BAT','🦇'], ['HEN','🐔'], ['BUG','🐛'], ['WEB','🕸️'], ['PEN','🖊️'], ['MAP','🗺️'], ['NUT','🥜'], ['VAN','🚐'],
+  ['BAG','👜'], ['TOY','🧸'], ['LEG','🦵'], ['JET','✈️'],
+];
+let letters = null;   // {mode, done, items, letter|word, ...}
+
+function getLettersMode(){ return localStorage.getItem('lettersMode') === 'spell' ? 'spell' : 'trace'; }
+function lettersCase(s){ return getLearnCfg().lettersCase === 'lower' ? s.toLowerCase() : s.toUpperCase(); }
+
+function openLetters(){
+  openLearn('letters');
+  newLettersRound();
+}
+function setLettersMode(mode){
+  localStorage.setItem('lettersMode', mode);
+  newLettersRound();
+}
+function newLettersRound(){
+  const mode = getLettersMode();
+  document.getElementById('lettersModeTrace').classList.toggle('on', mode === 'trace');
+  document.getElementById('lettersModeSpell').classList.toggle('on', mode === 'spell');
+  const items = mode === 'trace'
+    ? lgShuffle(Object.keys(LETTER_WORDS)).slice(0, LEARN_ROUND)
+    : lgShuffle(SPELL_WORDS).slice(0, LEARN_ROUND);
+  letters = {mode, done:0, items, locked:false};
+  nextLettersItem();
+}
+function nextLettersItem(){
+  letters.locked = false;
+  document.getElementById('lettersDots').innerHTML = learnDotsHtml(letters.done);
+  if(letters.mode === 'trace') startTrace(letters.items[letters.done]);
+  else startSpell(letters.items[letters.done]);
+}
+function lettersItemDone(){
+  letters.locked = true;
+  letters.done++;
+  document.getElementById('lettersDots').innerHTML = learnDotsHtml(letters.done);
+  setTimeout(()=>{
+    if(!document.getElementById('letters').classList.contains('active')) return;
+    if(letters.done >= LEARN_ROUND){
+      finishLearnRound('letters', letters.mode === 'trace' ? '✏️' : '🔤',
+        letters.mode === 'trace' ? 'You traced 5 letters!' : 'You spelled 5 words!', newLettersRound);
+    } else nextLettersItem();
+  }, 1600);
+}
+
+/* ---- tracing ----
+   The letter is drawn once into a hidden mask and split into a grid of
+   cells. Ink marks the cells it passes over; most letter cells inked = done,
+   lots of ink off the letter = "oops", wipe and try again. */
+let trace = null;
+const TRACE_GRID = 34;
+
+function startTrace(L){
+  const [emoji, word] = LETTER_WORDS[L];
+  const shown = lettersCase(L);
+  document.getElementById('lettersCard').innerHTML = `
+    <button type="button" class="learn-say" onclick="sayTraceLetter()" aria-label="say it again">🔊</button>
+    <div class="trace-word"><span>${emoji}</span>${shown} is for ${escapeHtml(word)}</div>
+    <div class="trace-box" id="traceBox">
+      <canvas id="traceGuide"></canvas>
+      <canvas id="traceInk"></canvas>
+    </div>
+    <div class="learn-btn-row"><button type="button" class="learn-btn" onclick="clearTrace()">🔄 Start over</button></div>
+    <div class="learn-hint">Color in the whole letter with your finger!</div>`;
+  trace = {L, shown, word, cells:null, maskCount:0, ink:new Set(), drawing:false, last:null};
+  const go = ()=>{ if(trace && trace.L === L) layoutTrace(); };
+  if(document.fonts && document.fonts.load) document.fonts.load("800 100px 'Baloo 2'").then(go, go);
+  else go();
+  sayTraceLetter();
+  const ink = document.getElementById('traceInk');
+  ink.addEventListener('pointerdown', traceDown);
+  ink.addEventListener('pointermove', traceMove);
+  ink.addEventListener('pointerup', traceUp);
+  ink.addEventListener('pointercancel', traceUp);
+}
+function sayTraceLetter(){
+  if(!trace) return;
+  speak('Trace the letter '+trace.L+'. '+trace.L+' is for '+trace.word+'.');
+}
+function layoutTrace(){
+  const box = document.getElementById('traceBox');
+  if(!box) return;
+  const size = box.clientWidth;
+  const dpr = window.devicePixelRatio || 1;
+  const font = `800 ${Math.round(size*0.8)}px 'Baloo 2', sans-serif`;
+  ['traceGuide','traceInk'].forEach(id=>{
+    const c = document.getElementById(id);
+    c.width = Math.round(size*dpr); c.height = Math.round(size*dpr);
+    c.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0);
+  });
+  // centre the glyph by its real ink box, not the font's line box
+  const g = document.getElementById('traceGuide').getContext('2d');
+  g.font = font; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+  const m = g.measureText(trace.shown);
+  const y = size/2 + (m.actualBoundingBoxAscent - m.actualBoundingBoxDescent)/2;
+  // Dashed outline, then punch the inside back out: the font builds letters
+  // from overlapping pieces, and their seams would otherwise show as dashes.
+  g.setLineDash([size*0.025, size*0.025]);
+  g.lineWidth = 6; g.strokeStyle = 'rgba(255,255,255,0.6)';
+  g.strokeText(trace.shown, size/2, y);
+  g.globalCompositeOperation = 'destination-out';
+  g.fillText(trace.shown, size/2, y);
+  g.globalCompositeOperation = 'source-over';
+  g.fillStyle = 'rgba(255,255,255,0.13)';
+  g.fillText(trace.shown, size/2, y);
+
+  const mask = document.createElement('canvas');
+  mask.width = mask.height = TRACE_GRID*4;
+  const mc = mask.getContext('2d');
+  const k = mask.width / size;
+  mc.scale(k, k);
+  mc.font = font; mc.textAlign = 'center'; mc.textBaseline = 'alphabetic';
+  mc.fillStyle = '#000';
+  mc.fillText(trace.shown, size/2, y);
+  const px = mc.getImageData(0, 0, mask.width, mask.height).data;
+  const cells = new Uint8Array(TRACE_GRID*TRACE_GRID);
+  let count = 0;
+  for(let cy=0; cy<TRACE_GRID; cy++) for(let cx=0; cx<TRACE_GRID; cx++){
+    let on = 0;
+    for(let yy=0; yy<4; yy++) for(let xx=0; xx<4; xx++){
+      if(px[(((cy*4+yy)*mask.width) + cx*4+xx)*4 + 3] > 100) on++;
+    }
+    if(on >= 6){ cells[cy*TRACE_GRID+cx] = 1; count++; }
+  }
+  trace.size = size;
+  trace.cells = cells;
+  trace.maskCount = count;
+  trace.ink = new Set();
+}
+function tracePoint(e){
+  const r = e.target.getBoundingClientRect();
+  return {x: e.clientX - r.left, y: e.clientY - r.top};
+}
+function traceMark(p){
+  // mark every grid cell under the brush
+  const cell = trace.size / TRACE_GRID;
+  const rad = trace.size*0.045;
+  const r = Math.ceil(rad / cell);
+  const cx = Math.floor(p.x / cell), cy = Math.floor(p.y / cell);
+  for(let dy=-r; dy<=r; dy++) for(let dx=-r; dx<=r; dx++){
+    const x = cx+dx, y = cy+dy;
+    if(x < 0 || y < 0 || x >= TRACE_GRID || y >= TRACE_GRID) continue;
+    if(Math.hypot((x+0.5)*cell - p.x, (y+0.5)*cell - p.y) <= rad + cell*0.5) trace.ink.add(y*TRACE_GRID + x);
+  }
+}
+function traceDown(e){
+  if(!trace || !trace.cells || letters.locked) return;
+  e.preventDefault();
+  e.target.setPointerCapture && e.target.setPointerCapture(e.pointerId);
+  trace.drawing = true;
+  trace.last = tracePoint(e);
+  traceSegment(trace.last, trace.last);
+}
+function traceMove(e){
+  if(!trace || !trace.drawing) return;
+  e.preventDefault();
+  const p = tracePoint(e);
+  traceSegment(trace.last, p);
+  trace.last = p;
+}
+function traceSegment(a, b){
+  const ctx = document.getElementById('traceInk').getContext('2d');
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.lineWidth = trace.size*0.09;
+  ctx.strokeStyle = '#FFC857';
+  ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x + 0.01, b.y); ctx.stroke();
+  const steps = Math.max(1, Math.ceil(Math.hypot(b.x-a.x, b.y-a.y) / 3));
+  for(let i=0;i<=steps;i++) traceMark({x: a.x + (b.x-a.x)*i/steps, y: a.y + (b.y-a.y)*i/steps});
+}
+function traceUp(){
+  if(!trace || !trace.drawing) return;
+  trace.drawing = false;
+  let covered = 0, outside = 0;
+  trace.ink.forEach(i=>{
+    if(trace.cells[i]){ covered++; return; }
+    // forgive ink that only grazes the edge of the letter
+    const x = i % TRACE_GRID, y = Math.floor(i / TRACE_GRID);
+    let near = false;
+    for(let dy=-2; dy<=2 && !near; dy++) for(let dx=-2; dx<=2 && !near; dx++){
+      const nx = x+dx, ny = y+dy;
+      if(nx>=0 && ny>=0 && nx<TRACE_GRID && ny<TRACE_GRID && trace.cells[ny*TRACE_GRID+nx]) near = true;
+    }
+    if(!near) outside++;
+  });
+  const box = document.getElementById('traceBox');
+  if(outside > trace.maskCount*0.5){
+    box.classList.remove('oops'); void box.offsetWidth; box.classList.add('oops');
+    speak('Oops! Stay on the letter.');
+    setTimeout(clearTrace, 500);
+    return;
+  }
+  if(covered >= trace.maskCount*0.75){
+    box.classList.add('win');
+    screenConfetti();
+    speak('Great job! '+trace.L+' is for '+trace.word+'!');
+    lettersItemDone();
+  }
+}
+function clearTrace(){
+  if(!trace) return;
+  const c = document.getElementById('traceInk');
+  if(!c) return;
+  c.getContext('2d').clearRect(0, 0, trace.size, trace.size);
+  trace.ink = new Set();
+}
+window.addEventListener('resize', ()=>{
+  if(trace && letters && letters.mode === 'trace' && !letters.locked && document.getElementById('letters').classList.contains('active')) layoutTrace();
+});
+
+/* ---- spelling ---- */
+function startSpell(item){
+  const [word, emoji] = item;
+  const extras = lgShuffle('ABCDEFGHIJKLMNOPRSTUVWY'.split('').filter(ch=>!word.includes(ch))).slice(0, 2);
+  letters.word = word;
+  letters.emoji = emoji;
+  letters.pos = 0;
+  letters.btns = lgShuffle(word.split('').concat(extras)).map(l=>({l, used:false}));
+  trace = null;
+  renderSpell();
+  sayWord();
+}
+function sayWord(){
+  speak('Spell '+letters.word.toLowerCase()+'!');
+}
+function renderSpell(){
+  const hint = getLearnCfg().lettersHint;
+  const slots = letters.word.split('').map((l, i)=>{
+    const filled = i < letters.pos;
+    return `<div class="spell-slot${filled ? ' filled' : (i === letters.pos ? ' next' : '')}">${filled || hint ? lettersCase(l) : ''}</div>`;
+  }).join('');
+  const btns = letters.btns.map((b, i)=>
+    `<button type="button" class="letter-btn${b.used ? ' used' : ''}" id="lbtn${i}" onclick="spellTap(${i})">${lettersCase(b.l)}</button>`).join('');
+  document.getElementById('lettersCard').innerHTML = `
+    <button type="button" class="learn-say" onclick="sayWord()" aria-label="say it again">🔊</button>
+    <div class="spell-pic">${letters.emoji}</div>
+    <div class="spell-slots">${slots}</div>
+    <div class="letter-btns">${btns}</div>
+    <div class="learn-hint">${hint ? 'Find the letters in order!' : 'Sound it out!'}</div>`;
+}
+function spellTap(i){
+  if(letters.locked) return;
+  const b = letters.btns[i];
+  if(!b || b.used) return;
+  if(b.l === letters.word[letters.pos]){
+    b.used = true;
+    letters.pos++;
+    renderSpell();
+    if(letters.pos >= letters.word.length){
+      speak(letters.word.split('').join(', ')+'. '+letters.word.toLowerCase()+'! You did it!');
+      lettersItemDone();
+    } else speak(b.l);
+  } else {
+    const el = document.getElementById('lbtn'+i);
+    el.classList.remove('wrong'); void el.offsetWidth; el.classList.add('wrong');
+    speak('Try again!');
+  }
+}
+
 /* ================= REWARDS ================= */
 function loadRewards(){
   let raw;
   try{ raw = JSON.parse(localStorage.getItem('rewardsList')); }catch(e){ raw = null; }
   if(!raw){
     raw = [
-      {id:1, name:'Ice Cream Trip',    threshold:60,  collected:false},
-      {id:2, name:'Pick Movie Night',  threshold:150, collected:false},
-      {id:3, name:'New Toy',           threshold:350, collected:false},
-      {id:4, name:'Day at the Park',   threshold:550, collected:false},
-      {id:5, name:'Big Reward!',       threshold:900, collected:false},
+      {id:1, name:'Ice Cream Trip',    emoji:'🍦', threshold:60,  collected:false},
+      {id:2, name:'Pick Movie Night',  emoji:'🎬', threshold:150, collected:false},
+      {id:3, name:'New Toy',           emoji:'🧸', threshold:350, collected:false},
+      {id:4, name:'Day at the Park',   emoji:'🌳', threshold:550, collected:false},
+      {id:5, name:'Big Reward!',       emoji:'🏆', threshold:900, collected:false},
     ];
     localStorage.setItem('rewardsList', JSON.stringify(raw));
   }
@@ -6438,59 +7172,99 @@ function saveRewards(list){
   localStorage.setItem('rewardsList', JSON.stringify(list));
 }
 
+// A picture for prizes added before emojis existed — he can't read the name.
+const REWARD_EMOJI_GUESS = [
+  [/ice ?cream|froyo/i,'🍦'], [/movie|film|cinema/i,'🎬'], [/toy|lego|plush/i,'🧸'],
+  [/park|playground/i,'🌳'], [/game|video|xbox|switch|nintendo/i,'🎮'], [/screen|tv|tablet|ipad/i,'📺'],
+  [/pizza/i,'🍕'], [/candy|sweet|treat|chocolate/i,'🍬'], [/book/i,'📚'], [/donut|doughnut/i,'🍩'],
+  [/swim|pool|beach/i,'🏊'], [/zoo/i,'🦁'], [/big|grand|super/i,'🏆'],
+];
+function guessRewardEmoji(name){
+  const hit = REWARD_EMOJI_GUESS.find(([re])=>re.test(name || ''));
+  return hit ? hit[1] : '🎁';
+}
 function renderRewards(){
   const points = getSpendable();
   const list = loadRewards().slice().sort((a,b)=>a.threshold-b.threshold);
   const container = document.getElementById('rewardList');
-  container.innerHTML = '';
+  const face = r => escapeHtml(r.emoji || guessRewardEmoji(r.name));
+  const ready = list.filter(r=>!r.collected && points >= r.threshold);
+  const saving = list.filter(r=>!r.collected && points < r.threshold);
+  const done = list.filter(r=>r.collected);
+  const next = saving[0];
 
   if(list.length===0){
     container.innerHTML = '<div class="reward-empty">No rewards yet — tap the pencil above to add one!</div>';
+  } else {
+    // The star jar, and the one prize he is saving for right now.
+    let spotlight;
+    if(next){
+      const pct = Math.min(100, Math.round(points/next.threshold*100));
+      spotlight = `<div class="rw-next-label">Saving for</div>
+        <div class="rw-next-name"><span>${face(next)}</span><span>${escapeHtml(next.name)}</span></div>
+        <div class="rw-bar"><div class="rw-bar-fill" style="width:${pct}%"></div></div>
+        <div class="rw-next-more">${next.threshold-points} more ⭐</div>`;
+    } else if(ready.length){
+      spotlight = `<div class="rw-next-label">Hooray!</div>
+        <div class="rw-next-name"><span>🎉</span><span>You can get a prize!</span></div>`;
+    } else {
+      spotlight = `<div class="rw-next-label">Wow!</div>
+        <div class="rw-next-name"><span>🏆</span><span>You got every prize!</span></div>`;
+    }
+    let html = `<div class="rw-hero">
+        <div class="rw-jar"><span class="rw-jar-star">⭐</span><b>${points}</b><small>MY STARS</small></div>
+        <div class="rw-next">${spotlight}</div>
+      </div>`;
+
+    if(ready.length){
+      html += `<div><div class="rw-section-title">🎁 Ready now!<span class="rw-count">${ready.length}</span></div><div class="rw-ready">`;
+      ready.forEach(r=>{
+        html += `<div class="rw-ready-card">
+            <div class="rw-ready-emoji">${face(r)}</div>
+            <div class="rw-ready-body">
+              <div class="rw-name">${escapeHtml(r.name)}</div>
+              <div class="rw-cost">⭐ ${r.threshold}</div>
+              ${r.repeat ? '<div class="rw-repeat">🔁 again &amp; again</div>' : ''}
+            </div>
+            <button class="rw-redeem" onclick="collectReward(${r.id})">Get it!</button>
+          </div>`;
+      });
+      html += '</div></div>';
+    }
+
+    if(saving.length){
+      const C = 2*Math.PI*36;
+      html += `<div><div class="rw-section-title">🚀 Saving up<span class="rw-count">${saving.length}</span></div><div class="rw-grid">`;
+      saving.forEach((r,i)=>{
+        const frac = Math.min(1, points/r.threshold);
+        html += `<div class="rw-tile ${i>0 ? 'far' : ''}">
+            ${i>0 ? '<span class="rw-lock">🔒</span>' : ''}
+            <div class="rw-ring">
+              <svg viewBox="0 0 84 84"><circle class="rw-ring-bg" cx="42" cy="42" r="36"/>
+                <circle class="rw-ring-fg" cx="42" cy="42" r="36" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C*(1-frac)).toFixed(1)}"/></svg>
+              <div class="rw-ring-emoji">${face(r)}</div>
+            </div>
+            <div class="rw-name">${escapeHtml(r.name)}</div>
+            <div class="rw-more">⭐ ${r.threshold}</div>
+          </div>`;
+      });
+      html += '</div></div>';
+    }
+
+    if(done.length){
+      html += `<div><div class="rw-section-title">✅ Got it!<span class="rw-count">${done.length}</span></div><div class="rw-done">`;
+      done.forEach(r=>{ html += `<div class="rw-done-chip"><span>${face(r)}</span><span>${escapeHtml(r.name)}</span></div>`; });
+      html += '</div></div>';
+    }
+    container.innerHTML = html;
   }
 
-  list.forEach((r,i)=>{
-    const unlocked = points >= r.threshold;
-    const collected = !!r.collected;
-    const stateClass = collected ? 'collected' : (unlocked ? 'unlocked' : '');
-    const icon = collected ? '✅' : (unlocked ? escapeHtml(r.emoji || '🎁') : '🔒');
-    const pct = Math.min(100, Math.round((points/r.threshold)*100));
-    const isLast = i === list.length-1;
-    const metaText = collected
-      ? r.threshold+' pts · Redeemed 🎉'
-      : unlocked
-        ? r.threshold+' pts · Ready to redeem!'
-        : r.threshold+' pts · '+(r.threshold-points)+' more to save';
-    const repeatNote = r.repeat ? ' · 🔁 again & again' : '';
-
-    const row = document.createElement('div');
-    row.className = 'reward-row';
-    row.innerHTML = `
-      <div class="reward-node-col">
-        <div class="reward-node ${stateClass}">${icon}</div>
-        ${!isLast ? `<div class="reward-connector ${unlocked?'filled':''}"></div>` : ''}
-      </div>
-      <div class="reward-card ${collected?'collected':''}">
-        <div class="reward-name">${escapeHtml(r.name)}</div>
-        <div class="reward-meta">${metaText}${repeatNote}</div>
-        ${!collected ? `<div class="reward-progress-track"><div class="reward-progress-fill" style="width:${pct}%"></div></div>` : ''}
-        <div class="reward-row-flex">
-          ${collected
-            ? '<span class="reward-status">✅ Redeemed</span>'
-            : unlocked
-              ? `<button class="reward-btn" onclick="collectReward(${r.id})">🎁 Redeem</button>`
-              : '<span></span>'}
-        </div>
-      </div>
-    `;
-    container.appendChild(row);
-  });
-
   document.getElementById('chip-rewards').textContent = points;
-  const nextLocked = list.find(r=>points < r.threshold);
   const sub = document.getElementById('rewardsSub');
-  if(list.length===0) sub.textContent = points+' pts to spend!';
-  else if(nextLocked) sub.textContent = points+' pts to spend · '+(nextLocked.threshold-points)+' more to save for "'+nextLocked.name+'"';
-  else sub.textContent = points+' pts to spend · everything unlocked! 🎉';
+  if(list.length===0) sub.textContent = points+' stars to spend!';
+  else if(ready.length) sub.textContent = ready.length === 1 ? 'A prize is ready for you!' : ready.length+' prizes are ready for you!';
+  else if(next) sub.textContent = 'Keep earning stars for your next prize!';
+  else sub.textContent = 'Everything unlocked! 🎉';
 }
 
 let pendingConfirmAction = null;
@@ -6713,10 +7487,11 @@ function performDayReset(){
   });
   localStorage.removeItem('dailyPointsLog');
   chessStore.remove('puzzlePointsToday');  // NOT localStorage — chessStore mirrors in memory
-  ['chess','activities'].forEach(page=>{
+  ['chess','activities','math','letters'].forEach(page=>{
     localStorage.removeItem('timeUsed_'+page);
     localStorage.removeItem('timeBonus_'+page);
   });
+  LEARN_PAGES.forEach(g => localStorage.removeItem('learn_'+g));
   localStorage.removeItem('allDoneShown_'+todayKey());
   updateLockedPads();
   goHome();
@@ -6741,10 +7516,11 @@ function performFullReset(){
     localStorage.removeItem('activity_'+id);
     localStorage.removeItem('session_'+id);
   });
-  ['chess','activities'].forEach(page=>{
+  ['chess','activities','math','letters'].forEach(page=>{
     localStorage.removeItem('timeUsed_'+page);
     localStorage.removeItem('timeBonus_'+page);
   });
+  LEARN_PAGES.forEach(g => localStorage.removeItem('learn_'+g));
   localStorage.removeItem('allDoneShown_'+todayKey());
   localStorage.removeItem('rewardLog');
   const rewards = loadRewards();
@@ -6821,11 +7597,12 @@ const PZ_TABS = [
   {id:'activities', icon:'🏅', name:'Activities'},
   {id:'rewards',    icon:'🎁', name:'Rewards'},
   {id:'chess',      icon:'♟️', name:'Chess'},
+  {id:'learning',   icon:'🧠', name:'Learning'},
   {id:'time',       icon:'⏱️', name:'Screen Time'},
   {id:'points',     icon:'⭐', name:'Points & Ranks'},
   {id:'backup',     icon:'💾', name:'Backup & Reset'},
 ];
-const EMOJI_CHOICES = ['✅','⭐','🌟','🚀','🪐','👕','🩳','🧦','👟','🪥','🦷','🛁','🚿','🧼','🚽','🛏️','💡','📖','📚','✏️','🎒','🍎','🥣','🥛','🍽️','🧹','🧺','🗑️','🐶','🐱','🌱','🎻','🎹','🥁','🎨','🧩','⚽','🏀','⚾','🏈','🎾','🏊','🚴','🛹','🤸','🧘','🏃','💪','🧗','🥋','🍦','🍕','🎬','🧸','🎮','🎁','🛝','🎡','🏖️','🎟️','🍿','📺','🦖','🤖','👽','🌙','☀️','🌅','🎉','🏆'];
+const EMOJI_CHOICES = ['✅','⭐','🌟','🚀','🪐','👕','🩳','🧦','👟','🪥','🦷','🛁','🚿','🧼','🚽','🛏️','💡','📖','📚','✏️','🎒','🍎','🥣','🥛','🍽️','🧹','🧺','🗑️','🐶','🐱','🌱','🎻','🎹','🥁','🎨','🧩','⚽','🏀','⚾','🏈','🎾','🏊','🚴','🛹','🤸','🧘','🏃','💪','🧗','🥋','🍦','🍕','🎬','🧸','🎮','🎁','🌳','🎡','🏖️','🎟️','🍿','📺','🦖','🤖','👽','🌙','☀️','🌅','🎉','🏆'];
 const TASK_SUGGESTIONS = [
   ['🦷','Floss'],['🐶','Feed the pet'],['🎹','Practice music'],['🧺','Put laundry away'],
   ['🍽️','Clear the table'],['🌱','Water the plants'],['🧦','Shoes & socks on'],['💧','Drink water'],
@@ -6836,7 +7613,7 @@ const ACTIVITY_SUGGESTIONS = [
 ];
 const REWARD_SUGGESTIONS = [
   ['🍦','Ice cream',60],['🎬','Pick the movie',100],['🍕','Pizza night',150],['🎮','30 min game time',80],
-  ['🧸','New toy',350],['🛝','Park trip',200],['🍿','Movie theater',500],['🎡','Big day out',900],
+  ['🧸','New toy',350],['🌳','Park trip',200],['🍿','Movie theater',500],['🎡','Big day out',900],
 ];
 const ROUTINE_DEFAULT_META = {
   morning: {emoji:'🌅', label:'Morning',      sub:'Rise & shine routine'},
@@ -6882,6 +7659,7 @@ function refreshEverything(){
   const id = active ? active.id : '';
   if(ROUTINE_META[id]) renderList(id);
   if(id === 'activities'){ renderActivities(); updateActivitiesTimeBadge(); }
+  if(LEARN_PAGES.includes(id)){ updateLearnTimeBadge(id); document.getElementById('chip-'+id).textContent = getSpendable(); }
   if(id === 'rewards') renderRewards();
   if(id === 'endday') renderEndDay();
   if(id === 'chess'){
@@ -6960,7 +7738,7 @@ function renderParentZone(){
   document.getElementById('pzTabs').innerHTML = PZ_TABS.map(t=>
     `<button type="button" class="pz-tab ${t.id===pzTab?'active':''}" onclick="setPzTab('${t.id}')"><span>${t.icon}</span>${t.name}</button>`).join('');
   const r = {kid:pzKid, checklists:pzChecklists, activities:pzActivities, rewards:pzRewards,
-             chess:pzChess, time:pzTime, points:pzPoints, backup:pzBackup}[pzTab];
+             chess:pzChess, learning:pzLearning, time:pzTime, points:pzPoints, backup:pzBackup}[pzTab];
   document.getElementById('pzBody').innerHTML = r();
   const active = document.querySelector('.pz-tab.active');
   if(active) active.scrollIntoView({inline:'center', block:'nearest'});
@@ -6968,21 +7746,27 @@ function renderParentZone(){
 
 /* ---------- Kid & App ---------- */
 function getKidName(){ return (localStorage.getItem('kidName') || '').trim(); }
+// Math and Letters start hidden; a parent switches them on in the Parent Zone.
+const DASH_HIDDEN_DEFAULTS = {math:true, letters:true};
 function getDashHidden(){
-  try{ const o = JSON.parse(localStorage.getItem('dashHidden')); return (o && typeof o === 'object') ? o : {}; }catch(e){ return {}; }
+  let o = null;
+  try{ o = JSON.parse(localStorage.getItem('dashHidden')); }catch(e){}
+  return Object.assign({}, DASH_HIDDEN_DEFAULTS, (o && typeof o === 'object') ? o : {});
 }
 function isHiddenOnDashboard(key){ return !!getDashHidden()[key]; }
 function applyDashVisibility(){
   const h = getDashHidden();
-  ['morning','school','bedtime','chess','activities','rewards'].forEach(k=>{
+  const tiles = ['chess','activities','math','letters','rewards'];
+  ['morning','school','bedtime'].concat(tiles).forEach(k=>{
     const el = document.getElementById(k+'-pad');
     if(el) el.style.display = h[k] ? 'none' : '';
   });
-  const tilesHidden = ['chess','activities','rewards'].every(k=>h[k]);
-  document.querySelector('.tiles').style.display = tilesHidden ? 'none' : '';
-  document.getElementById('tilesLabel').style.display = tilesHidden ? 'none' : '';
-  const shown = ['chess','activities','rewards'].filter(k=>!h[k]).length;
-  document.querySelector('.tiles').style.gridTemplateColumns = 'repeat('+Math.max(1,shown)+',1fr)';
+  const shown = tiles.filter(k=>!h[k]).length;
+  document.querySelector('.tiles').style.display = shown ? '' : 'none';
+  document.getElementById('tilesLabel').style.display = shown ? '' : 'none';
+  // Up to three per row; four sit as a 2×2 square.
+  const cols = shown === 4 ? 2 : Math.min(3, Math.max(1, shown));
+  document.querySelector('.tiles').style.gridTemplateColumns = 'repeat('+cols+',1fr)';
 }
 function pzKid(){
   const h = getDashHidden();
@@ -6994,7 +7778,8 @@ function pzKid(){
         vis('morning', ROUTINE_META.morning.emoji+' '+escapeHtml(ROUTINE_META.morning.label))
       + vis('school', ROUTINE_META.school.emoji+' '+escapeHtml(ROUTINE_META.school.label))
       + vis('bedtime', ROUTINE_META.bedtime.emoji+' '+escapeHtml(ROUTINE_META.bedtime.label))
-      + vis('chess', '♟️ Chess') + vis('activities', '🏅 Activities') + vis('rewards', '🎁 Rewards'))
+      + vis('chess', '♟️ Chess') + vis('activities', '🏅 Activities')
+      + vis('math', '🔢 Math') + vis('letters', '✏️ Letters') + vis('rewards', '🎁 Rewards'))
     + pzCard('🔊 Sound',
         pzRow('Read things out loud', pzSwitch(voiceOn, 'pzToggleVoice()'), 'Chess coach, celebrations and time-up messages.'))
     + pzCard('🔑 Passcode',
@@ -7353,6 +8138,36 @@ function pzChess(){
          </div><p class="pz-note">Classic looks like a real chess set. Chunky is bolder on small screens.</p>`);
 }
 
+/* ---------- Learning games ---------- */
+function pzLearnSet(field, value){
+  setLearnCfg(field, value);
+  renderParentZone(); pzSaved();
+}
+function pzLearning(){
+  const c = getLearnCfg();
+  const h = getDashHidden();
+  const today = g => { const st = loadLearnState(g); return st.rounds+' round'+(st.rounds===1?'':'s')+' today · '+st.stars+' stars earned'; };
+  const seg = (field, opts) => `<div class="pz-seg small">${opts.map(([v, label])=>
+    `<button type="button" class="${c[field]===v?'on':''}" onclick="pzLearnSet('${field}', ${typeof v === 'number' ? v : `'${v}'`})">${label}</button>`).join('')}</div>`;
+  return `<p class="pz-note">Two practice games for little learners. Both start switched off — turn one on to put it on the home screen. Each round is 5 questions, and wrong answers never cost anything.</p>`
+    + pzCard('🔢 Math',
+        pzRow('Show on home screen', pzSwitch(!h.math, `pzToggleHidden('math')`))
+      + pzRow('Numbers up to', seg('mathMax', [[5,'5'],[10,'10'],[20,'20']]), 'Counting, adding with pictures, and “which has more?”')
+      + pzRow('Take-away questions', pzSwitch(c.mathSub, `pzLearnSet('mathSub', ${!c.mathSub})`), 'Adds simple subtraction, like 5 − 2.')
+      + pzRow('Stars per round', pzStepper(c.mathStars, `pzLearnSet('mathStars', parseInt(this.value,10)||0)`, {min:0,max:50}))
+      + pzRow('Most math stars per day', pzStepper(c.mathCap, `pzLearnSet('mathCap', parseInt(this.value,10)||0)`, {min:0,max:500,step:5}), '0 = math earns nothing.')
+      + `<div class="pz-status">${today('math')}</div>`)
+    + pzCard('✏️ Letters',
+        pzRow('Show on home screen', pzSwitch(!h.letters, `pzToggleHidden('letters')`))
+      + `<p class="pz-note">He picks Trace (finger-trace a big letter — A is for Apple) or Spell (tap the letters of a 3-letter picture word).</p>`
+      + pzRow('Letters', seg('lettersCase', [['upper','ABC'],['lower','abc']]))
+      + pzRow('Show the word to copy', pzSwitch(c.lettersHint, `pzLearnSet('lettersHint', ${!c.lettersHint})`), 'Spelling shows faint letters in the boxes. Turn off once he can sound words out.')
+      + pzRow('Stars per round', pzStepper(c.lettersStars, `pzLearnSet('lettersStars', parseInt(this.value,10)||0)`, {min:0,max:50}))
+      + pzRow('Most letter stars per day', pzStepper(c.lettersCap, `pzLearnSet('lettersCap', parseInt(this.value,10)||0)`, {min:0,max:500,step:5}), '0 = letters earn nothing.')
+      + `<div class="pz-status">${today('letters')}</div>`)
+    + `<p class="pz-note" style="text-align:center;">Once a game is switched on, its daily time limit appears under ⏱️ Screen Time.</p>`;
+}
+
 /* ---------- Screen time ---------- */
 function pzTimeAdjust(page, mins){
   if(mins === 0) clearBonusToday(page); else addBonusFromSettings(page, mins);
@@ -7377,7 +8192,9 @@ function pzTime(){
           ${bonus ? `<button type="button" class="pz-chip" onclick="pzTimeAdjust('${page}',0)">Clear extra</button>` : ''}
         </div><p class="pz-note">Extra time is for today only and clears overnight.</p>` : ''));
   };
+  const h = getDashHidden();
   return block('chess', '♟️ Chess') + block('activities', '🏅 Activities')
+    + (h.math ? '' : block('math', '🔢 Math')) + (h.letters ? '' : block('letters', '✏️ Letters'))
     + `<p class="pz-note" style="text-align:center;">Time pauses while a sport stopwatch is running, while the app is in the background, and while this Parent Zone is open.</p>`;
 }
 

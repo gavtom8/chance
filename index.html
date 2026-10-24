@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0B1020">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Launchpad</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -15,6 +18,13 @@
     --mint:#7FE0C4;
     --panel:#233459;
     --text:#F4F6FB;
+    --space:#0B1020;
+    --glass:rgba(255,255,255,0.07);
+    --glass-hi:rgba(255,255,255,0.12);
+    --stroke:rgba(255,255,255,0.10);
+    --shadow:0 10px 30px rgba(0,0,0,0.35);
+    --safe-top:env(safe-area-inset-top, 0px);
+    --safe-bot:env(safe-area-inset-bottom, 0px);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none;}
   input, textarea, select{
@@ -28,14 +38,15 @@
   }
   body{
     font-family:'Nunito',sans-serif;
-    background:var(--navy);
+    background:var(--space);
     color:var(--text);
     overflow:hidden;
   }
+  button{font-family:'Nunito',sans-serif;}
   .screen{
     position:fixed; inset:0;
     display:flex; flex-direction:column;
-    padding:32px 24px 24px;
+    padding:0 20px calc(24px + var(--safe-bot));
     opacity:0; pointer-events:none;
     transform:scale(0.98);
     transition:opacity .25s ease, transform .25s ease;
@@ -51,42 +62,103 @@
   .stars{position:absolute; inset:0; z-index:0; overflow:hidden;}
   .star{position:absolute; background:#fff; border-radius:50%; opacity:.5; animation:twinkle 3s ease-in-out infinite;}
   @keyframes twinkle{0%,100%{opacity:.15;} 50%{opacity:.8;}}
+  .shooting-star{
+    position:absolute; top:12%; left:-10%; width:120px; height:2px; border-radius:2px;
+    background:linear-gradient(90deg, rgba(255,255,255,0), #fff);
+    transform:rotate(18deg); opacity:0;
+    animation:shoot 9s ease-in 2s infinite;
+  }
+  @keyframes shoot{
+    0%{opacity:0; transform:translate(0,0) rotate(18deg);}
+    3%{opacity:1;}
+    10%{opacity:0; transform:translate(120vw,38vw) rotate(18deg);}
+    100%{opacity:0; transform:translate(120vw,38vw) rotate(18deg);}
+  }
 
   /* ---------- DASHBOARD ---------- */
-  #dashboard{background:radial-gradient(ellipse at top, var(--navy) 0%, var(--navy-deep) 70%);}
-  .brand{position:relative; z-index:1; text-align:center; margin-bottom:8px;}
-  .brand h1{
-    font-family:'Baloo 2', sans-serif; font-weight:800; font-size:2.3rem;
-    margin:0; letter-spacing:.5px;
+  #dashboard{
+    padding-top:calc(26px + var(--safe-top));
+    background:
+      radial-gradient(60% 40% at 85% 8%, rgba(123,110,246,0.35) 0%, transparent 70%),
+      radial-gradient(55% 35% at 5% 35%, rgba(63,169,245,0.22) 0%, transparent 70%),
+      radial-gradient(70% 40% at 50% 105%, rgba(255,107,107,0.18) 0%, transparent 70%),
+      linear-gradient(180deg, #131A3A 0%, var(--space) 100%);
   }
-  .brand p{margin:4px 0 0; opacity:.65; font-weight:600; font-size:.95rem;}
+  .brand{position:relative; z-index:1; text-align:center; margin-bottom:4px;}
+  .brand h1{
+    font-family:'Baloo 2', sans-serif; font-weight:800; font-size:2.5rem;
+    margin:0; letter-spacing:.5px; line-height:1.1;
+  }
+  .brand h1 .brand-word{
+    background:linear-gradient(90deg, var(--gold), #FF9F6B 50%, #FF7BAC);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .brand h1 .brand-rocket{display:inline-block; animation:rocketBob 2.6s ease-in-out infinite;}
+  @keyframes rocketBob{0%,100%{transform:translateY(0) rotate(-8deg);} 50%{transform:translateY(-5px) rotate(4deg);}}
+  .brand p{margin:2px 0 0; opacity:.6; font-weight:700; font-size:.9rem;}
   .pads{
     position:relative; z-index:1;
-    flex:1 0 auto; display:flex; flex-direction:column; justify-content:flex-start; gap:18px;
+    display:flex; flex-direction:column; gap:12px;
     max-width:520px; margin:0 auto; width:100%;
-    padding-bottom:12px;
+  }
+  .section-label{
+    position:relative; z-index:1;
+    max-width:520px; width:100%; margin:18px auto 10px;
+    font-size:.72rem; font-weight:800; letter-spacing:1.4px; text-transform:uppercase; opacity:.5;
   }
   .pad{
-    display:flex; align-items:center; gap:18px;
-    background:var(--panel);
-    border:2px solid rgba(255,255,255,0.06);
-    border-radius:26px;
-    padding:20px 22px;
+    position:relative;
+    display:flex; align-items:center; gap:16px;
+    background:linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.04));
+    border:1px solid var(--stroke);
+    border-radius:24px;
+    padding:16px 18px;
     cursor:pointer;
+    box-shadow:var(--shadow);
+    -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+    transition:transform .12s ease, background .12s ease, border-color .2s ease;
+  }
+  .pad:active{transform:scale(0.97); background:rgba(255,255,255,0.14);}
+  .pad.done-today{border-color:rgba(127,224,196,0.55);}
+  .pad.done-today::after{
+    content:'✓'; position:absolute; top:-7px; right:-5px;
+    width:24px; height:24px; border-radius:50%;
+    background:var(--mint); color:#0c332a; font-weight:800; font-size:.85rem;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 0 12px rgba(127,224,196,0.7);
+  }
+  .pad.locked, .tile.locked{ opacity:.45; filter:grayscale(65%); }
+  .pad.locked:active, .tile.locked:active{ transform:none; }
+  .pad-icon{
+    width:58px; height:58px; border-radius:18px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.85rem; flex-shrink:0;
+    box-shadow: inset 0 0 0 2px rgba(255,255,255,0.18), 0 6px 18px rgba(0,0,0,0.3);
+  }
+  .pad-text{flex:1; min-width:0;}
+  .pad-text h2{font-family:'Baloo 2',sans-serif; margin:0; font-size:1.25rem; line-height:1.2;}
+  .pad-text span{font-size:.8rem; opacity:.6; font-weight:700;}
+
+  /* the three "tools" sit in a compact row under the routines */
+  .tiles{
+    position:relative; z-index:1;
+    display:grid; grid-template-columns:repeat(3,1fr); gap:12px;
+    max-width:520px; margin:0 auto; width:100%;
+  }
+  .tile{
+    position:relative;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+    background:linear-gradient(160deg, rgba(255,255,255,0.10), rgba(255,255,255,0.03));
+    border:1px solid var(--stroke); border-radius:22px;
+    padding:16px 6px 14px; cursor:pointer; text-align:center;
+    box-shadow:var(--shadow);
     transition:transform .12s ease, background .12s ease;
   }
-  .pad:active{transform:scale(0.96); background:#2b3f6b;}
-  .pad.locked{ opacity:.45; filter:grayscale(65%); }
-  .pad.locked:active{ transform:none; }
-  .pad-icon{
-    width:64px; height:64px; border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    font-size:2rem; flex-shrink:0;
-    box-shadow: inset 0 0 0 3px rgba(255,255,255,0.15);
-  }
-  .pad-text{flex:1;}
-  .pad-text h2{font-family:'Baloo 2',sans-serif; margin:0 0 2px; font-size:1.3rem;}
-  .pad-text span{font-size:.85rem; opacity:.6; font-weight:700;}
+  .tile:active{transform:scale(0.95); background:rgba(255,255,255,0.14);}
+  .tile .pad-icon{width:54px; height:54px; font-size:1.7rem;}
+  .tile h2{font-family:'Baloo 2',sans-serif; margin:0; font-size:1.02rem; line-height:1.1;}
+  .tile .tile-sub{font-size:.68rem; font-weight:800; opacity:.55; line-height:1.2;}
+  .tile.locked .tile-sub::before{content:'⏰ ';}
   .pad-ring{position:relative; width:46px; height:46px; flex-shrink:0;}
   .pad-ring svg{transform:rotate(-90deg);}
   .pad-ring circle{fill:none; stroke-width:5;}
@@ -99,24 +171,45 @@
   #morning-pad .pad-icon{background:linear-gradient(135deg,#FFC857,#FF8C42);}
   #school-pad .pad-icon{background:linear-gradient(135deg,#7FE0C4,#3FA9F5);}
   #bedtime-pad .pad-icon{background:linear-gradient(135deg,#7B6EF6,#3A3D7A);}
+  #chess-pad .pad-icon{background:linear-gradient(135deg,#9FB8D9,#4A6382);}
+  #activities-pad .pad-icon{background:linear-gradient(135deg,#7FE0A0,#2E9E6A);}
+  #rewards-pad .pad-icon{background:linear-gradient(135deg,#FF8FB1,#E0507A);}
   .ring-fg.morning{stroke:var(--gold);}
   .ring-fg.school{stroke:var(--mint);}
   .ring-fg.bedtime{stroke:#A79CFF;}
 
   .footer-date{
     position:relative; z-index:1; text-align:center;
-    font-size:.8rem; opacity:.4; font-weight:700; margin-top:14px;
+    font-size:.8rem; opacity:.4; font-weight:700; margin-top:16px;
   }
 
   /* ---------- POINTS / LEVEL ---------- */
   .points-bar{
     position:relative; z-index:1;
-    display:flex; align-items:center; gap:12px;
-    background:var(--panel);
-    border-radius:20px; padding:14px 18px;
-    max-width:520px; margin:18px auto 4px;
+    display:flex; align-items:center; gap:14px;
+    background:linear-gradient(135deg, rgba(255,200,87,0.16), rgba(255,107,107,0.10));
+    border:1px solid rgba(255,200,87,0.28);
+    border-radius:22px; padding:14px 16px;
+    max-width:520px; width:100%; margin:16px auto 0;
+    box-shadow:var(--shadow);
   }
-  .level-emoji{font-size:1.8rem; flex-shrink:0;}
+  .level-emoji{
+    font-size:1.7rem; flex-shrink:0;
+    width:52px; height:52px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(255,255,255,0.1);
+    box-shadow:0 0 0 2px rgba(255,200,87,0.45), 0 0 18px rgba(255,200,87,0.35);
+  }
+  .spend-pill{
+    flex-shrink:0; text-align:center; cursor:pointer;
+    background:var(--gold); color:#3a2b17;
+    border-radius:16px; padding:6px 12px;
+    font-family:'Baloo 2',sans-serif; font-weight:800; line-height:1.05;
+    box-shadow:0 4px 14px rgba(255,200,87,0.35);
+  }
+  .spend-pill b{display:block; font-size:1.25rem;}
+  .spend-pill small{display:block; font-size:.62rem; font-weight:800; opacity:.75; letter-spacing:.3px;}
+  .spend-pill:active{transform:scale(0.95);}
   .points-info{flex:1; min-width:0;}
   .points-top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;}
   .level-title{font-family:'Baloo 2',sans-serif; font-weight:700; font-size:1rem;}
@@ -126,24 +219,29 @@
   .level-next{font-size:.7rem; opacity:.5; font-weight:700; margin-top:4px;}
 
   .points-chip{
-    display:flex; align-items:center; gap:5px;
-    background:rgba(255,255,255,0.12);
-    border-radius:16px; padding:8px 14px;
-    font-weight:800; font-size:.95rem;
+    display:flex; align-items:center; gap:5px; flex-shrink:0;
+    background:rgba(255,200,87,0.18); border:1px solid rgba(255,200,87,0.35);
+    border-radius:16px; padding:7px 12px;
+    font-weight:800; font-size:.95rem; white-space:nowrap;
     margin-left:auto;
   }
   .time-badge{
     display:flex; align-items:center; justify-content:center;
-    max-width:480px; margin:10px auto 0; width:100%;
-    background:rgba(255,255,255,0.08); border-radius:14px; padding:9px;
-    font-weight:800; font-size:.85rem; opacity:.85;
+    max-width:480px; margin:4px auto 0; width:100%;
+    background:rgba(255,255,255,0.08); border:1px solid var(--stroke);
+    border-radius:14px; padding:9px;
+    font-weight:800; font-size:.85rem; opacity:.9;
   }
+  .time-badge.low{background:rgba(255,107,107,0.22); border-color:rgba(255,107,107,0.5); animation:lowPulse 1.6s ease-in-out infinite;}
+  @keyframes lowPulse{0%,100%{opacity:.75;} 50%{opacity:1;}}
+  /* Parent-only controls stay small and quiet so a child isn't drawn to them. */
   .edit-btn{
-    width:40px; height:40px; border-radius:50%;
-    background:rgba(255,255,255,0.12); display:flex; align-items:center; justify-content:center;
-    font-size:1.05rem; cursor:pointer; flex-shrink:0; margin-left:8px;
+    width:36px; height:36px; border-radius:50%;
+    background:rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:center;
+    font-size:.95rem; cursor:pointer; flex-shrink:0; margin-left:6px; opacity:.7;
   }
-  .edit-btn:active{background:rgba(255,255,255,0.25);}
+  .edit-btn:active{background:rgba(255,255,255,0.25); opacity:1;}
+  .icon-btn{opacity:1; background:rgba(255,255,255,0.12); width:40px; height:40px; font-size:1.1rem;}
   .danger-btn{background:rgba(255,107,107,0.28) !important; color:#ffdcdc !important;}
 
   .checkbox{position:relative;}
@@ -163,7 +261,9 @@
   .celebration-overlay{
     position:fixed; inset:0; z-index:50;
     display:flex; align-items:center; justify-content:center;
-    background:rgba(10,14,30,0.55);
+    padding:16px;
+    background:rgba(6,9,22,0.62);
+    -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
     opacity:0; pointer-events:none;
     transition:opacity .25s ease;
   }
@@ -175,61 +275,113 @@
   #addTimeOverlay{z-index:70;}          /* over the time-up card */
   #activityDetailOverlay{z-index:75;}   /* over the activities editor */
   .celebration-card{
-    background:var(--panel); border-radius:28px; padding:36px 30px;
-    text-align:center; max-width:320px;
-    transform:scale(0.85); transition:transform .25s ease;
+    background:linear-gradient(170deg, #2A3A66 0%, #1A2547 100%);
+    border:1px solid rgba(255,255,255,0.12);
+    box-shadow:0 24px 60px rgba(0,0,0,0.5);
+    border-radius:28px; padding:32px 26px 24px;
+    text-align:center; width:100%; max-width:340px;
+    transform:translateY(18px) scale(0.92); transition:transform .3s cubic-bezier(.2,.9,.3,1.2);
   }
-  .celebration-overlay.show .celebration-card{transform:scale(1);}
+  .celebration-overlay.show .celebration-card{transform:none;}
   .celebration-card .emoji{font-size:3.4rem; margin-bottom:8px;}
+  .celebration-overlay.show .celebration-card .emoji{animation:emojiPop .6s cubic-bezier(.2,.9,.3,1.4);}
+  @keyframes emojiPop{0%{transform:scale(0.3) rotate(-20deg);} 70%{transform:scale(1.2) rotate(6deg);} 100%{transform:scale(1);}}
   .celebration-card h3{font-family:'Baloo 2',sans-serif; margin:0 0 6px; font-size:1.4rem;}
   .celebration-card p{margin:0 0 20px; opacity:.7; font-weight:700; font-size:.95rem;}
   .celebration-card button{
-    background:var(--gold); border:none; color:#3a2b17;
-    font-family:'Baloo 2',sans-serif; font-weight:700; font-size:1rem;
+    background:linear-gradient(180deg, #FFD67A, var(--gold)); border:none; color:#3a2b17;
+    font-family:'Baloo 2',sans-serif; font-weight:700; font-size:1.05rem;
     padding:14px 28px; border-radius:16px; cursor:pointer;
+    box-shadow:0 6px 0 #C9952F, 0 10px 20px rgba(0,0,0,0.25);
+    transition:transform .08s ease, box-shadow .08s ease;
   }
+  .celebration-card button:active{transform:translateY(4px); box-shadow:0 2px 0 #C9952F;}
+  .celebration-card button + button{margin-top:10px;}
+  .celebration-card button.cancel-btn{box-shadow:none;}
+  .celebration-card button.cancel-btn:active{transform:none;}
+  /* full-screen confetti for big wins */
+  .screen-confetti{position:fixed; top:-20px; width:10px; height:14px; border-radius:2px; z-index:90; pointer-events:none;}
 
   /* ---------- ROUTINE SCREENS ---------- */
-  .routine-header{display:flex; align-items:center; gap:14px; margin-bottom:6px;}
+  /* Sticks to the top while the screen scrolls, so "back" is always one tap away. */
+  .routine-header{
+    position:sticky; top:0; z-index:20;
+    display:flex; align-items:center; gap:12px;
+    margin:0 -20px 6px; padding:calc(14px + var(--safe-top)) 20px 12px;
+    background:rgba(8,12,28,0.28);
+    -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
+  }
   .back-btn{
     width:44px; height:44px; border-radius:50%;
-    background:rgba(255,255,255,0.12); display:flex; align-items:center; justify-content:center;
-    font-size:1.3rem; cursor:pointer; flex-shrink:0;
+    background:rgba(255,255,255,0.14); border:1px solid var(--stroke);
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.3rem; font-weight:800; cursor:pointer; flex-shrink:0;
   }
-  .back-btn:active{background:rgba(255,255,255,0.25);}
-  .routine-title{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.6rem; margin:0;}
-  .routine-sub{margin:2px 0 0 58px; font-size:.85rem; opacity:.65; font-weight:700;}
+  .back-btn:active{background:rgba(255,255,255,0.28); transform:scale(0.94);}
+  .routine-title{
+    font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.5rem; margin:0;
+    flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .routine-sub{margin:2px 0 0; font-size:.85rem; opacity:.7; font-weight:700;}
 
-  .progress-track{
-    height:12px; border-radius:8px; background:rgba(255,255,255,0.1);
-    margin:22px 0 6px; overflow:hidden;
+  .progress-wrap{margin:18px 0 4px;}
+  .progress-meta{
+    display:flex; justify-content:space-between; align-items:baseline;
+    font-size:.8rem; font-weight:800; margin-bottom:7px; opacity:.85;
   }
-  .progress-fill{height:100%; border-radius:8px; width:0%; transition:width .4s ease;}
+  .progress-meta .pm-count{font-family:'Baloo 2',sans-serif; font-size:1rem;}
+  .progress-track{
+    height:14px; border-radius:10px; background:rgba(0,0,0,0.22);
+    box-shadow:inset 0 1px 3px rgba(0,0,0,0.3);
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%; border-radius:10px; width:0%; transition:width .5s cubic-bezier(.2,.9,.3,1.1);
+    background-image:linear-gradient(90deg, rgba(255,255,255,0.0), rgba(255,255,255,0.35), rgba(255,255,255,0.0)) !important;
+    background-size:200% 100% !important;
+    animation:shimmer 2.4s linear infinite;
+  }
+  @keyframes shimmer{from{background-position:200% 0;} to{background-position:-200% 0;}}
 
   .checklist{
-    flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:14px;
-    padding-top:8px; padding-bottom:12px; min-height:0;
+    flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:12px;
+    padding-top:10px; padding-bottom:12px; min-height:0;
     overscroll-behavior-y:contain;
   }
   .item{
     display:flex; align-items:center; gap:16px;
-    background:rgba(255,255,255,0.06);
-    border-radius:20px; padding:18px 18px;
-    cursor:pointer; transition:background .15s ease, transform .1s ease;
+    background:rgba(255,255,255,0.10);
+    border:1px solid rgba(255,255,255,0.10);
+    border-radius:20px; padding:16px 18px;
+    cursor:pointer; transition:background .15s ease, transform .1s ease, border-color .2s ease;
+    box-shadow:0 4px 14px rgba(0,0,0,0.18);
   }
   .item:active{transform:scale(0.98);}
-  .item.done{background:rgba(255,255,255,0.03);}
+  .item.next{border-color:rgba(255,255,255,0.55); background:rgba(255,255,255,0.16); box-shadow:0 0 0 3px rgba(255,255,255,0.10), 0 6px 18px rgba(0,0,0,0.25);}
+  .item.next .item-label::after{
+    content:'Next!'; margin-left:10px; flex-shrink:0;
+    font-size:.68rem; font-weight:800; letter-spacing:.5px; text-transform:uppercase;
+    background:rgba(255,255,255,0.22); border-radius:8px; padding:2px 7px;
+  }
+  .item.done{background:rgba(0,0,0,0.14); box-shadow:none; border-color:transparent;}
   .checkbox{
-    width:34px; height:34px; border-radius:10px; flex-shrink:0;
-    border:2.5px solid rgba(255,255,255,0.35);
+    width:36px; height:36px; border-radius:50%; flex-shrink:0;
+    border:3px solid rgba(255,255,255,0.45);
     display:flex; align-items:center; justify-content:center;
     font-size:1.1rem; font-weight:800;
     transition:all .15s ease;
   }
-  .checkbox.checked{border-color:transparent;}
-  .item-label{font-size:1.15rem; font-weight:700; transition:opacity .15s ease;}
-  .item.done .item-label{opacity:.4; text-decoration:line-through;}
-  .item-emoji{font-size:1.5rem; margin-right:2px;}
+  .checkbox.checked{border-color:transparent; animation:checkPop .35s cubic-bezier(.2,.9,.3,1.5);}
+  @keyframes checkPop{0%{transform:scale(0.5);} 70%{transform:scale(1.2);} 100%{transform:scale(1);}}
+  .item-label{display:flex; align-items:center; font-size:1.15rem; font-weight:700; transition:opacity .15s ease; min-width:0;}
+  .item.done .item-label{opacity:.45; text-decoration:line-through;}
+  .item-emoji{font-size:1.5rem; margin-right:8px;}
+  @media (max-width:380px){
+    .routine-title{font-size:1.25rem;}
+    .points-chip{padding:6px 9px; font-size:.88rem;}
+    .routine-header{gap:8px;}
+    .item-label{font-size:1.05rem;}
+  }
 
   .celebrate{
     display:none; text-align:center; padding:26px 10px 10px;
@@ -342,9 +494,11 @@
     display:flex; gap:10px; max-width:480px; margin:12px auto 0; width:100%;
   }
   .chess-actions button{
-    flex:1; padding:12px; border-radius:14px; border:none;
-    background:rgba(255,255,255,0.1); color:var(--text);
-    font-family:'Nunito',sans-serif; font-weight:800; font-size:.85rem; cursor:pointer;
+    flex:1; padding:13px 8px; border-radius:16px;
+    border:1px solid var(--stroke);
+    background:rgba(255,255,255,0.10); color:var(--text);
+    font-family:'Nunito',sans-serif; font-weight:800; font-size:.88rem; cursor:pointer;
+    box-shadow:0 4px 12px rgba(0,0,0,0.18);
   }
 
   .guide-overlay .celebration-card{max-width:380px; max-height:80vh; overflow-y:auto; text-align:left; overscroll-behavior-y:contain;}
@@ -535,7 +689,9 @@
 
   @media (prefers-reduced-motion: reduce){
     .lesson-bubble.next, .sq .star-target, .sq .danger-ring, .sq .ask-ring, .sq .hint-ring,
-    .board-wrap.win, .board-wrap.nope, .sq.goal-glow::before{animation:none !important;}
+    .board-wrap.win, .board-wrap.nope, .sq.goal-glow::before,
+    .shooting-star, .brand h1 .brand-rocket, .progress-fill, .time-badge.low{animation:none !important;}
+    .screen-confetti{display:none;}
   }
 
   /* ---------- ACTIVITIES ---------- */
@@ -546,8 +702,11 @@
     overscroll-behavior-y:contain;
   }
   .activity-card{
-    background:rgba(255,255,255,0.06); border-radius:20px; padding:16px 18px;
+    background:rgba(255,255,255,0.08); border:1px solid var(--stroke);
+    border-radius:20px; padding:16px 18px;
+    box-shadow:0 4px 14px rgba(0,0,0,0.18);
   }
+  .activity-card.running{border-color:var(--mint); box-shadow:0 0 0 3px rgba(127,224,196,0.2), 0 4px 14px rgba(0,0,0,0.18);}
   .activity-top{display:flex; align-items:center; gap:12px; margin-bottom:12px;}
   .activity-emoji{font-size:1.8rem; flex-shrink:0;}
   .activity-name{font-family:'Baloo 2',sans-serif; font-weight:700; font-size:1.1rem;}
@@ -555,8 +714,9 @@
   .activity-cap{font-size:.75rem; color:var(--gold); font-weight:800; margin-left:auto; text-align:right;}
   .qa-row{display:flex; gap:8px;}
   .qa-btn{
-    position:relative; flex:1; text-align:center; padding:12px 4px;
-    border-radius:14px; background:rgba(255,255,255,0.1);
+    position:relative; flex:1; text-align:center; padding:13px 4px;
+    border-radius:14px; background:rgba(255,255,255,0.12);
+    border:1px solid var(--stroke);
     font-weight:800; font-size:.9rem; cursor:pointer;
   }
   .qa-btn:active{background:rgba(255,255,255,0.22); transform:scale(0.96);}
@@ -570,12 +730,17 @@
 
   /* ---------- END OF DAY ---------- */
   .end-day-link{
-    position:relative; z-index:1; text-align:center; margin-top:16px;
-    font-size:.85rem; font-weight:700; opacity:.6; text-decoration:underline; cursor:pointer;
+    position:relative; z-index:1;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    max-width:520px; width:100%; margin:16px auto 0;
+    padding:14px; border-radius:18px; cursor:pointer;
+    background:rgba(123,110,246,0.16); border:1px solid rgba(167,156,255,0.35);
+    font-family:'Baloo 2',sans-serif; font-weight:700; font-size:1rem;
   }
+  .end-day-link:active{transform:scale(0.97); background:rgba(123,110,246,0.3);}
   #endday{background:linear-gradient(180deg,#241a3d 0%, #120c22 100%);}
   .endday-label{font-size:.85rem; font-weight:800; opacity:.55; margin:16px 0 8px; text-transform:uppercase; letter-spacing:.5px;}
-  .endday-row{display:flex; align-items:center; gap:12px; background:rgba(255,255,255,0.07); border-radius:16px; padding:12px 16px; margin-bottom:10px;}
+  .endday-row{display:flex; align-items:center; gap:12px; background:rgba(255,255,255,0.08); border:1px solid var(--stroke); border-radius:16px; padding:12px 16px; margin-bottom:10px;}
   .endday-row .ico{font-size:1.4rem; flex-shrink:0;}
   .endday-row .name{font-family:'Baloo 2',sans-serif; font-weight:700; font-size:.98rem;}
   .endday-row .status{font-size:.8rem; opacity:.7; font-weight:700; margin-top:1px;}
@@ -615,11 +780,11 @@
     display:flex; align-items:center; justify-content:center; font-size:1.15rem; font-weight:800;
     background:rgba(255,255,255,0.08); border:3px solid rgba(255,255,255,0.22);
   }
-  .reward-node.unlocked{background:var(--gold); border-color:#ffe9b0; color:#3a2b17;}
+  .reward-node.unlocked{background:var(--gold); border-color:#ffe9b0; color:#3a2b17; box-shadow:0 0 16px rgba(255,200,87,0.8); animation:matePulse 1.4s ease-in-out infinite;}
   .reward-node.collected{background:#6fcf7a; border-color:#c7f2c9; color:#123a17;}
   .reward-connector{width:4px; flex:1; min-height:22px; background:rgba(255,255,255,0.18); margin:2px 0; border-radius:2px;}
   .reward-connector.filled{background:var(--gold);}
-  .reward-card{flex:1; background:rgba(255,255,255,0.08); border-radius:18px; padding:14px 16px; margin-bottom:18px;}
+  .reward-card{flex:1; background:rgba(255,255,255,0.10); border:1px solid var(--stroke); box-shadow:0 4px 14px rgba(0,0,0,0.18); border-radius:18px; padding:14px 16px; margin-bottom:18px;}
   .reward-card.collected{opacity:.65;}
   .reward-name{font-family:'Baloo 2',sans-serif; font-weight:700; font-size:1.05rem; margin-bottom:2px;}
   .reward-meta{font-size:.8rem; opacity:.7; font-weight:700; margin-bottom:10px;}
@@ -885,9 +1050,9 @@
 <body>
 <!-- ================= DASHBOARD ================= -->
 <div id="dashboard" class="screen active">
-  <div class="stars" id="starfield"></div>
+  <div class="stars" id="starfield"><div class="shooting-star"></div></div>
   <div class="brand">
-    <h1>🚀 Launchpad</h1>
+    <h1><span class="brand-rocket">🚀</span> <span class="brand-word">Launchpad</span></h1>
     <p id="kidName">Pick your mission</p>
   </div>
   <div class="points-bar">
@@ -900,7 +1065,11 @@
       <div class="level-track"><div class="level-fill" id="levelFill"></div></div>
       <div class="level-next" id="levelNext"></div>
     </div>
+    <div class="spend-pill" onclick="openRewards()" title="Points you can spend on rewards">
+      <b id="spendTotal">0</b><small>TO SPEND</small>
+    </div>
   </div>
+  <div class="section-label">Today's missions</div>
   <div class="pads">
     <div class="pad" id="morning-pad" onclick="openRoutine('morning')">
       <div class="pad-icon">🌅</div>
@@ -926,21 +1095,27 @@
         <div class="pad-ring-label" id="ring-bedtime-label">0/6</div>
       </div>
     </div>
-    <div class="pad" id="chess-pad" onclick="openChess()">
+  </div>
+  <div class="section-label">Play &amp; earn</div>
+  <div class="tiles">
+    <div class="tile" id="chess-pad" onclick="openChess()">
       <div class="pad-icon">♟️</div>
-      <div class="pad-text"><h2>Chess</h2><span>Learn &amp; play</span></div>
+      <h2>Chess</h2>
+      <span class="tile-sub" id="tileSub-chess">Learn &amp; play</span>
     </div>
-    <div class="pad" id="activities-pad" onclick="openActivities()">
+    <div class="tile" id="activities-pad" onclick="openActivities()">
       <div class="pad-icon">🏅</div>
-      <div class="pad-text"><h2>Activities</h2><span>Earn points staying active</span></div>
+      <h2>Activities</h2>
+      <span class="tile-sub" id="tileSub-activities">Get moving</span>
     </div>
-    <div class="pad" id="rewards-pad" onclick="openRewards()">
+    <div class="tile" id="rewards-pad" onclick="openRewards()">
       <div class="pad-icon">🎁</div>
-      <div class="pad-text"><h2>Rewards</h2><span>Turn points into real prizes</span></div>
+      <h2>Rewards</h2>
+      <span class="tile-sub" id="tileSub-rewards">Real prizes</span>
     </div>
   </div>
-  <div class="footer-date" id="todayLabel"></div>
   <div class="end-day-link" onclick="openEndDay()">🌙 End of Day Summary</div>
+  <div class="footer-date" id="todayLabel"></div>
 </div>
 
 <!-- ================= MORNING ================= -->
@@ -953,7 +1128,10 @@
   </div>
   <div class="routine-sub" id="sub-morning">Things to launch your day · 10 pts each</div>
   <div class="skip-banner" id="skipBanner-morning" style="display:none;"></div>
-  <div class="progress-track"><div class="progress-fill" id="fill-morning"></div></div>
+  <div class="progress-wrap">
+    <div class="progress-meta"><span id="metaLabel-morning">Let's go!</span><span class="pm-count" id="metaCount-morning"></span></div>
+    <div class="progress-track"><div class="progress-fill" id="fill-morning"></div></div>
+  </div>
   <div class="checklist" id="list-morning"></div>
 </div>
 
@@ -967,7 +1145,10 @@
   </div>
   <div class="routine-sub" id="sub-school">Things before free time · 10 pts each</div>
   <div class="skip-banner" id="skipBanner-school" style="display:none;"></div>
-  <div class="progress-track"><div class="progress-fill" id="fill-school"></div></div>
+  <div class="progress-wrap">
+    <div class="progress-meta"><span id="metaLabel-school">Let's go!</span><span class="pm-count" id="metaCount-school"></span></div>
+    <div class="progress-track"><div class="progress-fill" id="fill-school"></div></div>
+  </div>
   <div class="checklist" id="list-school"></div>
 </div>
 
@@ -981,7 +1162,10 @@
   </div>
   <div class="routine-sub" id="sub-bedtime">Things before lights out · 10 pts each</div>
   <div class="skip-banner" id="skipBanner-bedtime" style="display:none;"></div>
-  <div class="progress-track"><div class="progress-fill" id="fill-bedtime"></div></div>
+  <div class="progress-wrap">
+    <div class="progress-meta"><span id="metaLabel-bedtime">Let's go!</span><span class="pm-count" id="metaCount-bedtime"></span></div>
+    <div class="progress-track"><div class="progress-fill" id="fill-bedtime"></div></div>
+  </div>
   <div class="checklist" id="list-bedtime"></div>
 </div>
 
@@ -990,9 +1174,9 @@
   <div class="routine-header">
     <div class="back-btn" onclick="chessBack()">←</div>
     <h2 class="routine-title">♟️ Chess</h2>
-    <div class="edit-btn" id="voiceToggleBtn" onclick="toggleVoice()">🔊</div>
-    <div class="edit-btn" onclick="openEditChessPoints()">✏️</div>
-    <div class="points-chip" style="cursor:pointer;" onclick="openGuide()">📖 Guide</div>
+    <div class="edit-btn icon-btn" onclick="openGuide()" title="How pieces move">📖</div>
+    <div class="edit-btn icon-btn" id="voiceToggleBtn" onclick="toggleVoice()" title="Voice on/off">🔊</div>
+    <div class="edit-btn" onclick="openEditChessPoints()" title="Parent settings">✏️</div>
   </div>
   <div class="time-badge" id="chessTimeBadge" style="display:none;"></div>
 
@@ -1252,6 +1436,24 @@
     <button class="danger-btn" onclick="fullReset()">☢️ Reset Everything</button>
   </div>
   <div class="routine-sub" style="margin-top:10px; opacity:.55; text-align:center;">Wipes all points, rank, and progress back to zero. Rewards &amp; checklists stay, just marked un-collected again.</div>
+
+  <div class="endday-label" style="margin-top:26px;">Parent Settings</div>
+  <div class="chess-actions">
+    <button onclick="openChangePasscode()">🔑 Change Passcode</button>
+  </div>
+</div>
+
+<div class="celebration-overlay" id="changePasscodeOverlay">
+  <div class="celebration-card">
+    <div class="emoji">🔑</div>
+    <h3>New Passcode</h3>
+    <p style="margin-bottom:14px;">4–6 digits. Write it down somewhere safe!</p>
+    <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" class="passcode-input" id="newPasscodeInput" placeholder="New code">
+    <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" class="passcode-input" id="newPasscodeConfirm" placeholder="Type it again" onkeydown="if(event.key==='Enter') saveNewPasscode();">
+    <div id="newPasscodeError" style="display:none; color:#ffb3b3; font-weight:700; font-size:.85rem; margin:-4px 0 10px;"></div>
+    <button onclick="saveNewPasscode()" style="width:100%;">Save</button>
+    <button onclick="closeChangePasscode()" class="cancel-btn" style="width:100%;">Cancel</button>
+  </div>
 </div>
 
 <div class="celebration-overlay" id="editRewardsOverlay">
@@ -1277,8 +1479,8 @@
     <div class="emoji" id="confirmEmoji">❓</div>
     <h3 id="confirmTitle">Are you sure?</h3>
     <p id="confirmSub"></p>
-    <button onclick="confirmYes()" style="width:100%;">Yes</button>
-    <button onclick="confirmNo()" class="cancel-btn" style="width:100%;">Cancel</button>
+    <button id="confirmYesBtn" onclick="confirmYes()" style="width:100%;">Yes</button>
+    <button id="confirmNoBtn" onclick="confirmNo()" class="cancel-btn" style="width:100%;">Cancel</button>
   </div>
 </div>
 
@@ -1299,8 +1501,8 @@
     <div class="emoji">⏰</div>
     <h3>Time's Up!</h3>
     <p id="timeUpSub"></p>
-    <button onclick="addMoreTime()" style="width:100%;">🔓 Add More Time</button>
-    <button onclick="closeTimeUp()" class="cancel-btn" style="width:100%;">OK</button>
+    <button onclick="closeTimeUp()" style="width:100%;">OK</button>
+    <button onclick="addMoreTime()" class="cancel-btn" style="width:100%;">🔒 Parent: add more time</button>
   </div>
 </div>
 
@@ -1372,7 +1574,7 @@
     <div class="emoji">🎉</div>
     <h3 id="celebrationTitle">Routine complete!</h3>
     <p id="celebrationSub">+20 bonus points</p>
-    <button onclick="closeCelebration()">Nice!</button>
+    <button onclick="closeCelebration()" style="width:100%;">🚀 Back to base</button>
   </div>
 </div>
 
@@ -1429,6 +1631,33 @@ const LEVELS = [
 /* ----------------------------------------------------------- */
 
 const CIRC = 119.4; // 2*PI*19
+
+// Names typed into the editors end up in innerHTML templates; escape them so a
+// stray "<" or "&" in a task name can't break (or inject into) the page.
+function escapeHtml(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, ch => (
+    {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+
+// Big full-screen confetti shower for finished routines and redeemed rewards.
+function screenConfetti(){
+  const colors = ['#FFC857','#FF6B6B','#7FE0C4','#A79CFF','#ffffff','#FF8FB1'];
+  for(let i=0;i<60;i++){
+    const p = document.createElement('div');
+    p.className = 'screen-confetti';
+    p.style.left = (Math.random()*100)+'vw';
+    p.style.background = colors[i % colors.length];
+    document.body.appendChild(p);
+    if(!p.animate){ p.remove(); continue; }
+    const drift = (Math.random()-0.5)*160;
+    const rot = Math.random()*900 - 450;
+    p.animate([
+      {transform:'translate(0,0) rotate(0deg)', opacity:1},
+      {transform:`translate(${drift}px, 105vh) rotate(${rot}deg)`, opacity:.9}
+    ], {duration:1800 + Math.random()*1400, delay:Math.random()*350, easing:'cubic-bezier(.25,.6,.45,1)', fill:'forwards'});
+    setTimeout(()=>p.remove(), 3700);
+  }
+}
 
 function todayKey(){
   const d = new Date();
@@ -1576,6 +1805,7 @@ let timeUpPage = null;
 
 function showTimeUpMessage(page){
   timeUpPage = page;
+  if(page === 'activities') stopAllSessions();
   document.getElementById('timeUpSub').textContent = "You've used all your "+PAGE_NAMES[page]+" time for today. Come back tomorrow!";
   document.getElementById('timeUpOverlay').classList.add('show');
   speak("Time's up for "+PAGE_NAMES[page]+" today! Come back tomorrow.");
@@ -1612,6 +1842,21 @@ function updateLockedPads(){
   const actPad = document.getElementById('activities-pad');
   if(chessPad) chessPad.classList.toggle('locked', isPageTimeUp('chess'));
   if(actPad) actPad.classList.toggle('locked', isPageTimeUp('activities'));
+  // Tile captions double as a "minutes left today" readout.
+  const defaults = {chess:'Learn & play', activities:'Get moving'};
+  ['chess','activities'].forEach(page=>{
+    const sub = document.getElementById('tileSub-'+page);
+    if(!sub) return;
+    if(hasNoTimeLimit(page)) sub.textContent = defaults[page];
+    else if(isPageTimeUp(page)) sub.textContent = 'Done for today';
+    else sub.textContent = Math.ceil(getPageTimeRemaining(page)/60)+' min left';
+  });
+  const rewSub = document.getElementById('tileSub-rewards');
+  if(rewSub){
+    const pts = getSpendable();
+    const ready = loadRewards().filter(r=>!r.collected && pts >= r.threshold).length;
+    rewSub.textContent = ready ? ('🎉 '+ready+' ready!') : 'Real prizes';
+  }
 }
 
 /* ---------- skipping a routine for the day ----------
@@ -1763,6 +2008,8 @@ function updatePointsBar(){
   document.getElementById('levelEmoji').textContent = current.emoji;
   document.getElementById('levelTitle').textContent = current.title;
   document.getElementById('pointsTotal').textContent = points+' ⭐';
+  const spend = document.getElementById('spendTotal');
+  if(spend) spend.textContent = getSpendable();
   if(next){
     const span = next.min - current.min;
     const progressed = points - current.min;
@@ -1790,14 +2037,16 @@ function renderList(routine){
   const state = loadState(routine);
   const container = document.getElementById('list-'+routine);
   container.innerHTML = '';
+  // The first unchecked task gets a "Next!" glow so a young kid knows where to look.
+  const nextIdx = items.findIndex((_, i)=>!state.checked[i]);
   items.forEach((item, i)=>{
     const isDone = !!state.checked[i];
     const row = document.createElement('div');
-    row.className = 'item' + (isDone ? ' done' : '');
+    row.className = 'item' + (isDone ? ' done' : '') + (i === nextIdx ? ' next' : '');
     row.onclick = (e)=> toggleItem(routine, i, e);
     row.innerHTML = `
       <div class="checkbox ${isDone?'checked':''}" id="cb-${routine}-${i}">${isDone?'✓':''}</div>
-      <div class="item-label"><span class="item-emoji">${item.emoji}</span>${item.label}</div>
+      <div class="item-label"><span class="item-emoji">${escapeHtml(item.emoji)}</span>${escapeHtml(item.label)}</div>
     `;
     container.appendChild(row);
   });
@@ -1858,12 +2107,19 @@ function spawnFloatingPoints(routine, i, text){
 
 function showCelebration(routine){
   const names = {morning:'Morning routine', school:'After School routine', bedtime:'Bedtime routine'};
+  const bonus = getRoutinePoints(routine).bonus;
   document.getElementById('celebrationTitle').textContent = names[routine]+' complete!';
-  document.getElementById('celebrationSub').textContent = '+'+getRoutinePoints(routine).bonus+' bonus points';
+  // Bonus defaults to 0, and "+0 bonus points" reads like a let-down.
+  document.getElementById('celebrationSub').textContent = bonus > 0 ? '+'+bonus+' bonus points' : 'Mission accomplished, astronaut!';
   document.getElementById('celebrationOverlay').classList.add('show');
+  screenConfetti();
 }
 function closeCelebration(){
   document.getElementById('celebrationOverlay').classList.remove('show');
+  // Finished a routine from its own screen? Head back to the dashboard. (From
+  // the End of Day editor, stay put.)
+  const onRoutine = Object.keys(ROUTINE_META).some(r=>document.getElementById(r).classList.contains('active'));
+  if(onRoutine) goHome();
 }
 
 function updateProgress(routine){
@@ -1872,6 +2128,16 @@ function updateProgress(routine){
   const doneCount = items.filter((_,i)=>state.checked[i]).length;
   const pct = Math.round((doneCount/items.length)*100);
   document.getElementById('fill-'+routine).style.width = pct+'%';
+  const count = document.getElementById('metaCount-'+routine);
+  const label = document.getElementById('metaLabel-'+routine);
+  if(count) count.textContent = doneCount+' / '+items.length;
+  if(label){
+    const left = items.length - doneCount;
+    label.textContent = left === 0 ? '🎉 All done!'
+      : doneCount === 0 ? "🚀 Let's go!"
+      : left === 1 ? '🔥 Just one more!'
+      : '⭐ '+left+' to go';
+  }
 }
 
 function updateDashboardRing(routine){
@@ -1879,6 +2145,8 @@ function updateDashboardRing(routine){
   const state = loadState(routine);
   const ring = document.getElementById('ring-'+routine);
   const label = document.getElementById('ring-'+routine+'-label');
+  const pad = document.getElementById(routine+'-pad');
+  if(pad) pad.classList.toggle('done-today', !!state.bonusAwarded && !isRoutineSkippedToday(routine));
   if(isRoutineSkippedToday(routine)){
     ring.style.strokeDashoffset = CIRC;   // empty ring
     label.textContent = '—';
@@ -1931,6 +2199,7 @@ function goHome(){
     clearInterval(chessClockHandle);
     chessClockHandle = null;
   }
+  chessGameId++;   // drop any pending robot move / puzzle timer from the chess screen
   updateLockedPads();
   updateSkippedPads();
   checkAllDoneForToday();
@@ -1955,6 +2224,23 @@ function setDateLabel(){
   const d = new Date();
   document.getElementById('todayLabel').textContent =
     d.toLocaleDateString(undefined,{weekday:'long', month:'long', day:'numeric'});
+  const h = d.getHours();
+  document.getElementById('kidName').textContent =
+    h < 12 ? '☀️ Good morning, astronaut!' : h < 17 ? '🛰️ Good afternoon, astronaut!' : '🌙 Good evening, astronaut!';
+}
+
+/* A tablet left on overnight kept showing yesterday's ticks until something was
+   tapped. Check for a new day once a minute and whenever the app comes back. */
+let shownDay = todayKey();
+function checkDayRollover(){
+  setDateLabel();
+  if(todayKey() === shownDay) return;
+  shownDay = todayKey();
+  if(document.getElementById('dashboard').classList.contains('active')) goHome();
+  Object.keys(ROUTINE_META).forEach(r=>{
+    refreshSkipUI(r);
+    if(document.getElementById(r).classList.contains('active')) renderList(r);
+  });
 }
 /* ================= CHESS ================= */
 /* Locked-down webviews and private windows can make localStorage throw on
@@ -2172,6 +2458,12 @@ function toggleVoice(){
 }
 
 let board, turn, selected, legalForSelected, mode, gameOver, castling, lastMove;
+// Bumped whenever the board is replaced (new game, puzzle, lesson, undo, leaving
+// chess). Delayed callbacks — the robot's reply, puzzle/lesson resets — check it
+// so they can't land on a board that's no longer there.
+let chessGameId = 0;
+// One win bonus per game, so undo-then-mate-again can't farm points.
+let chessWinAwarded = false;
 
 function initialBoard(){
   return [
@@ -2188,6 +2480,8 @@ function initialBoard(){
 
 function newChessGame(){
   stopMateWalkthrough();
+  chessGameId++;
+  chessWinAwarded = false;
   board = initialBoard();
   turn = 'w';
   selected = null;
@@ -2304,6 +2598,7 @@ let explainKingSquare = null;
 
 function loadPuzzle(idx){
   puzzleIndex = ((idx % PUZZLES.length) + PUZZLES.length) % PUZZLES.length;
+  chessGameId++;
   const p = PUZZLES[puzzleIndex];
   board = p.board.map(row=>row.slice());
   puzzleStartBoard = p.board.map(row=>row.slice());
@@ -2362,7 +2657,9 @@ function handlePuzzleMove(fr,fc,tr,tc){
     } else {
       speak("Not quite — try again!");
     }
+    const gid = chessGameId;
     setTimeout(()=>{
+      if(gid !== chessGameId) return;
       board = puzzleStartBoard.map(row=>row.slice());
       selected = null; legalForSelected = [];
       lastMove = null;
@@ -2490,7 +2787,9 @@ function explainCheckmate(){
   const p = PUZZLES[puzzleIndex];
   speak(p.why || "Look! The king is trapped and can't escape anywhere. That's checkmate!");
 
+  const gid = chessGameId;
   setTimeout(()=>{
+    if(gid !== chessGameId) return;   // he moved on before the explanation finished
     explainSquares = [];
     explainKingSquare = null;
     puzzleLocked = false;
@@ -2560,7 +2859,20 @@ function openChess(){
   chessClockHandle = setInterval(tickChessTime, 1000);
 }
 
+// Screen time shouldn't drain while the tablet is asleep / app is in the
+// background, or while a parent has a settings or passcode panel open.
+const PARENT_OVERLAYS = ['passcodeOverlay','editChessPointsOverlay','editActivityPointsOverlay',
+                         'activityDetailOverlay','timeUpOverlay','addTimeOverlay'];
+function screenTimeShouldTick(){
+  if(document.hidden) return false;
+  return !PARENT_OVERLAYS.some(id=>{
+    const el = document.getElementById(id);
+    return el && el.classList.contains('show');
+  });
+}
+
 function tickChessTime(){
+  if(!screenTimeShouldTick()) return;
   addPageTimeUsed('chess', 1);
   updateChessTimeBadge();
   if(isPageTimeUp('chess')){
@@ -2577,6 +2889,7 @@ function updateChessTimeBadge(){
   const text = formatTimeRemaining('chess');
   el.style.display = text ? 'flex' : 'none';
   if(text) el.textContent = text;
+  el.classList.toggle('low', !!text && getPageTimeRemaining('chess') <= 120);
 }
 
 function getChessWinBonus(){
@@ -3131,7 +3444,9 @@ function afterMove(){
     gameOver = true;
     if(isInCheck(board, turn)){
       const winner = opponent(turn);
-      addPoints(getChessWinBonus());
+      // Points only when he (white) wins — the computer winning used to pay out too.
+      const award = (winner==='w' && !chessWinAwarded) ? getChessWinBonus() : 0;
+      if(award > 0){ addPoints(award); chessWinAwarded = true; }
       if(mode==='robot'){
         speak(winner==='w' ? 'Checkmate! You win! Great job!' : 'Checkmate! The computer won this time. Try again!');
       } else {
@@ -3139,13 +3454,17 @@ function afterMove(){
       }
       // Keep the board visible and walk through WHY it's mate, with a small
       // result strip instead of a full-screen popup.
+      document.getElementById('turnText').textContent = '🏆 Checkmate!';
       mateLoserColor = turn;
       showMateResultBar(
         '🏆 Checkmate!',
-        (winner==='w'?'White':'Black')+' wins · +'+getChessWinBonus()+' pts'
+        (mode==='robot' ? (winner==='w' ? 'You win!' : 'Computer wins') : (winner==='w'?'White':'Black')+' wins')
+          + (award > 0 ? ' · +'+award+' pts' : '')
       );
       startMateWalkthrough(turn, ()=>{});
     } else {
+      document.getElementById('turnBanner').classList.remove('check');
+      document.getElementById('turnText').textContent = '🤝 Draw!';
       mateLoserColor = turn;
       showMateResultBar('🤝 Draw', "No legal moves left — that's a stalemate.");
       speak("It's a draw! Good game!");
@@ -3155,7 +3474,8 @@ function afterMove(){
 
   if(mode==='robot' && turn==='b'){
     document.getElementById('turnText').textContent = "Computer is thinking…";
-    setTimeout(robotMove, 550);
+    const gid = chessGameId;
+    setTimeout(()=>{ if(gid === chessGameId && mode === 'robot') robotMove(); }, 550);
   }
 }
 
@@ -3326,7 +3646,7 @@ function chooseRobotMove(bd, color, difficulty){
 }
 
 function robotMove(){
-  if(gameOver) return;
+  if(gameOver || turn !== 'b') return;
   const moves = allLegalMoves(board, 'b');
   if(moves.length===0) return;
   const pick = chooseRobotMove(board, 'b', chessDifficulty) || moves[Math.floor(Math.random()*moves.length)];
@@ -3652,6 +3972,8 @@ function pushChessHistory(){
   if(chessUndoStack.length > 60) chessUndoStack.shift();
 }
 function restoreChessHistory(snap){
+  stopMateWalkthrough();
+  chessGameId++;            // cancels a pending robot reply
   board = snap.board; turn = snap.turn;
   castling = snap.castling; lastMove = snap.lastMove;
   document.getElementById('capturedWhite').innerHTML = snap.capW;
@@ -3672,6 +3994,7 @@ function undoChessMove(){
   if(mode==='robot' && snap.turn !== 'w' && chessUndoStack.length) snap = chessUndoStack.pop();
   restoreChessHistory(snap);
   setChessCoach('↩️', 'Move taken back. Try another one!', '');
+  updateScoreBar();
 }
 
 /* ---------- lesson data ---------- */
@@ -4036,6 +4359,7 @@ function showChessPlayLayout(){
   document.getElementById('turnBanner').style.display = 'flex';
 }
 function backToLessonMap(){
+  chessGameId++;
   lesson = null;
   mode = 'learn';
   starSquares = []; glowSquares = []; attackMarks = []; attackTarget = null; hintArrow = null;
@@ -4079,6 +4403,7 @@ function startChessLesson(i){
 }
 function restartChessLesson(){
   if(!lesson) return;
+  chessGameId++;
   board = lessonBoard(lesson);
   castling = lesson.castling
     ? Object.assign({wK:false,wQ:false,bK:false,bQ:false}, lesson.castling)
@@ -4356,7 +4681,9 @@ function finishLesson(){
   if(stars === 3 && improved && room > 0) award += 1;
   if(award > 0){ addPoints(award); addPuzzlePointsToday(award); }
 
+  const gid = chessGameId;
   setTimeout(()=>{
+    if(gid !== chessGameId) return;
     const more = lessonIdx < CHESS_LESSONS.length - 1;
     document.getElementById('chessEndEmoji').textContent = starText(stars);
     document.getElementById('chessEndTitle').textContent = lesson.win || 'You did it!';
@@ -4376,7 +4703,9 @@ function lessonMiss(fr, fc, tr, tc, snapshot){
   const token = ++missToken;   // a newer mistake must not be wiped by an older timer
   flashChessBoard('nope');
   const threats = chessAttackersOf(board, tr, tc, 'b');   // who would punish that square
+  const gid = chessGameId;
   setTimeout(()=>{
+    if(gid !== chessGameId) return;   // "Again"/back was tapped — don't restore an old board
     board = snapshot.board;
     castling = snapshot.castling;
     document.getElementById('capturedWhite').innerHTML = snapshot.capW;
@@ -4650,7 +4979,7 @@ function renderActivities(){
     const id = cfg.id;
     const state = loadActivityState(id);
     const card = document.createElement('div');
-    card.className = 'activity-card';
+    card.className = 'activity-card' + (cfg.type==='time' && loadSession(id) ? ' running' : '');
     const cap = getActivityCap(id);
     const capped = state.pointsAwarded >= cap || getGlobalRoomLeft() <= 0;
     const upp = getUnitsPerPoint(id);
@@ -4660,7 +4989,7 @@ function renderActivities(){
     let controls;
     if(cfg.type==='reps'){
       controls = `<div class="qa-row">
-        ${cfg.quick.map(q=>`<div class="qa-btn" onclick="startRepsTimer('${id}',${q})">${q} ${cfg.unit}</div>`).join('')}
+        ${cfg.quick.map(q=>`<div class="qa-btn" onclick="startRepsTimer('${id}',${q})">${q} ${escapeHtml(cfg.unit)}</div>`).join('')}
       </div>`;
     } else {
       const sess = loadSession(id);
@@ -4679,10 +5008,10 @@ function renderActivities(){
 
     card.innerHTML = `
       <div class="activity-top">
-        <div class="activity-emoji">${cfg.emoji}</div>
+        <div class="activity-emoji">${escapeHtml(cfg.emoji)}</div>
         <div>
-          <div class="activity-name">${cfg.label}</div>
-          <div class="activity-tally">${state.qty} ${cfg.unit} today · ${state.pointsAwarded} pts · ${rateLabel}</div>
+          <div class="activity-name">${escapeHtml(cfg.label)}</div>
+          <div class="activity-tally">${state.qty} ${escapeHtml(cfg.unit)} today · ${state.pointsAwarded} pts · ${rateLabel}</div>
         </div>
         <div class="activity-cap">${capped ? 'Maxed! ⭐' : (cap-state.pointsAwarded)+' pts left'}</div>
       </div>
@@ -4713,6 +5042,10 @@ function tickActivitiesClock(){
   // running timers unless a session is actually going.
   const anyRunning = getActivityIds().some(id => loadSession(id));
   if(anyRunning) renderActivities();
+  // While a sport stopwatch is running he's out playing, not looking at the
+  // screen — so that time doesn't count against his screen-time limit. (It
+  // used to, which meant a 30-min game got cut off by a 30-min limit.)
+  if(anyRunning || repsTimer || !screenTimeShouldTick()) return;
   addPageTimeUsed('activities', 1);
   updateActivitiesTimeBadge();
   if(isPageTimeUp('activities')){
@@ -4723,12 +5056,20 @@ function tickActivitiesClock(){
   }
 }
 
+// Log and stop any running stopwatches. Used when Activities locks for the day:
+// otherwise a running session couldn't be stopped until tomorrow, and would
+// then dump a whole night's worth of "minutes" into the next day.
+function stopAllSessions(){
+  getActivityIds().forEach(id=>{ if(loadSession(id)) stopSession(id); });
+}
+
 function updateActivitiesTimeBadge(){
   const el = document.getElementById('activitiesTimeBadge');
   if(!el) return;
   const text = formatTimeRemaining('activities');
   el.style.display = text ? 'flex' : 'none';
   if(text) el.textContent = text;
+  el.classList.toggle('low', !!text && getPageTimeRemaining('activities') <= 120);
 }
 
 let editingActivities = [];
@@ -4772,10 +5113,10 @@ function renderEditActivitiesList(){
         <button type="button" class="reorder-btn" ${i===editingActivities.length-1?'disabled':''} onclick="moveActivity(${i},1)">▼</button>
       </div>
       <button type="button" class="act-row-main" onclick="openActivityDetail(${i})">
-        <span class="act-row-emoji">${a.emoji}</span>
+        <span class="act-row-emoji">${escapeHtml(a.emoji)}</span>
         <span class="act-row-text">
-          <span class="act-row-name">${a.label}</span>
-          <span class="act-row-sum">${activitySummary(a)}</span>
+          <span class="act-row-name">${escapeHtml(a.label)}</span>
+          <span class="act-row-sum">${escapeHtml(activitySummary(a))}</span>
         </span>
         <span class="act-row-chev">›</span>
       </button>
@@ -4953,7 +5294,7 @@ function renderRewards(){
     const unlocked = points >= r.threshold;
     const collected = !!r.collected;
     const stateClass = collected ? 'collected' : (unlocked ? 'unlocked' : '');
-    const icon = collected ? '✅' : (unlocked ? (r.emoji || '🎁') : '🔒');
+    const icon = collected ? '✅' : (unlocked ? escapeHtml(r.emoji || '🎁') : '🔒');
     const pct = Math.min(100, Math.round((points/r.threshold)*100));
     const isLast = i === list.length-1;
     const metaText = collected
@@ -4970,7 +5311,7 @@ function renderRewards(){
         ${!isLast ? `<div class="reward-connector ${unlocked?'filled':''}"></div>` : ''}
       </div>
       <div class="reward-card ${collected?'collected':''}">
-        <div class="reward-name">${r.name}</div>
+        <div class="reward-name">${escapeHtml(r.name)}</div>
         <div class="reward-meta">${metaText}</div>
         ${!collected ? `<div class="reward-progress-track"><div class="reward-progress-fill" style="width:${pct}%"></div></div>` : ''}
         <div class="reward-row-flex">
@@ -4998,6 +5339,9 @@ function showConfirm(emoji, title, sub, onYes){
   document.getElementById('confirmEmoji').textContent = emoji;
   document.getElementById('confirmTitle').textContent = title;
   document.getElementById('confirmSub').textContent = sub;
+  // With no action it's just a notice: one "OK" button, no Cancel.
+  document.getElementById('confirmYesBtn').textContent = onYes ? 'Yes' : 'OK';
+  document.getElementById('confirmNoBtn').style.display = onYes ? '' : 'none';
   pendingConfirmAction = onYes;
   document.getElementById('confirmOverlay').classList.add('show');
 }
@@ -5012,7 +5356,36 @@ function confirmNo(){
   pendingConfirmAction = null;
 }
 
-/* ---------- parent passcode gate ---------- */
+/* ---------- parent passcode gate ----------
+   PARENT_PASSCODE is only the factory default; a parent can set their own from
+   the End of Day screen, so the code isn't sitting in the page source. */
+function getParentPasscode(){
+  const v = localStorage.getItem('parentPasscode');
+  return (v && /^\d{4,6}$/.test(v)) ? v : PARENT_PASSCODE;
+}
+function openChangePasscode(){
+  requirePasscode('Parent Passcode', 'Enter the CURRENT code to set a new one.', ()=>{
+    document.getElementById('newPasscodeInput').value = '';
+    document.getElementById('newPasscodeConfirm').value = '';
+    document.getElementById('newPasscodeError').style.display = 'none';
+    document.getElementById('changePasscodeOverlay').classList.add('show');
+    setTimeout(()=>document.getElementById('newPasscodeInput').focus(), 150);
+  });
+}
+function saveNewPasscode(){
+  const a = document.getElementById('newPasscodeInput').value;
+  const b = document.getElementById('newPasscodeConfirm').value;
+  const err = document.getElementById('newPasscodeError');
+  if(!/^\d{4,6}$/.test(a)){ err.textContent = 'Use 4 to 6 numbers.'; err.style.display = 'block'; return; }
+  if(a !== b){ err.textContent = "Those don't match — try again."; err.style.display = 'block'; return; }
+  localStorage.setItem('parentPasscode', a);
+  closeChangePasscode();
+  showConfirm('✅', 'Passcode changed', 'Use your new code from now on.', null);
+}
+function closeChangePasscode(){
+  document.getElementById('changePasscodeOverlay').classList.remove('show');
+}
+
 let pendingPasscodeAction = null;
 function requirePasscode(title, sub, onSuccess){
   document.getElementById('passcodeTitle').textContent = title;
@@ -5028,7 +5401,7 @@ function requirePasscode(title, sub, onSuccess){
 }
 function submitPasscode(){
   const val = document.getElementById('passcodeInput').value;
-  if(val === PARENT_PASSCODE){
+  if(val === getParentPasscode()){
     document.getElementById('passcodeOverlay').classList.remove('show');
     const action = pendingPasscodeAction;
     pendingPasscodeAction = null;
@@ -5081,7 +5454,7 @@ function renderEndDay(){
       const isDone = !!st.checked[i];
       return `<div class="item ${isDone?'done':''}" style="margin:6px 0 6px 18px;" onclick="toggleItem('${r}',${i}); renderEndDay();">
         <div class="checkbox ${isDone?'checked':''}">${isDone?'✓':''}</div>
-        <div class="item-label"><span class="item-emoji">${item.emoji}</span>${item.label}</div>
+        <div class="item-label"><span class="item-emoji">${escapeHtml(item.emoji)}</span>${escapeHtml(item.label)}</div>
       </div>`;
     }).join('');
     return header + itemRows;
@@ -5093,16 +5466,16 @@ function renderEndDay(){
     const st = loadActivityState(id);
     if(endDayEditUnlocked){
       return `<div class="endday-row">
-        <div class="ico">${cfg.emoji}</div>
-        <div style="flex:1;"><div class="name">${cfg.label}</div><div class="status">${st.pointsAwarded} pts today</div></div>
+        <div class="ico">${escapeHtml(cfg.emoji)}</div>
+        <div style="flex:1;"><div class="name">${escapeHtml(cfg.label)}</div><div class="status">${st.pointsAwarded} pts today</div></div>
         <input type="number" min="0" class="reward-input" id="edit-qty-${id}" value="${st.qty}" style="width:60px; margin-bottom:0; padding:8px; text-align:center;">
         <span class="reward-btn" style="margin-left:8px; padding:8px 12px; font-size:.78rem;" onclick="updateActivityQty('${id}')">Update</span>
       </div>`;
     }
     if(st.qty<=0) return '';
     return `<div class="endday-row">
-      <div class="ico">${cfg.emoji}</div>
-      <div><div class="name">${cfg.label}</div><div class="status">${st.qty} ${cfg.unit} · ${st.pointsAwarded} pts</div></div>
+      <div class="ico">${escapeHtml(cfg.emoji)}</div>
+      <div><div class="name">${escapeHtml(cfg.label)}</div><div class="status">${st.qty} ${escapeHtml(cfg.unit)} · ${st.pointsAwarded} pts</div></div>
     </div>`;
   }).join('');
   document.getElementById('enddayActivities').innerHTML = activityRows || '<div class="endday-row"><div><div class="status">No activities logged today.</div></div></div>';
@@ -5111,7 +5484,7 @@ function renderEndDay(){
   const rewardsHtml = rewardsToday.length
     ? rewardsToday.map(r => `<div class="endday-row">
         <div class="ico">🎁</div>
-        <div style="flex:1;"><div class="name">${r.name}</div><div class="status">${r.threshold} pts redeemed</div></div>
+        <div style="flex:1;"><div class="name">${escapeHtml(r.name)}</div><div class="status">${r.threshold} pts redeemed</div></div>
         ${endDayEditUnlocked ? `<span class="reward-remove" onclick="undoRedeemReward(${r.id})">Undo</span>` : ''}
       </div>`).join('')
     : '<div class="endday-row"><div><div class="status">No rewards redeemed today.</div></div></div>';
@@ -5226,11 +5599,13 @@ function fullReset(){
 /* ---------- checklist editing (parent only) ---------- */
 let editingRoutine = null;
 let editingItems = [];
+let editingRoutineOriginal = [];
 
 function openEditRoutine(routine){
   requirePasscode('Parent Passcode', 'Enter the code to edit the '+ROUTINE_META[routine].label+' checklist.', ()=>{
     editingRoutine = routine;
     editingItems = getRoutineItems(routine).map(it=>({emoji:it.emoji, label:it.label}));
+    editingRoutineOriginal = getRoutineItems(routine).map(it=>({emoji:it.emoji, label:it.label}));
     document.getElementById('editRoutineTitle').textContent = '✏️ Edit '+ROUTINE_META[routine].label+' Checklist';
     document.getElementById('editItemEmoji').value = '';
     document.getElementById('editItemLabel').value = '';
@@ -5313,7 +5688,17 @@ function closeEditRoutine(){
     refreshSkipUI(editingRoutine);
     updateDashboardRing(editingRoutine);
     updateSkippedPads();
-    localStorage.removeItem('routine_'+editingRoutine); // list/points changed, start today's checklist fresh
+    // Keep today's ticks for tasks that still exist (matched by name), instead of
+    // wiping them — wiping let already-earned points be earned a second time.
+    const oldItems = editingRoutineOriginal;
+    const st = loadState(editingRoutine);
+    const checked = {};
+    cleaned.forEach((it, i)=>{
+      const j = oldItems.findIndex((o, k)=>o.label === it.label && st.checked[k]);
+      if(j >= 0){ checked[i] = true; oldItems.splice(j, 1, {}); }
+    });
+    st.checked = checked;
+    saveState(editingRoutine, st);
     if(document.getElementById(editingRoutine).classList.contains('active')) renderList(editingRoutine);
   }
   document.getElementById('editRoutineOverlay').classList.remove('show');
@@ -5330,6 +5715,7 @@ function collectReward(id){
     saveRewards(list);
     spendPoints(r.threshold);
     renderRewards();
+    screenConfetti();
   });
 }
 
@@ -5461,7 +5847,8 @@ updateLockedPads();
 updateSkippedPads();
 Object.keys(DEFAULT_ROUTINES).forEach(refreshSkipUI);
 checkAllDoneForToday();
-
+setInterval(checkDayRollover, 60000);
+document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) checkDayRollover(); });
 
 </script>
 </body>

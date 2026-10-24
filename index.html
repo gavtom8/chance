@@ -696,38 +696,183 @@
   }
 
   /* ---------- ACTIVITIES ---------- */
-  #activities{background:linear-gradient(180deg,#1e3a2e 0%, #14261f 100%);}
-  .activity-list{
-    flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:14px;
-    padding-top:10px; padding-bottom:12px; min-height:0;
-    overscroll-behavior-y:contain;
+  /* A neon "power-up gym": every activity is a big bright tile, today's stars
+     pour into one Star Jar, and tapping a tile opens a sheet with giant buttons. */
+  #activities{
+    background:
+      radial-gradient(55% 35% at 90% 4%, rgba(255,95,162,0.32) 0%, transparent 70%),
+      radial-gradient(60% 40% at 0% 40%, rgba(46,196,182,0.24) 0%, transparent 70%),
+      radial-gradient(70% 40% at 60% 105%, rgba(123,110,246,0.30) 0%, transparent 70%),
+      linear-gradient(180deg, #1A1240 0%, #0D0B26 100%);
   }
-  .activity-card{
-    background:rgba(255,255,255,0.08); border:1px solid var(--stroke);
-    border-radius:20px; padding:16px 18px;
-    box-shadow:0 4px 14px rgba(0,0,0,0.18);
-  }
-  .activity-card.running{border-color:var(--mint); box-shadow:0 0 0 3px rgba(127,224,196,0.2), 0 4px 14px rgba(0,0,0,0.18);}
-  .activity-top{display:flex; align-items:center; gap:12px; margin-bottom:12px;}
-  .activity-emoji{font-size:1.8rem; flex-shrink:0;}
-  .activity-name{font-family:'Baloo 2',sans-serif; font-weight:700; font-size:1.1rem;}
-  .activity-tally{font-size:.8rem; opacity:.6; font-weight:700;}
-  .activity-cap{font-size:.75rem; color:var(--gold); font-weight:800; margin-left:auto; text-align:right;}
-  .qa-row{display:flex; gap:8px;}
-  .qa-btn{
-    position:relative; flex:1; text-align:center; padding:13px 4px;
-    border-radius:14px; background:rgba(255,255,255,0.12);
-    border:1px solid var(--stroke);
-    font-weight:800; font-size:.9rem; cursor:pointer;
-  }
-  .qa-btn:active{background:rgba(255,255,255,0.22); transform:scale(0.96);}
-  .session-row{display:flex; align-items:center; gap:10px;}
-  .session-time{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.3rem; flex-shrink:0; min-width:74px;}
-  .qa-btn.start-btn{background:rgba(127,224,196,0.22);}
-  .qa-btn.stop-btn{background:rgba(255,107,107,0.28);}
+  .act-wrap{max-width:760px; width:100%; margin:0 auto; padding:8px 0 16px;}
 
-  .reps-progress-track{height:14px; border-radius:8px; background:rgba(255,255,255,0.15); overflow:hidden; margin:16px 0 6px;}
-  .reps-progress-fill{height:100%; width:0%; background:var(--mint); transition:width .1s linear;}
+  /* ---- Star Jar ---- */
+  .star-jar{
+    position:relative; overflow:hidden;
+    display:flex; align-items:center; gap:16px;
+    background:linear-gradient(135deg, rgba(255,200,87,0.20), rgba(255,122,61,0.10));
+    border:1.5px solid rgba(255,200,87,0.45); border-radius:26px;
+    padding:14px 18px; margin-bottom:16px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.12);
+  }
+  .star-jar.full{animation:jarGlow 2.4s ease-in-out infinite;}
+  @keyframes jarGlow{0%,100%{box-shadow:0 0 0 0 rgba(255,200,87,0.0), 0 10px 30px rgba(0,0,0,0.3);} 50%{box-shadow:0 0 0 6px rgba(255,200,87,0.25), 0 10px 30px rgba(0,0,0,0.3);}}
+  .jar-svg{width:84px; height:96px; flex-shrink:0; filter:drop-shadow(0 6px 12px rgba(0,0,0,0.35));}
+  .jar-fill{transition:y .6s cubic-bezier(.2,.9,.3,1.1), height .6s cubic-bezier(.2,.9,.3,1.1);}
+  .jar-text{flex:1; min-width:0;}
+  .jar-title{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.05rem; opacity:.75; letter-spacing:.3px;}
+  .jar-count{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:2.6rem; line-height:1; color:var(--gold); text-shadow:0 2px 12px rgba(255,200,87,0.45);}
+  .jar-count small{font-size:1.1rem; color:var(--text); opacity:.55; margin-left:4px;}
+  .jar-hint{font-weight:800; font-size:.9rem; margin-top:4px; opacity:.85;}
+
+  /* ---- activity tiles ---- */
+  .act-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:14px;}
+  .act-tile{
+    --c1:#FF6B6B; --c2:#FF9F6B;
+    position:relative; overflow:hidden;
+    display:flex; flex-direction:column; align-items:center; text-align:center;
+    min-height:178px; padding:16px 12px 14px;
+    border:none; border-radius:26px; color:#fff; cursor:pointer;
+    background:linear-gradient(150deg, var(--c1), var(--c2));
+    box-shadow:0 6px 0 rgba(0,0,0,0.28), 0 14px 26px rgba(0,0,0,0.3);
+    transition:transform .1s ease, box-shadow .1s ease;
+  }
+  .act-tile::before{   /* glossy shine across the top */
+    content:''; position:absolute; left:-20%; right:-20%; top:-50%; height:90%;
+    background:radial-gradient(closest-side, rgba(255,255,255,0.35), transparent);
+    pointer-events:none;
+  }
+  .act-tile:active{transform:translateY(4px); box-shadow:0 2px 0 rgba(0,0,0,0.28), 0 6px 14px rgba(0,0,0,0.3);}
+  .act-tile-emoji{
+    position:relative; width:72px; height:72px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-size:2.6rem;
+    background:rgba(255,255,255,0.22); box-shadow:inset 0 -4px 0 rgba(0,0,0,0.12);
+    margin-bottom:8px;
+  }
+  .act-tile:nth-child(odd) .act-tile-emoji{animation:tileBob 3s ease-in-out infinite;}
+  .act-tile:nth-child(even) .act-tile-emoji{animation:tileBob 3s ease-in-out 1.5s infinite;}
+  @keyframes tileBob{0%,100%{transform:translateY(0) rotate(-4deg);} 50%{transform:translateY(-4px) rotate(4deg);}}
+  .act-tile-name{
+    position:relative; font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.15rem; line-height:1.1;
+    text-shadow:0 2px 0 rgba(0,0,0,0.18);
+  }
+  .act-tile-stars{
+    position:relative; margin-top:auto; padding-top:10px;
+    font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.2rem;
+    text-shadow:0 2px 0 rgba(0,0,0,0.18);
+  }
+  .act-meter{position:relative; display:flex; gap:3px; width:100%; height:12px; margin-top:6px;}
+  .act-meter i{flex:1; border-radius:4px; background:rgba(0,0,0,0.22);}
+  .act-meter i.on{background:#FFE29A; box-shadow:0 0 6px rgba(255,226,154,0.8);}
+  .act-meter.bar{display:block; border-radius:6px; background:rgba(0,0,0,0.22); overflow:hidden;}
+  .act-meter.bar b{display:block; height:100%; background:#FFE29A; box-shadow:0 0 6px rgba(255,226,154,0.8);}
+  .act-badge{
+    position:absolute; top:10px; right:10px; z-index:1;
+    background:rgba(255,255,255,0.95); color:#2a2346;
+    border-radius:12px; padding:3px 8px;
+    font-weight:800; font-size:.78rem; box-shadow:0 2px 6px rgba(0,0,0,0.25);
+  }
+  .act-tile.running{animation:tilePulse 1.6s ease-in-out infinite;}
+  @keyframes tilePulse{0%,100%{box-shadow:0 6px 0 rgba(0,0,0,0.28), 0 0 0 0 rgba(255,255,255,0.5);} 50%{box-shadow:0 6px 0 rgba(0,0,0,0.28), 0 0 0 7px rgba(255,255,255,0.0);}}
+  .act-tile.running .act-badge{background:#2a2346; color:#7FE0C4;}
+
+  /* ---- activity sheet (opens when a tile is tapped) ---- */
+  #actSheetOverlay{align-items:flex-end;}
+  .act-sheet{
+    --c1:#FF6B6B; --c2:#FF9F6B;
+    position:relative; width:100%; max-width:520px; max-height:92vh; overflow-y:auto;
+    overscroll-behavior-y:contain;
+    background:linear-gradient(180deg, #2A2156 0%, #17123A 100%);
+    border:1px solid rgba(255,255,255,0.12); border-radius:30px;
+    padding:0 18px calc(18px + var(--safe-bot)); text-align:center;
+    box-shadow:0 24px 60px rgba(0,0,0,0.55);
+    transform:translateY(40px); transition:transform .3s cubic-bezier(.2,.9,.3,1.15);
+  }
+  .celebration-overlay.show .act-sheet{transform:none;}
+  .act-sheet-hero{
+    margin:0 -18px 14px; padding:22px 18px 18px; border-radius:30px 30px 0 0;
+    background:linear-gradient(150deg, var(--c1), var(--c2));
+    position:relative; overflow:hidden;
+  }
+  .act-sheet-hero .big-emoji{font-size:4rem; line-height:1; display:inline-block; animation:emojiPop .6s cubic-bezier(.2,.9,.3,1.4);}
+  .act-sheet-hero h3{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.8rem; margin:4px 0 0; text-shadow:0 2px 0 rgba(0,0,0,0.2);}
+  .act-sheet-close{
+    position:absolute; top:12px; right:12px; width:40px; height:40px; border-radius:50%;
+    background:rgba(0,0,0,0.22); border:none; color:#fff; font-size:1.2rem; font-weight:800; cursor:pointer;
+  }
+  .act-ask{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.3rem; margin:0 0 12px;}
+  .act-rule{
+    display:inline-flex; align-items:center; gap:10px;
+    background:rgba(255,255,255,0.08); border:1px solid var(--stroke); border-radius:18px;
+    padding:10px 16px; margin-bottom:16px;
+    font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.25rem;
+  }
+  .act-rule .arrow{opacity:.5;}
+  .round-btns{display:flex; flex-direction:column; gap:12px; margin-bottom:16px;}
+  .round-btn{
+    display:flex; align-items:center; gap:14px; width:100%;
+    padding:14px 18px; border:none; border-radius:22px; cursor:pointer; color:#fff;
+    background:linear-gradient(150deg, var(--c1), var(--c2));
+    box-shadow:0 6px 0 rgba(0,0,0,0.3);
+    font-family:'Baloo 2',sans-serif; text-align:left;
+    transition:transform .08s ease, box-shadow .08s ease;
+  }
+  .round-btn:active{transform:translateY(4px); box-shadow:0 2px 0 rgba(0,0,0,0.3);}
+  .round-btn .n{font-size:2.4rem; font-weight:800; line-height:1; min-width:58px; text-align:center; text-shadow:0 2px 0 rgba(0,0,0,0.2);}
+  .round-btn .what{flex:1; font-size:1.1rem; font-weight:700; line-height:1.15;}
+  .round-btn .pay{
+    background:rgba(0,0,0,0.25); border-radius:16px; padding:6px 12px;
+    font-size:1.35rem; font-weight:800; white-space:nowrap;
+  }
+  .round-btn .pay.zero{font-size:.95rem; opacity:.85;}
+  .go-btn{
+    width:100%; padding:18px; border:none; border-radius:24px; cursor:pointer;
+    font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.5rem; color:#123b2f;
+    background:linear-gradient(180deg, #A6F5DC, var(--mint));
+    box-shadow:0 7px 0 #3FA58B, 0 12px 24px rgba(0,0,0,0.3);
+    transition:transform .08s ease, box-shadow .08s ease; margin-bottom:14px;
+  }
+  .go-btn:active{transform:translateY(5px); box-shadow:0 2px 0 #3FA58B;}
+  .go-btn.stop{color:#4a1111; background:linear-gradient(180deg, #FFB0B0, var(--coral)); box-shadow:0 7px 0 #B94444, 0 12px 24px rgba(0,0,0,0.3);}
+  .go-btn.stop:active{box-shadow:0 2px 0 #B94444;}
+  .act-today{
+    display:flex; align-items:center; gap:12px; text-align:left;
+    background:rgba(255,255,255,0.06); border-radius:18px; padding:12px 14px;
+  }
+  .act-today .lbl{font-weight:800; font-size:.9rem; opacity:.75; white-space:nowrap;}
+  .act-today .act-meter{margin:0; height:14px;}
+  .act-today .num{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.1rem; color:var(--gold); white-space:nowrap;}
+  .act-note{font-weight:800; font-size:.95rem; margin:0 0 14px; padding:10px 14px; border-radius:16px; background:rgba(255,200,87,0.15); color:#FFE29A;}
+
+  /* ---- big ring (playing stopwatch + rep counter) ---- */
+  .big-ring{position:relative; width:200px; height:200px; margin:0 auto 14px;}
+  .big-ring svg{width:100%; height:100%; transform:rotate(-90deg);}
+  .big-ring .bg{fill:none; stroke:rgba(255,255,255,0.12); stroke-width:12;}
+  .big-ring .fg{fill:none; stroke:url(#ringGrad); stroke-width:12; stroke-linecap:round; transition:stroke-dashoffset .25s linear;}
+  .big-ring .mid{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+  .big-ring .mid .t{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:2.7rem; line-height:1;}
+  .big-ring .mid .s{font-weight:800; font-size:.95rem; opacity:.7; margin-top:4px;}
+  .big-ring .mid .e{font-size:2rem; line-height:1; margin-bottom:2px;}
+  .big-ring .mid .e.hop{animation:repHop .35s ease;}
+  @keyframes repHop{0%{transform:translateY(0) scale(1);} 40%{transform:translateY(-10px) scale(1.15);} 100%{transform:translateY(0) scale(1);}}
+  .play-stars{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.5rem; margin-bottom:14px;
+  }
+  .play-stars b{color:var(--gold); display:inline-block;}
+  .play-stars b.pop{animation:emojiPop .6s cubic-bezier(.2,.9,.3,1.4);}
+
+  /* ---- reward card ---- */
+  .reward-stars{display:flex; flex-wrap:wrap; justify-content:center; gap:4px; margin:4px 0 8px; min-height:44px;}
+  .reward-stars span{font-size:2.2rem; line-height:1; opacity:0; animation:starIn .45s cubic-bezier(.2,.9,.3,1.5) forwards;}
+  @keyframes starIn{0%{opacity:0; transform:scale(0.2) rotate(-90deg);} 100%{opacity:1; transform:none;}}
+  .reward-big{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:3rem; line-height:1; color:var(--gold); text-shadow:0 2px 14px rgba(255,200,87,0.5); margin:4px 0;}
+
+  @media (prefers-reduced-motion: reduce){
+    .star-jar.full, .act-tile-emoji, .act-tile.running, .big-ring .mid .e.hop{animation:none !important;}
+    .reward-stars span{animation:none; opacity:1;}
+  }
 
   /* ---------- END OF DAY ---------- */
   .end-day-link{
@@ -822,11 +967,6 @@
   .act-edit-fields input{
     width:56px; margin-bottom:0; text-align:center; padding:7px;
     font-size:.9rem;
-  }
-  .global-cap-banner{
-    background:rgba(255,200,87,0.16); border:1.5px solid rgba(255,200,87,0.4);
-    border-radius:14px; padding:10px; text-align:center;
-    font-weight:800; font-size:.85rem; margin-bottom:14px;
   }
 
   /* ---------- stacked edit rows (checklists + rewards) ---------- */
@@ -1619,8 +1759,14 @@
     <div class="edit-btn" onclick="openEditActivityPoints()">✏️</div>
   </div>
   <div class="time-badge" id="activitiesTimeBadge" style="display:none;"></div>
-  <div class="routine-sub">Move your body, earn points!</div>
-  <div class="activity-list" id="activityList"></div>
+  <div class="act-wrap">
+    <div class="star-jar" id="actJar"></div>
+    <div class="act-grid" id="activityList"></div>
+  </div>
+  <!-- shared gradient for the big rings in the activity sheet and rep counter -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+    <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE29A"/><stop offset="1" stop-color="#FF7A3D"/></linearGradient>
+  </defs></svg>
 </div>
 
 <!-- ================= REWARDS ================= -->
@@ -1744,11 +1890,32 @@
 
 <div class="celebration-overlay" id="repsTimerOverlay">
   <div class="celebration-card">
-    <div class="emoji" id="repsTimerEmoji">💪</div>
-    <h3 id="repsTimerLabel">10 Push-ups</h3>
-    <div class="reps-progress-track"><div class="reps-progress-fill" id="repsTimerBar"></div></div>
-    <p id="repsTimerSeconds" style="font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.2rem; margin:6px 0 20px; opacity:.85;">10s left</p>
-    <button onclick="cancelRepsTimer()" class="cancel-btn" style="width:100%;">Cancel</button>
+    <h3 id="repsTimerLabel">Push-ups</h3>
+    <p style="margin-bottom:12px;">Count with me!</p>
+    <div class="big-ring">
+      <svg viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="52"/><circle class="fg" id="repsRing" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="326.7"/></svg>
+      <div class="mid">
+        <div class="e" id="repsTimerEmoji">💪</div>
+        <div class="t" id="repsCount">0</div>
+        <div class="s" id="repsOf">of 10</div>
+      </div>
+    </div>
+    <button onclick="cancelRepsTimer()" class="cancel-btn" style="width:100%;">Stop</button>
+  </div>
+</div>
+
+<div class="celebration-overlay" id="actSheetOverlay" onclick="if(event.target===this) closeActSheet()">
+  <div class="act-sheet" id="actSheet"></div>
+</div>
+
+<div class="celebration-overlay" id="actRewardOverlay">
+  <div class="celebration-card">
+    <div class="emoji" id="actRewardEmoji">💪</div>
+    <h3 id="actRewardTitle">Awesome!</h3>
+    <div class="reward-big" id="actRewardBig"></div>
+    <div class="reward-stars" id="actRewardStars"></div>
+    <p id="actRewardSub"></p>
+    <button onclick="closeActReward()" style="width:100%;">Yay! 🎉</button>
   </div>
 </div>
 
@@ -4168,6 +4335,14 @@ const CHESS_CHAPTERS = [
   {n:7, icon:'👑', name:'Checkmate!'},
   {n:8, icon:'🍴', name:'Win two at once'},
   {n:9, icon:'🚀', name:'Smart starts'},
+  {n:10, icon:'⚖️', name:'What is it worth?'},
+  {n:11, icon:'📌', name:'Pins & skewers'},
+  {n:12, icon:'💥', name:'Sneaky attacks'},
+  {n:13, icon:'🎯', name:'More checkmates'},
+  {n:14, icon:'🧠', name:'Think two moves'},
+  {n:15, icon:'♟️', name:'Endgame skills'},
+  {n:16, icon:'🛡️', name:'Defend like a champ'},
+  {n:17, icon:'🌱', name:'Opening ideas'},
 ];
 const PIECE_TIPS_SHORT = {
   P:'Pawn: walks up, eats slanted',
@@ -4196,8 +4371,12 @@ const PIECE_TIPS_SHORT = {
      check / mate — any move that gives check / is checkmate
      escape     — any legal move (used when the king is already in check)
      safe       — move the piece where black cannot reach it
+     mate2      — checkmate in two: the first move must force mate whatever
+                  black answers; black then replies on its own
+     defend     — black threatens mate in one; any move that stops it
    only: 'hero' locks him to one piece, which follows itself around.
          [[r,c]] locks him to specific squares.
+   opening: moves played from the starting position to set the board up.
    ask:'piece'  — the question IS which piece; tapping a wrong one costs a star. */
 const CHESS_LESSONS = [
   /* --- 1. meet the pieces --- */
@@ -4370,6 +4549,141 @@ const CHESS_LESSONS = [
            ['bR',0,0],['bN',0,1],['bB',0,2],['bQ',0,3],['bK',0,4],['bB',0,5],['bN',0,6],['bR',0,7],
            ['bP',1,0],['bP',1,1],['bP',1,2],['bP',1,3],['bP',1,5],['bP',1,6],['bP',1,7],['bP',3,4]],
    solutions:[[7,4,7,6]], wrong:'Tap the king, then the square two steps toward the corner rook.'},
+
+  /* --- 10. what is it worth? (pawn 1, knight 3, bishop 3, rook 5, queen 9) --- */
+  {id:'v1', ch:10, icon:'💎', name:'Biggest snack', type:'best', only:'hero', hero:[4,3],
+   cap:'Eat the BIGGEST piece you can', sub:'Pawn = 1, knight or bishop = 3, rook = 5, queen = 9.',
+   win:'You grabbed the queen — worth 9!',
+   pieces:[['wN',4,3],['bP',2,2],['bB',3,5],['bQ',2,4],['wK',7,0],['bK',0,7]],
+   solutions:[[4,3,2,4]], wrong:'Yum — but there is a bigger one! The queen is worth 9.'},
+  {id:'v2', ch:10, icon:'🤏', name:'Smallest one takes', type:'best',
+   cap:'Eat the knight — with the RIGHT piece', sub:'The knight is guarded. Take it with your smallest piece so you lose the least.',
+   win:'Pawn for a knight — great trade!',
+   pieces:[['wP',4,2],['wQ',7,3],['bN',3,3],['bP',2,4],['wK',7,6],['bK',0,6]],
+   solutions:[[4,2,3,3]], wrong:'The pawn would eat your queen back! Use your smallest piece.'},
+  {id:'v3', ch:10, icon:'🔁', name:'Good trade', type:'best',
+   cap:'Find the trade that WINS', sub:'Both black pieces are guarded. Giving a 3 to get a 5 is a win — giving a 3 for a 1 is not.',
+   win:'Knight (3) for a rook (5). You win the trade!',
+   pieces:[['wN',3,4],['wB',7,2],['bR',1,5],['bP',3,6],['bP',2,7],['wK',7,6],['bK',0,6]],
+   solutions:[[3,4,1,5]], wrong:'That piece is worth less than yours, and it is guarded. Find a bigger target.'},
+
+  /* --- 11. pins & skewers --- */
+  {id:'s1', ch:11, piece:'R', name:'Rook skewer', type:'best', only:'hero', hero:[7,0],
+   cap:'Check the king — and win what hides behind him', sub:'Line up rook, king, queen. When the king steps away, the queen is yours. That is a SKEWER.',
+   win:'Skewer! The queen is next.', pieces:[['wR',7,0],['wK',7,7],['bK',1,2],['bQ',1,6]],
+   solutions:[[7,0,1,0]], wrong:'Find the check where the queen is right BEHIND the king.'},
+  {id:'s2', ch:11, piece:'B', name:'Bishop skewer', type:'best', only:'hero', hero:[7,3],
+   cap:'Skewer the king and the rook', sub:'Check him on a slant line that has the rook behind him.',
+   win:'Skewer! The rook is next.', pieces:[['wB',7,3],['wK',7,7],['bK',3,3],['bR',0,6]],
+   solutions:[[7,3,5,1]], wrong:'Check is nice — but line up something BEHIND the king too!'},
+  {id:'p1', ch:11, piece:'B', name:'Make a pin', type:'best', only:'hero', hero:[7,5],
+   cap:'Pin the knight to its king', sub:'Aim at the knight with the king right behind it. Now the knight cannot move!',
+   win:'Pinned! That knight is stuck.',
+   pieces:[['wB',7,5],['wK',7,6],['bN',2,2],['bK',0,4],['bP',1,0],['bP',1,1],['bP',1,5],['bP',1,6],['bP',1,7]],
+   solutions:[[7,5,3,1]], wrong:'Find the slant line that goes through the knight AND the king.'},
+  {id:'p2', ch:11, icon:'📌', name:'Pinned & stuck', type:'best',
+   cap:'The knight is pinned — win it!', sub:'It cannot move, or its king would be in check. Attack it with something small.',
+   win:'It cannot run — the knight is yours!',
+   pieces:[['wR',7,4],['wK',7,6],['wP',6,3],['wP',6,5],['wP',6,6],['wP',6,7],
+           ['bN',3,4],['bP',2,3],['bK',0,4],['bP',1,0],['bP',1,1],['bP',1,6],['bP',1,7]],
+   solutions:[[6,3,4,3],[6,5,4,5]], wrong:'Cheaper! Attack the stuck knight with a little pawn.'},
+
+  /* --- 12. sneaky attacks --- */
+  {id:'d1', ch:12, icon:'🎭', name:'Discovered check', type:'best',
+   cap:'Move the bishop out of the way — and grab a snack', sub:'When the bishop moves, the rook behind it says CHECK. He must save his king!',
+   win:'Discovered check — and the queen is gone!',
+   pieces:[['wR',7,4],['wB',4,4],['wK',7,7],['bK',0,4],['bQ',1,1],['bP',1,5],['bP',1,6]],
+   solutions:[[4,4,1,1]], wrong:'Check is good — but which bishop move ALSO eats something big?'},
+  {id:'d2', ch:12, piece:'N', name:'Discovered attack', type:'best',
+   cap:'Jump the knight with CHECK — and free the rook', sub:'The knight is blocking your rook from the queen. Move it with check so she has no time to escape.',
+   win:'He has to save his king — and the rook eats the queen!',
+   pieces:[['wR',7,3],['wN',4,3],['wK',7,6],['bQ',0,3],['bK',1,6],['bP',1,7],['bP',1,0],['bP',1,1]],
+   solutions:[[4,3,3,5],[4,3,2,4]], wrong:'The knight should jump with CHECK — then the rook is free to strike.'},
+  {id:'d3', ch:12, piece:'R', name:'Rook double attack', type:'best', only:'hero', hero:[7,3],
+   cap:'Attack BOTH black pieces with one rook move', sub:'Nobody is guarding them. He can only save one!',
+   win:'Double attack! One of them is yours.',
+   pieces:[['wR',7,3],['wK',7,6],['bB',3,1],['bN',3,6],['bK',0,7],['bP',1,6],['bP',1,7]],
+   solutions:[[7,3,3,3]], wrong:'Find the square in the middle of the row with BOTH pieces.'},
+  {id:'d4', ch:12, piece:'B', name:'Bishop fork', type:'best', only:'hero', hero:[5,1],
+   cap:'Check the king AND attack the rook', sub:'One slant line to the king, the other slant line to the rook.',
+   win:'Bishop fork! The rook falls next.', pieces:[['wB',5,1],['wK',7,2],['bK',7,7],['bR',0,0]],
+   solutions:[[5,1,3,3]], wrong:'Find the square where the bishop aims at BOTH.'},
+
+  /* --- 13. more checkmates --- */
+  {id:'m1', ch:13, icon:'💋', name:'Queen kiss', type:'mate',
+   cap:'Find checkmate in one move!', sub:'Your pawn guards the square right next to his king. Put the queen there.',
+   win:'CHECKMATE!', pieces:[['wQ',2,7],['wP',2,5],['wK',7,0],['bK',0,6],['bP',1,5],['bP',1,7]]},
+  {id:'m2', ch:13, icon:'🤝', name:'Queen + bishop team', type:'mate',
+   cap:'Find checkmate in one move!', sub:'The bishop and queen aim at the same square. Land the queen there — the bishop protects her.',
+   win:'CHECKMATE!',
+   pieces:[['wQ',3,7],['wB',5,3],['wK',7,6],['bK',0,6],['bR',0,5],['bP',1,5],['bP',1,6]]},
+  {id:'m3', ch:13, icon:'🏹', name:'Bishop snipe', type:'mate',
+   cap:'Find checkmate in one move!', sub:'His king is stuck in the corner. Aim the bishop down the long slant line.',
+   win:'CHECKMATE!', pieces:[['wB',2,3],['wK',7,2],['bK',0,7],['bB',0,6],['bP',1,7]]},
+
+  /* --- 14. mate in two --- */
+  {id:'t1', ch:14, icon:'🪜', name:'Rook roller', type:'mate2',
+   cap:'Checkmate in TWO moves', sub:'First push him to the top row. Then the other rook finishes.',
+   win:'Two-move checkmate!', pieces:[['wR',7,0],['wR',6,1],['wK',3,4],['bK',1,4]]},
+  {id:'t2', ch:14, icon:'🧱', name:'Break the wall', type:'mate2',
+   cap:'Checkmate in TWO moves', sub:'Eat his rook with check. When the other rook takes back, your second rook finishes.',
+   win:'Two-move checkmate!',
+   pieces:[['wR',7,3],['wR',6,3],['wK',7,6],['wP',6,5],['wP',6,6],['wP',6,7],
+           ['bK',0,6],['bR',0,3],['bR',0,2],['bP',1,5],['bP',1,6],['bP',1,7]]},
+  {id:'t3', ch:14, icon:'🐴', name:'Smothered mate', type:'mate2',
+   cap:'Checkmate in TWO moves', sub:'Give away your queen next to his king! When the rook eats her, the knight jumps in.',
+   win:'Smothered mate — the most famous trick in chess!',
+   pieces:[['wQ',4,2],['wN',2,7],['wK',7,6],['wP',6,5],['wP',6,6],['wP',6,7],
+           ['bK',0,7],['bR',0,3],['bP',1,6],['bP',1,7]]},
+  {id:'t4', ch:14, icon:'👑', name:'King + queen squeeze', type:'mate2',
+   cap:'Checkmate in TWO moves', sub:'Use the queen to box him into a smaller space. Your king helps.',
+   win:'Two-move checkmate!', pieces:[['wQ',6,4],['wK',2,5],['bK',0,7]]},
+
+  /* --- 15. endgame skills --- */
+  {id:'e1', ch:15, icon:'😐', name:'Stalemate trap', type:'mate',
+   cap:'Checkmate — but do NOT stalemate!', sub:'If he cannot move but is NOT in check, the game is a tie. Make sure you say check!',
+   win:'CHECKMATE — and no tie!', pieces:[['wK',2,6],['wQ',5,1],['bK',0,7]],
+   wrong:'Not checkmate yet. Make sure he is in CHECK with nowhere to go.'},
+  {id:'e2', ch:15, piece:'K', name:'Catch the pawn', type:'best', only:'hero', hero:[5,5],
+   cap:'Stop the pawn before it becomes a queen', sub:'It needs 3 steps to reach the bottom. Step your king TOWARD it so you get there first.',
+   win:'Your king will catch it in time!', pieces:[['wK',5,5],['bP',4,1],['bK',0,7]],
+   solutions:[[5,5,6,4],[5,5,5,4],[5,5,4,4]], wrong:'Too slow — that pawn would win the race. Step toward it!'},
+  {id:'e3', ch:15, icon:'👑', name:'Eat and promote', type:'best', only:'hero', hero:[1,6],
+   cap:'Make a queen that nobody can eat', sub:'A pawn can become a queen by EATING onto the last row too.',
+   win:'A brand new queen — and a rook in her tummy!',
+   pieces:[['wP',1,6],['wK',7,6],['bR',0,5],['bN',0,7],['bK',3,1]],
+   solutions:[[1,6,0,5]], wrong:'The rook would eat your new queen! Find the safe square.'},
+
+  /* --- 16. defend like a champ --- */
+  {id:'g1', ch:16, icon:'🪟', name:'Back-rank danger', type:'defend',
+   cap:'Black wants to checkmate you — stop it!', sub:'The red arrow is his plan. Give your king a window, or block the line.',
+   win:'Safe! His trick will not work now.',
+   pieces:[['wK',7,6],['wP',6,5],['wP',6,6],['wP',6,7],['wR',3,0],
+           ['bK',0,6],['bP',1,5],['bP',1,6],['bP',1,7],['bR',0,4]],
+   wrong:'He can still checkmate you! Look at the red arrow.'},
+  {id:'g2', ch:16, icon:'🧱', name:'Guard the corner', type:'defend',
+   cap:'Black wants to checkmate you — stop it!', sub:'His queen and bishop both aim at the same pawn. Block the bishop, or guard the square.',
+   win:'Blocked! Your king is safe.',
+   pieces:[['wK',7,6],['wR',7,5],['wP',6,5],['wP',6,6],['wP',6,7],['wP',6,0],['wP',6,1],
+           ['bK',0,6],['bP',1,5],['bP',1,6],['bP',1,7],['bQ',4,7],['bB',2,3]],
+   wrong:'He can still checkmate you! Look at the red arrow.'},
+  {id:'g3', ch:16, icon:'🚫', name:'Stop the sneaky mate', type:'defend',
+   opening:[[6,4,4,4],[1,4,3,4],[6,1,5,1],[0,5,3,2],[6,0,5,0],[0,3,2,5]],
+   cap:'Black wants a quick checkmate — stop it!', sub:'His queen and bishop both aim at the pawn next to your king. Guard it or block!',
+   win:'Nice defence! No quick checkmate today.',
+   wrong:'He can still checkmate you! Look at the red arrow.'},
+
+  /* --- 17. opening ideas --- */
+  {id:'o1', ch:17, piece:'B', name:'Bring out a bishop', type:'best',
+   opening:[[6,4,4,4],[1,4,3,4],[7,6,5,5],[0,1,2,2]],
+   cap:'Bring a bishop out to a good square', sub:'Bishops like long, open lines. The one next to your king can come out now.',
+   win:'Bishop is out — and your king can castle soon!',
+   solutions:[[7,5,4,2],[7,5,3,1]], wrong:'Bring the bishop out further — where it aims at his side of the board.'},
+  {id:'o2', ch:17, icon:'🛡️', name:'Guard your pawn', type:'best',
+   opening:[[6,4,4,4],[0,6,2,5]],
+   cap:'His knight attacks your pawn — guard it!', sub:'The best guard also brings a new piece into the game.',
+   win:'Guarded — and a new piece is out!',
+   solutions:[[7,1,5,2],[6,3,5,3],[4,4,3,4]], wrong:'Your middle pawn is under attack. Guard it — a knight would be perfect.'},
 ];
 function lessonBoard(l){
   if(l.full === 'start') return initialBoard();
@@ -4377,6 +4691,11 @@ function lessonBoard(l){
     const b = initialBoard();
     b[4][4] = b[6][4]; b[6][4] = null;   // 1. e4
     b[3][4] = b[1][4]; b[1][4] = null;   // 1... e5
+    return b;
+  }
+  if(l.opening){
+    const b = initialBoard();
+    l.opening.forEach(([fr,fc,tr,tc])=>{ b[tr][tc] = b[fr][fc]; b[fr][fc] = null; });
     return b;
   }
   if(l.puzzle !== undefined) return PUZZLES[l.puzzle].board.map(row=>row.slice());
@@ -4531,6 +4850,7 @@ function chessBack(){
 
 /* ---------- running a lesson ---------- */
 let lesson = null, lessonIdx = 0, starIdx = 0, lessonWrong = 0, lessonBusy = false;
+let lessonStep = 0;   // mate2: 0 = looking for the first move, 1 = black has replied
 let heroSq = null;
 /* Anti-flail state. `lessonMisses` and `movesUsed` decide the star rating, and
    `hintLevel` only ever goes up one notch at a time — so tapping wildly is now
@@ -4557,11 +4877,11 @@ function restartChessLesson(){
   board = lessonBoard(lesson);
   castling = lesson.castling
     ? Object.assign({wK:false,wQ:false,bK:false,bQ:false}, lesson.castling)
-    : (lesson.full ? {wK:true,wQ:true,bK:true,bQ:true} : {wK:false,wQ:false,bK:false,bQ:false});
+    : ((lesson.full || lesson.opening) ? {wK:true,wQ:true,bK:true,bQ:true} : {wK:false,wQ:false,bK:false,bQ:false});
   turn = 'w';
   selected = null; legalForSelected = [];
   gameOver = false; lastMove = null;
-  starIdx = 0; lessonWrong = 0; lessonBusy = false;
+  starIdx = 0; lessonWrong = 0; lessonBusy = false; lessonStep = 0;
   lessonMisses = 0; movesUsed = 0; hintLevel = 0;
   hintPiece = null; hintShowMoves = false;
   heroSq = lesson.hero ? lesson.hero.slice() : null;
@@ -4586,10 +4906,20 @@ function restartChessLesson(){
     attackMarks = chessAttackersOf(board, k[0], k[1], 'b');
     renderBoard();
   }
+  if(lesson.type === 'defend') showMateThreat(board);
+}
+// Draws black's mating move as a red arrow, so the threat is seen, not read.
+function showMateThreat(bd){
+  const m = chessMateInOne(bd, 'b');
+  if(!m) return;
+  attackMarks = [[m.fr, m.fc]];
+  attackTarget = [m.tr, m.tc];
+  renderBoard();
 }
 function lessonPar(){
   if(lesson.par !== undefined) return lesson.par;
   if(lesson.type === 'tapTargets') return 0;
+  if(lesson.type === 'mate2') return 2;
   return lesson.stars ? lesson.stars.length : 1;
 }
 /* Three stars for a clean solve, and they tick away in the banner as he goes —
@@ -4642,6 +4972,32 @@ function chessSimulateMove(bd, fr,fc,tr,tc){
   if(p[1]==='P' && (tr===0 || tr===7)) b[tr][tc] = p[0]+'Q';
   return b;
 }
+function chessIsMate(bd, color){
+  return isInCheck(bd, color) && allLegalMoves(bd, color).length === 0;
+}
+function chessIsStalemate(bd, color){
+  return !isInCheck(bd, color) && allLegalMoves(bd, color).length === 0;
+}
+function chessMateInOne(bd, color){
+  for(const m of allLegalMoves(bd, color)){
+    if(chessIsMate(chessSimulateMove(bd, m.fr, m.fc, m.tr, m.tc), opponent(color))) return m;
+  }
+  return null;
+}
+// After white's first move: does every black answer still leave a mate in one?
+function chessForcesMate(after){
+  const replies = allLegalMoves(after, 'b');
+  if(!replies.length) return false;
+  return replies.every(m=>chessMateInOne(chessSimulateMove(after, m.fr, m.fc, m.tr, m.tc), 'w'));
+}
+/* Black's answer in a mate-in-two. Every reply loses, so pick the one a real
+   player would try: a capture first, otherwise a king run. */
+function chessPickReply(bd){
+  const replies = allLegalMoves(bd, 'b');
+  return replies.find(m=>bd[m.tr][m.tc])
+      || replies.find(m=>bd[m.fr][m.fc][1] === 'K')
+      || replies[0];
+}
 function judgeLesson(after, fr,fc,tr,tc){
   const t = lesson.type;
   if(t === 'collect'){
@@ -4661,6 +5017,12 @@ function judgeLesson(after, fr,fc,tr,tc){
   }
   if(t === 'escape') return {ok:!isInCheck(after,'w'), last:true};
   if(t === 'safe') return {ok:!isSquareAttacked(after, tr, tc, 'b'), last:true};
+  if(t === 'mate2'){
+    if(chessIsMate(after, 'b')) return {ok:true, last:true};
+    if(lessonStep === 0 && chessForcesMate(after)) return {ok:true, last:false, reply:true};
+    return {ok:false};
+  }
+  if(t === 'defend') return {ok:!chessMateInOne(after, 'b'), last:true};
   return {ok:false};
 }
 /* Breadth-first walk to the nearest star. Because wandering is allowed, the
@@ -4773,9 +5135,39 @@ function handleLessonMove(fr,fc,tr,tc){
   selected = null; legalForSelected = [];
   renderBoard();
 
-  if(verdict.ok) lessonWin(tr, tc, verdict.last, verdict.starIndex);
+  if(verdict.ok && verdict.reply) lessonReply();
+  else if(verdict.ok) lessonWin(tr, tc, verdict.last, verdict.starIndex);
   else if(verdict.neutral) lessonWander(tr, tc);
-  else lessonMiss(fr, fc, tr, tc, snapshot);
+  else {
+    let msg = null;
+    if(chessIsStalemate(after, 'b')) msg = 'Stalemate — that is a TIE! He has no moves but is not in check.';
+    else if(lesson.type === 'mate2' && lessonStep === 0)
+      msg = 'After that he can wriggle free. Find a move that leaves him NO way out.';
+    lessonMiss(fr, fc, tr, tc, snapshot, msg, lesson.type === 'defend' ? after : null);
+  }
+}
+
+/* Mate in two, half-way: the first move was right, so black answers on its own
+   and the child has to find the finish. */
+function lessonReply(){
+  lessonStep = 1;
+  lessonWrong = 0;
+  hintLevel = 0; hintPiece = null; hintShowMoves = false;
+  setChessCoach('👍', 'Great first move! Now watch black…', lesson.sub || '', 'good');
+  speak('Great move! Now watch.');
+  const gid = chessGameId;
+  setTimeout(()=>{
+    if(gid !== chessGameId) return;
+    const m = chessPickReply(board);
+    if(!m){ finishLesson(); return; }
+    turn = 'b';
+    applyMove(m.fr, m.fc, m.tr, m.tc);
+    turn = 'w';
+    renderBoard();
+    setChessCoach('🏁', 'Now finish it — checkmate!', 'One more move.');
+    speak('Now finish it. Checkmate!');
+    lessonBusy = false;
+  }, 900);
 }
 
 /* A legal move that isn't a star: let it stand. The piece stays where the child
@@ -4847,7 +5239,7 @@ function finishLesson(){
 }
 
 let missToken = 0;
-function lessonMiss(fr, fc, tr, tc, snapshot){
+function lessonMiss(fr, fc, tr, tc, snapshot, msg, defendAfter){
   lessonWrong++;
   registerMiss();
   const token = ++missToken;   // a newer mistake must not be wiped by an older timer
@@ -4864,7 +5256,15 @@ function lessonMiss(fr, fc, tr, tc, snapshot){
     selected = null; legalForSelected = [];
     pendingAnim = null; pendingBurst = null;
 
-    if(threats.length){
+    const mate = defendAfter ? chessMateInOne(defendAfter, 'b') : null;
+    if(mate){
+      // Show the checkmate he still has. It stays up until he moves again.
+      attackMarks = [[mate.fr, mate.fc]];
+      attackTarget = [mate.tr, mate.tc];
+      setChessCoach('🛡️', lesson.wrong || 'He can still checkmate you!',
+               'The red arrow shows his checkmate move.', 'bad');
+      renderBoard();
+    } else if(threats.length && !msg){
       attackMarks = threats;
       attackTarget = [tr, tc];
       setChessCoach('🛡️', lesson.wrong || 'Careful — that square is watched!',
@@ -4876,10 +5276,10 @@ function lessonMiss(fr, fc, tr, tc, snapshot){
         if(mode==='learn' && lesson) renderBoard();
       }, 2400);
     } else {
-      setChessCoach('🤔', lesson.wrong || 'Not quite — try again!', lesson.cap, 'bad');
+      setChessCoach('🤔', msg || lesson.wrong || 'Not quite — try again!', lesson.cap, 'bad');
       renderBoard();
     }
-    speak(lesson.wrong || 'Not quite. Try again!');
+    speak(msg || lesson.wrong || 'Not quite. Try again!');
     autoNudge();
     lessonBusy = false;
   }, 950);
@@ -5658,76 +6058,110 @@ function saveActivityState(id, state){
   localStorage.setItem('activity_'+id, JSON.stringify(state));
 }
 
-function logActivity(id, amount, btnId){
+/* ---- kid-sized scoring ----
+   Every button promises an exact number of stars before it's tapped
+   ("10 push-ups = 5 stars"), and pays exactly that — no hidden leftovers
+   carrying between rounds. Timed sports pay 1 star per full "unitsPerPoint"
+   minutes, shown as a ring that fills up and drops a star each lap. Both are
+   still trimmed by the per-activity and whole-page daily limits. */
+function roundStars(units, upp){
+  return Math.max(1, Math.round(units / Math.max(1, upp)));
+}
+function starsForRound(id, units){
+  return roundStars(units, getUnitsPerPoint(id));
+}
+// How many more stars this activity can still pay today.
+function starsLeftFor(id){
+  const own = Math.max(0, getActivityCap(id) - loadActivityState(id).pointsAwarded);
+  return Math.max(0, Math.min(own, getGlobalRoomLeft()));
+}
+
+// Logs `amount` reps/minutes and pays up to `stars`. Returns the stars paid.
+function logActivity(id, amount, stars){
   const state = loadActivityState(id);
   state.qty += amount;
-
-  // Earn from cumulative units so leftover reps carry forward instead of being lost.
-  const earnedFromUnits = pointsForUnits(id, state.qty);
-  const cappedByActivity = Math.min(earnedFromUnits, getActivityCap(id));
-  const wanted = cappedByActivity - state.pointsAwarded;
-  const award = Math.max(0, Math.min(wanted, getGlobalRoomLeft()));
-
+  const award = Math.max(0, Math.min(stars, starsLeftFor(id)));
   state.pointsAwarded += award;
   saveActivityState(id, state);
-
-  if(award > 0){
-    addPoints(award);
-    if(btnId) spawnFloatAt(btnId, '+'+award);
-  } else if(btnId){
-    const atCap = state.pointsAwarded >= getActivityCap(id) || getGlobalRoomLeft() <= 0;
-    spawnFloatAt(btnId, atCap ? 'Max today!' : 'Keep going!');
-  }
+  if(award > 0) addPoints(award);
   renderActivities();
+  if(actSheetId) renderActSheet();
+  return award;
 }
 
-function spawnFloatAt(elId, text){
-  const el = document.getElementById(elId);
-  if(!el) return;
-  const span = document.createElement('div');
-  span.className = 'float-pts';
-  span.textContent = text;
-  span.style.left = '50%';
-  el.appendChild(span);
-  setTimeout(()=> span.remove(), 800);
+/* ---- reward card ---- */
+function showActReward(cfg, title, stars, sub){
+  document.getElementById('actRewardEmoji').textContent = cfg.emoji;
+  document.getElementById('actRewardTitle').textContent = title;
+  document.getElementById('actRewardBig').textContent = stars > 0 ? '+'+stars : '';
+  const row = document.getElementById('actRewardStars');
+  row.style.display = stars > 0 ? 'flex' : 'none';
+  row.innerHTML = stars > 10
+    ? '<span style="animation-delay:.1s">⭐</span>'
+    : Array.from({length:stars}, (_, i)=>`<span style="animation-delay:${(0.15 + i*0.12).toFixed(2)}s">⭐</span>`).join('');
+  document.getElementById('actRewardSub').textContent = sub;
+  document.getElementById('actRewardOverlay').classList.add('show');
+  if(stars > 0){
+    screenConfetti();
+    speak('Awesome! You got '+stars+' star'+(stars===1?'':'s')+'!');
+  } else speak(sub);
+}
+function closeActReward(){
+  document.getElementById('actRewardOverlay').classList.remove('show');
+}
+function noStarsReason(id){
+  if(getGlobalRoomLeft() <= 0) return 'Your Star Jar is full today. Great moving!';
+  if(getActivityCap(id) <= 0) return 'This one is just for fun!';
+  return 'You got all the '+getActivity(id).label+' stars today. Try another one!';
 }
 
-/* ---- paced countdown for rep-based exercises ---- */
+/* ---- rep counter: counts along at a steady pace, then pays ---- */
 let repsTimer = null;
+const RING_C = 326.7;   // 2*PI*52
 
 function startRepsTimer(id, amount){
   if(repsTimer) return;
   const cfg = getActivity(id);
   if(!cfg) return;
+  closeActSheet();
   const totalMs = Math.round(amount * cfg.pace * 1000);
-  repsTimer = {id, amount, totalMs, remainingMs: totalMs};
+  repsTimer = {id, amount, totalMs, startedAt: Date.now(), shown: -1};
   document.getElementById('repsTimerEmoji').textContent = cfg.emoji;
   document.getElementById('repsTimerLabel').textContent = amount+' '+cfg.label;
+  document.getElementById('repsOf').textContent = 'of '+amount;
   document.getElementById('repsTimerOverlay').classList.add('show');
+  speak('Ready? Go!');
   tickRepsTimer();
   repsTimer.handle = setInterval(tickRepsTimer, 100);
 }
 function tickRepsTimer(){
   if(!repsTimer) return;
-  const remain = Math.max(0, repsTimer.remainingMs);
-  const pct = 100 - (remain/repsTimer.totalMs*100);
-  document.getElementById('repsTimerBar').style.width = pct+'%';
-  document.getElementById('repsTimerSeconds').textContent = Math.ceil(remain/1000)+'s left';
-  if(remain<=0){
+  const elapsed = Date.now() - repsTimer.startedAt;
+  const pct = Math.min(1, elapsed / repsTimer.totalMs);
+  // The count ticks up once per rep, in rhythm, so he can count along out loud.
+  const count = Math.min(repsTimer.amount, Math.floor(pct * repsTimer.amount + 1e-9));
+  document.getElementById('repsRing').style.strokeDashoffset = (RING_C * (1 - pct)).toFixed(1);
+  if(count !== repsTimer.shown){
+    repsTimer.shown = count;
+    document.getElementById('repsCount').textContent = count;
+    const e = document.getElementById('repsTimerEmoji');
+    e.classList.remove('hop'); void e.offsetWidth; e.classList.add('hop');
+  }
+  if(pct >= 1){
     clearInterval(repsTimer.handle);
     finishRepsTimer();
-    return;
   }
-  repsTimer.remainingMs -= 100;
 }
 function finishRepsTimer(){
   const {id, amount} = repsTimer;
   repsTimer = null;
-  const before = loadActivityState(id).pointsAwarded;
-  logActivity(id, amount, null);
-  const gained = loadActivityState(id).pointsAwarded - before;
-  spawnFloatAt('repsTimerEmoji', gained>0 ? '+'+gained+' pts' : 'Keep going!');
-  setTimeout(()=> document.getElementById('repsTimerOverlay').classList.remove('show'), 900);
+  const cfg = getActivity(id);
+  const paid = logActivity(id, amount, starsForRound(id, amount));
+  setTimeout(()=>{
+    document.getElementById('repsTimerOverlay').classList.remove('show');
+    if(!cfg) return;
+    showActReward(cfg, 'You did '+amount+' '+cfg.label+'!', paid, paid > 0 ? 'Stars go in your Star Jar!' : noStarsReason(id));
+  }, 500);
 }
 function cancelRepsTimer(){
   if(repsTimer){ clearInterval(repsTimer.handle); repsTimer = null; }
@@ -5740,79 +6174,198 @@ function loadSession(id){
 }
 function startSession(id){
   localStorage.setItem('session_'+id, JSON.stringify({startedAt: Date.now()}));
+  const cfg = getActivity(id);
+  if(cfg) speak('Go play '+cfg.label+'! Tap stop when you are done.');
   renderActivities();
+  if(actSheetId) renderActSheet();
 }
-function stopSession(id){
+// Where a running session is right now: clock text, how full the ring is
+// toward the next star, and how many stars it will pay if stopped now.
+function sessionInfo(cfg, sess){
+  const sec = Math.max(0, Math.floor((Date.now() - sess.startedAt) / 1000));
+  const perStar = cfg.unitsPerPoint * 60;
+  const mm = Math.floor(sec/60), ss = sec % 60;
+  return {
+    clock: mm+':'+String(ss).padStart(2,'0'),
+    frac: (sec % perStar) / perStar,
+    stars: Math.min(Math.floor(sec / perStar), starsLeftFor(cfg.id)),
+  };
+}
+// quiet = true when Activities locks for the day: log it, no reward card.
+function stopSession(id, quiet){
   const sess = loadSession(id);
   if(!sess) return;
+  const cfg = getActivity(id);
   const minutes = Math.floor((Date.now()-sess.startedAt)/60000);
   localStorage.removeItem('session_'+id);
-  if(minutes > 0) logActivity(id, minutes, null);
-  else renderActivities();
+  const paid = minutes > 0 ? logActivity(id, minutes, Math.floor(minutes / getUnitsPerPoint(id))) : 0;
+  if(minutes <= 0){ renderActivities(); if(actSheetId) renderActSheet(); }
+  if(quiet || !cfg) return;
+  closeActSheet();
+  const played = minutes > 0 ? 'You played '+minutes+' minute'+(minutes===1?'':'s')+'!' : 'That was quick!';
+  const sub = paid > 0 ? 'Stars go in your Star Jar!'
+    : (starsLeftFor(id) > 0 ? 'Play '+cfg.unitsPerPoint+' minutes to fill the circle and get a star.' : noStarsReason(id));
+  showActReward(cfg, played, paid, sub);
+}
+
+/* ---- the page: Star Jar + tiles ---- */
+const ACT_COLORS = [
+  ['#FF5F6D','#FF9A5A'], ['#7B5CFF','#B07CFF'], ['#12B5A6','#4FD8B0'], ['#FF4FA3','#FF8FC8'],
+  ['#2F8CFF','#4FC6FF'], ['#F29A12','#FF6B3D'], ['#3DBE55','#9BE36A'],
+];
+function actColors(id){
+  const i = Math.max(0, getActivityIds().indexOf(id));
+  const [c1, c2] = ACT_COLORS[i % ACT_COLORS.length];
+  return `--c1:${c1};--c2:${c2};`;
+}
+// Little segmented meter of today's stars for one activity (a plain bar when
+// the limit is too big for countable segments).
+function actMeterHtml(got, cap){
+  if(cap <= 0) return '';
+  if(cap > 20) return `<span class="act-meter bar"><b style="width:${Math.min(100, got/cap*100)}%"></b></span>`;
+  return `<span class="act-meter">${Array.from({length:cap}, (_, i)=>`<i class="${i < got ? 'on' : ''}"></i>`).join('')}</span>`;
 }
 
 let activityClockHandle = null;
 
+function renderStarJar(){
+  const el = document.getElementById('actJar');
+  if(!el) return;
+  const used = getActivityPointsToday();
+  const cap = getGlobalActivityCap();
+  const full = cap > 0 && used >= cap;
+  // Jar body spans y=30..104 inside the SVG; the gold rises with today's stars.
+  const frac = cap > 0 ? Math.min(1, used / cap) : (used > 0 ? 0.5 : 0);
+  const h = 74 * frac, y = 104 - h;
+  el.classList.toggle('full', full);
+  el.innerHTML = `
+    <svg class="jar-svg" viewBox="0 0 100 112" aria-hidden="true">
+      <defs>
+        <clipPath id="jarClip"><path d="M24 30 h52 q10 0 10 12 v52 q0 12 -12 12 h-48 q-12 0 -12 -12 v-52 q0 -12 10 -12z"/></clipPath>
+        <linearGradient id="jarGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE29A"/><stop offset="1" stop-color="#F29A12"/></linearGradient>
+      </defs>
+      <path d="M24 30 h52 q10 0 10 12 v52 q0 12 -12 12 h-48 q-12 0 -12 -12 v-52 q0 -12 10 -12z" fill="rgba(255,255,255,0.10)"/>
+      <rect class="jar-fill" clip-path="url(#jarClip)" x="0" y="${y.toFixed(1)}" width="100" height="${(h+8).toFixed(1)}" fill="url(#jarGold)"/>
+      ${frac > 0.08 ? `<text x="50" y="${Math.min(98, y + 22).toFixed(1)}" text-anchor="middle" font-size="20">⭐</text>` : ''}
+      <path d="M24 30 h52 q10 0 10 12 v52 q0 12 -12 12 h-48 q-12 0 -12 -12 v-52 q0 -12 10 -12z" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="3"/>
+      <rect x="20" y="14" width="60" height="14" rx="5" fill="#B07CFF" stroke="rgba(255,255,255,0.55)" stroke-width="3"/>
+      <path d="M32 44 v40" stroke="rgba(255,255,255,0.35)" stroke-width="5" stroke-linecap="round"/>
+    </svg>
+    <div class="jar-text">
+      <div class="jar-title">MY STAR JAR</div>
+      <div class="jar-count">${cap > 0 ? Math.min(used, cap) : used}${cap > 0 ? `<small>/ ${cap}</small>` : ' ⭐'}</div>
+      <div class="jar-hint">${full ? '🎉 Full! You did it!' : (used === 0 ? 'Tap a game to start!' : (cap > 0 ? (cap - used)+' more to fill it!' : 'Keep moving!'))}</div>
+    </div>`;
+}
+
 function renderActivities(){
   const list = document.getElementById('activityList');
-  list.innerHTML = '';
-
-  const globalCap = getGlobalActivityCap();
-  if(globalCap > 0){
-    const used = getActivityPointsToday();
-    const banner = document.createElement('div');
-    banner.className = 'global-cap-banner';
-    banner.textContent = used >= globalCap
-      ? '⭐ Activity points maxed out for today!'
-      : '⭐ '+used+' / '+globalCap+' activity points today';
-    list.appendChild(banner);
-  }
-
-  getActivities().forEach(cfg=>{
+  renderStarJar();
+  list.innerHTML = getActivities().map(cfg=>{
     const id = cfg.id;
-    const state = loadActivityState(id);
-    const card = document.createElement('div');
-    card.className = 'activity-card' + (cfg.type==='time' && loadSession(id) ? ' running' : '');
+    const st = loadActivityState(id);
     const cap = getActivityCap(id);
-    const capped = state.pointsAwarded >= cap || getGlobalRoomLeft() <= 0;
-    const upp = getUnitsPerPoint(id);
-    const unitSingular = cfg.unit==='min' ? 'min' : cfg.unit.replace(/s$/,'');
-    const rateLabel = upp===1 ? ('1 pt / '+unitSingular) : ('1 pt / '+upp+' '+cfg.unit);
+    const sess = cfg.type === 'time' ? loadSession(id) : null;
+    const done = cap > 0 && st.pointsAwarded >= cap;
+    let badge = '';
+    if(sess) badge = `<span class="act-badge">▶ <span data-run="${escapeHtml(id)}" data-kind="clock">${sessionInfo(cfg, sess).clock}</span></span>`;
+    else if(done) badge = '<span class="act-badge">✅ Full</span>';
+    return `<button type="button" class="act-tile${sess ? ' running' : ''}" style="${actColors(id)}" onclick="openActSheet('${escapeHtml(id)}')">
+      ${badge}
+      <span class="act-tile-emoji">${escapeHtml(cfg.emoji)}</span>
+      <span class="act-tile-name">${escapeHtml(cfg.label)}</span>
+      <span class="act-tile-stars">⭐ ${st.pointsAwarded}</span>
+      ${actMeterHtml(st.pointsAwarded, cap)}
+    </button>`;
+  }).join('');
+  document.getElementById('chip-activities').textContent = getSpendable();
+}
 
-    let controls;
-    if(cfg.type==='reps'){
-      controls = `<div class="qa-row">
-        ${cfg.quick.map(q=>`<div class="qa-btn" onclick="startRepsTimer('${id}',${q})">${q} ${escapeHtml(cfg.unit)}</div>`).join('')}
-      </div>`;
+/* ---- the sheet for one activity ---- */
+let actSheetId = null;
+
+function openActSheet(id){
+  const cfg = getActivity(id);
+  if(!cfg) return;
+  actSheetId = id;
+  renderActSheet();
+  document.getElementById('actSheetOverlay').classList.add('show');
+  if(cfg.type === 'reps') speak(cfg.label+'! How many?');
+  else if(!loadSession(id)) speak(cfg.label+'! Every '+cfg.unitsPerPoint+' minutes, you get a star.');
+}
+function closeActSheet(){
+  actSheetId = null;
+  document.getElementById('actSheetOverlay').classList.remove('show');
+}
+function renderActSheet(){
+  const cfg = getActivity(actSheetId);
+  if(!cfg){ closeActSheet(); return; }
+  const id = cfg.id;
+  const st = loadActivityState(id);
+  const cap = getActivityCap(id);
+  const left = starsLeftFor(id);
+  const eid = escapeHtml(id);
+  let body;
+  if(cfg.type === 'reps'){
+    const btns = cfg.quick.map(q=>{
+      const pay = Math.min(starsForRound(id, q), left);
+      return `<button type="button" class="round-btn" onclick="startRepsTimer('${eid}',${q})">
+        <span class="n">${q}</span>
+        <span class="what">${escapeHtml(cfg.unit)}</span>
+        <span class="pay${pay ? '' : ' zero'}">${pay ? '⭐ '+pay : 'for fun'}</span>
+      </button>`;
+    }).join('');
+    body = `<p class="act-ask">How many?</p><div class="round-btns">${btns}</div>`;
+  } else {
+    const sess = loadSession(id);
+    if(sess){
+      const info = sessionInfo(cfg, sess);
+      body = `<div class="big-ring">
+          <svg viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="52"/><circle class="fg" data-run="${eid}" data-kind="ring" cx="60" cy="60" r="52" stroke-dasharray="${RING_C}" stroke-dashoffset="${(RING_C*(1-info.frac)).toFixed(1)}"/></svg>
+          <div class="mid"><div class="e">${escapeHtml(cfg.emoji)}</div><div class="t" data-run="${eid}" data-kind="clock">${info.clock}</div><div class="s">fill the circle = ⭐</div></div>
+        </div>
+        <div class="play-stars">So far: <b data-run="${eid}" data-kind="stars" data-last="${info.stars}">⭐ ${info.stars}</b></div>
+        <button type="button" class="go-btn stop" onclick="stopSession('${eid}')">⏹ I'm done!</button>`;
     } else {
-      const sess = loadSession(id);
-      if(sess){
-        const s = Math.floor((Date.now()-sess.startedAt)/1000);
-        const mm = String(Math.floor(s/60)).padStart(2,'0');
-        const ss = String(s%60).padStart(2,'0');
-        controls = `<div class="session-row">
-          <div class="session-time">⏱ ${mm}:${ss}</div>
-          <div class="qa-btn stop-btn" onclick="stopSession('${id}')">⏹ Stop &amp; Log</div>
-        </div>`;
-      } else {
-        controls = `<div class="qa-row"><div class="qa-btn start-btn" onclick="startSession('${id}')">▶️ Start Playing</div></div>`;
+      body = `<div class="act-rule"><span>⏱ ${cfg.unitsPerPoint} min</span><span class="arrow">➜</span><span>⭐ 1</span></div>
+        <button type="button" class="go-btn" onclick="startSession('${eid}')">▶ Start playing!</button>`;
+    }
+  }
+  const note = left > 0 ? '' : `<p class="act-note">${escapeHtml(noStarsReason(id))}</p>`;
+  const today = cap > 0
+    ? `<div class="act-today"><span class="lbl">Today</span>${actMeterHtml(st.pointsAwarded, cap)}<span class="num">⭐ ${st.pointsAwarded}</span></div>`
+    : '';
+  const sheet = document.getElementById('actSheet');
+  sheet.style.cssText = actColors(id);
+  sheet.innerHTML = `
+    <div class="act-sheet-hero">
+      <button type="button" class="act-sheet-close" onclick="closeActSheet()" aria-label="close">✕</button>
+      <div class="big-emoji">${escapeHtml(cfg.emoji)}</div>
+      <h3>${escapeHtml(cfg.label)}</h3>
+    </div>
+    ${note}${body}${today}`;
+}
+
+// Once a second while a sport is running: nudge the clocks, rings and star
+// counts in place rather than rebuilding the tiles under his finger.
+function updateRunningUI(){
+  document.querySelectorAll('[data-run]').forEach(el=>{
+    const cfg = getActivity(el.dataset.run);
+    const sess = cfg && loadSession(cfg.id);
+    if(!sess) return;
+    const info = sessionInfo(cfg, sess);
+    const kind = el.dataset.kind;
+    if(kind === 'clock') el.textContent = info.clock;
+    else if(kind === 'ring') el.style.strokeDashoffset = (RING_C*(1-info.frac)).toFixed(1);
+    else if(kind === 'stars'){
+      if(String(info.stars) !== el.dataset.last){
+        el.dataset.last = info.stars;
+        el.textContent = '⭐ '+info.stars;
+        el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
+        speak('Star!');
       }
     }
-
-    card.innerHTML = `
-      <div class="activity-top">
-        <div class="activity-emoji">${escapeHtml(cfg.emoji)}</div>
-        <div>
-          <div class="activity-name">${escapeHtml(cfg.label)}</div>
-          <div class="activity-tally">${state.qty} ${escapeHtml(cfg.unit)} today · ${state.pointsAwarded} pts · ${rateLabel}</div>
-        </div>
-        <div class="activity-cap">${capped ? 'Maxed! ⭐' : (cap-state.pointsAwarded)+' pts left'}</div>
-      </div>
-      ${controls}
-    `;
-    list.appendChild(card);
   });
-  document.getElementById('chip-activities').textContent = getSpendable();
 }
 
 function openActivities(){
@@ -5830,11 +6383,8 @@ function openActivities(){
 }
 
 function tickActivitiesClock(){
-  // Only the running stopwatches change second to second. Rebuilding every
-  // card each tick was wasted work on a slow tablet, so update just the
-  // running timers unless a session is actually going.
   const anyRunning = getActivityIds().some(id => loadSession(id));
-  if(anyRunning) renderActivities();
+  if(anyRunning) updateRunningUI();
   // While a sport stopwatch is running he's out playing, not looking at the
   // screen — so that time doesn't count against his screen-time limit. (It
   // used to, which meant a 30-min game got cut off by a 30-min limit.)
@@ -5844,6 +6394,7 @@ function tickActivitiesClock(){
   if(isPageTimeUp('activities')){
     clearInterval(activityClockHandle);
     activityClockHandle = null;
+    closeActSheet();
     showTimeUpMessage('activities');
     goHome();
   }
@@ -5853,7 +6404,7 @@ function tickActivitiesClock(){
 // otherwise a running session couldn't be stopped until tomorrow, and would
 // then dump a whole night's worth of "minutes" into the next day.
 function stopAllSessions(){
-  getActivityIds().forEach(id=>{ if(loadSession(id)) stopSession(id); });
+  getActivityIds().forEach(id=>{ if(loadSession(id)) stopSession(id, true); });
 }
 
 function updateActivitiesTimeBadge(){
@@ -6122,6 +6673,9 @@ function updateActivityQty(id){
   const input = document.getElementById('edit-qty-'+id);
   const newQty = Math.max(0, parseInt(input.value, 10) || 0);
   const state = loadActivityState(id);
+  // Rounds pay a fixed number of stars, so recounting from the total could
+  // shift today's stars even when the count wasn't touched — leave those alone.
+  if(newQty === state.qty) return;
   const newPointsAwarded = Math.min(pointsForUnits(id, newQty), getActivityCap(id));
   const delta = newPointsAwarded - state.pointsAwarded;
   addPoints(delta);
@@ -6667,7 +7221,7 @@ function pzActivities(){
         ${pzRow('1 point for every', pzStepper(a.unitsPerPoint, `pzActField(${i},'unitsPerPoint',this.value)`, {min:1,max:100, suffix: reps ? escapeHtml(a.unit) : 'min'}))}
         ${pzRow('Most points per day', pzStepper(a.cap, `pzActField(${i},'cap',this.value)`, {min:0,max:200}), '0 = this activity earns nothing.')}
         ${reps ? pzRow('Counting word', `<input type="text" class="pz-input" style="width:110px" value="${pzAttr(a.unit)}" onchange="pzActField(${i},'unit',this.value.trim()||'reps')">`, 'e.g. reps, jumps, laps')
-               + pzRow('Tap buttons', `<input type="text" class="pz-input" style="width:110px" value="${(a.quick||[]).join(', ')}" onchange="pzActField(${i},'quick',this.value)">`, 'Up to 3 amounts, like 5, 10, 20')
+               + pzRow('Tap buttons', `<input type="text" class="pz-input" style="width:110px" value="${(a.quick||[]).join(', ')}" onchange="pzActField(${i},'quick',this.value)">`, 'Up to 3 amounts. Each button pays a set number of stars: ' + (a.quick||[]).map(q=>q+' → '+roundStars(q, a.unitsPerPoint)+'⭐').join(', '))
                + pzRow('Seconds per rep', pzStepper(a.pace || 3, `pzActField(${i},'pace',this.value)`, {min:1,max:20}), 'Paces the countdown so reps aren’t rushed.') : ''}
       </div>`;
     const sum = (reps ? '🔢 ' : '⏱️ ') + '1 pt / ' + a.unitsPerPoint + ' ' + (reps ? a.unit : 'min') + ' · max ' + a.cap + '/day';

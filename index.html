@@ -376,6 +376,7 @@
   .item-label{display:flex; align-items:center; font-size:1.15rem; font-weight:700; transition:opacity .15s ease; min-width:0;}
   .item.done .item-label{opacity:.45; text-decoration:line-through;}
   .item-emoji{font-size:1.5rem; margin-right:8px;}
+  .item-pts{margin-left:auto; flex-shrink:0; font-weight:800; font-size:.8rem; background:rgba(255,200,87,0.25); border-radius:10px; padding:3px 8px;}
   @media (max-width:380px){
     .routine-title{font-size:1.25rem;}
     .points-chip{padding:6px 9px; font-size:.88rem;}
@@ -1186,6 +1187,178 @@
   /* ---- puzzle map ---- */
   .lesson-bubble .pz-num{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.3rem;}
 
+  /* ================= PARENT ZONE ================= */
+  .pz-overlay{
+    position:fixed; inset:0; z-index:60;
+    display:flex; flex-direction:column;
+    background:linear-gradient(180deg,#151C38 0%, #0E1328 100%);
+    transform:translateY(100%); transition:transform .3s cubic-bezier(.2,.9,.3,1);
+    visibility:hidden;
+  }
+  .pz-overlay.show{transform:none; visibility:visible;}
+  /* dialogs opened from inside the Parent Zone must sit above it */
+  #confirmOverlay, #emojiPicker, #changePasscodeOverlay{z-index:86;}
+  .pz-header{
+    display:flex; align-items:center; gap:10px;
+    padding:calc(12px + var(--safe-top)) 16px 10px;
+    border-bottom:1px solid var(--stroke);
+  }
+  .pz-header h2{flex:1; margin:0; text-align:center; font-family:'Baloo 2',sans-serif; font-size:1.25rem;}
+  .pz-done, .pz-lock{
+    border:none; border-radius:14px; padding:10px 14px; cursor:pointer;
+    font-family:'Nunito',sans-serif; font-weight:800; font-size:.9rem; color:var(--text);
+  }
+  .pz-done{background:var(--mint); color:#0c332a;}
+  .pz-lock{background:rgba(255,255,255,0.1);}
+  .pz-tabs{
+    display:flex; gap:8px; overflow-x:auto; padding:10px 16px; flex-shrink:0;
+    scrollbar-width:none; -webkit-overflow-scrolling:touch; overscroll-behavior-x:contain;
+  }
+  .pz-tabs::-webkit-scrollbar{display:none;}
+  .pz-tab{
+    flex-shrink:0; display:flex; align-items:center; gap:6px;
+    border:1px solid var(--stroke); background:rgba(255,255,255,0.06); color:var(--text);
+    border-radius:999px; padding:9px 14px; cursor:pointer;
+    font-family:'Nunito',sans-serif; font-weight:800; font-size:.86rem; white-space:nowrap;
+  }
+  .pz-tab.active{background:var(--gold); color:#3a2b17; border-color:var(--gold);}
+  .pz-body{
+    flex:1; overflow-y:auto; padding:6px 16px calc(40px + var(--safe-bot));
+    overscroll-behavior-y:contain; -webkit-overflow-scrolling:touch;
+  }
+  .pz-body > *{max-width:640px; margin-left:auto; margin-right:auto;}
+  .pz-card{
+    background:rgba(255,255,255,0.06); border:1px solid var(--stroke);
+    border-radius:20px; padding:14px; margin-bottom:14px;
+  }
+  .pz-card.danger{border-color:rgba(255,107,107,0.45); background:rgba(255,107,107,0.07);}
+  .pz-card-title{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.08rem; margin-bottom:10px; display:flex; align-items:center; gap:8px;}
+  .pz-count{font-family:'Nunito',sans-serif; font-size:.72rem; background:rgba(255,255,255,0.12); border-radius:10px; padding:2px 8px;}
+  .pz-note{font-size:.8rem; font-weight:700; opacity:.6; margin:0 0 10px; line-height:1.4;}
+  .pz-row{display:flex; align-items:center; gap:12px; padding:10px 0; border-top:1px solid rgba(255,255,255,0.06);}
+  .pz-card-title + .pz-row, .pz-note + .pz-row{border-top:none;}
+  .pz-row-label{flex:1; min-width:0; font-weight:800; font-size:.92rem;}
+  .pz-row-label small{display:block; font-weight:700; font-size:.74rem; opacity:.55; margin-top:2px;}
+  .pz-row-ctl{flex-shrink:0;}
+  .pz-input{
+    width:100%; min-width:0; padding:11px 12px; border-radius:12px;
+    border:1px solid rgba(255,255,255,0.12); background:rgba(0,0,0,0.25); color:var(--text);
+    font-family:'Nunito',sans-serif; font-weight:700; font-size:1rem;
+  }
+  .pz-input:focus{outline:none; border-color:var(--gold);}
+  .pz-input-sm{font-size:.82rem; padding:8px 10px; margin-top:6px; opacity:.85;}
+  .stepper{display:inline-flex; align-items:center; gap:0; background:rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.12); border-radius:14px; overflow:hidden;}
+  .stepper button{
+    width:42px; height:42px; border:none; background:rgba(255,255,255,0.08); color:var(--text);
+    font-size:1.3rem; font-weight:800; cursor:pointer; touch-action:manipulation;
+  }
+  .stepper button:active{background:rgba(255,200,87,0.35);}
+  .stepper input{
+    width:58px; height:42px; border:none; background:transparent; color:var(--text); text-align:center;
+    font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.1rem; -moz-appearance:textfield;
+  }
+  .stepper input::-webkit-outer-spin-button, .stepper input::-webkit-inner-spin-button{-webkit-appearance:none; margin:0;}
+  .stepper-suffix{padding:0 10px 0 2px; font-size:.78rem; font-weight:800; opacity:.6;}
+  .pz-switch{
+    position:relative; width:56px; height:32px; border-radius:16px; border:none; cursor:pointer;
+    background:rgba(255,255,255,0.18); transition:background .2s ease; flex-shrink:0; vertical-align:middle;
+  }
+  .pz-switch i{position:absolute; top:3px; left:3px; width:26px; height:26px; border-radius:50%; background:#fff; transition:transform .2s ease; box-shadow:0 2px 6px rgba(0,0,0,0.3);}
+  .pz-switch.on{background:var(--mint);}
+  .pz-switch.on i{transform:translateX(24px);}
+  .pz-inline{display:inline-flex; align-items:center; gap:8px; font-size:.82rem; font-weight:800; opacity:.9;}
+  .pz-btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:6px;
+    border:1px solid var(--stroke); background:rgba(255,255,255,0.1); color:var(--text);
+    border-radius:14px; padding:11px 14px; cursor:pointer; flex-shrink:0;
+    font-family:'Nunito',sans-serif; font-weight:800; font-size:.9rem;
+  }
+  .pz-btn:active{transform:scale(0.97);}
+  .pz-btn.primary{background:var(--gold); color:#3a2b17; border-color:var(--gold);}
+  .pz-btn.danger{background:rgba(255,107,107,0.25); color:#ffdcdc; border-color:rgba(255,107,107,0.5);}
+  .pz-btn-row{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;}
+  .pz-btn-row .pz-btn{flex:1 1 140px;}
+  .pz-link{display:block; margin:10px auto 0; background:none; border:none; color:var(--text); opacity:.5; font-weight:700; font-size:.8rem; text-decoration:underline; cursor:pointer;}
+  .pz-item{
+    display:flex; align-items:flex-start; gap:8px; flex-wrap:wrap;
+    background:rgba(0,0,0,0.18); border-radius:16px; padding:8px; margin-bottom:8px;
+  }
+  .pz-reorder{display:flex; flex-direction:column; gap:4px;}
+  .pz-reorder button{
+    width:34px; height:30px; border:none; border-radius:9px; background:rgba(255,255,255,0.1);
+    color:var(--text); font-size:.75rem; cursor:pointer; touch-action:manipulation;
+  }
+  .pz-reorder button:disabled{opacity:.2;}
+  .pz-emoji{
+    width:48px; height:48px; flex-shrink:0; border-radius:14px; cursor:pointer;
+    border:1px dashed rgba(255,255,255,0.3); background:rgba(255,255,255,0.08); font-size:1.5rem;
+  }
+  .pz-item-main{flex:1; min-width:0;}
+  .pz-item-meta{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:6px;}
+  .pz-item-meta .stepper button{width:36px; height:36px; font-size:1.1rem;}
+  .pz-item-meta .stepper input{width:52px; height:36px; font-size:1rem;}
+  .pz-mini-label{font-size:.72rem; font-weight:800; opacity:.6; text-transform:uppercase; letter-spacing:.4px;}
+  .pz-tag{font-size:.7rem; font-weight:800; padding:3px 8px; border-radius:8px;}
+  .pz-tag.done{background:rgba(127,224,196,0.2); color:#9df0d6;}
+  .pz-del{
+    width:40px; height:40px; flex-shrink:0; border:none; border-radius:12px; cursor:pointer;
+    background:rgba(255,107,107,0.2); color:#ffb3b3; font-weight:800; font-size:1rem;
+  }
+  .pz-del:disabled{opacity:.25;}
+  .pz-expand{
+    display:flex; justify-content:space-between; width:100%; margin-top:6px; text-align:left;
+    background:rgba(255,255,255,0.06); border:none; border-radius:10px; padding:8px 10px; cursor:pointer;
+    color:var(--text); font-family:'Nunito',sans-serif; font-weight:700; font-size:.78rem; opacity:.85;
+  }
+  .pz-act.open{background:rgba(255,200,87,0.08); box-shadow:inset 0 0 0 1px rgba(255,200,87,0.35);}
+  .pz-act-body{flex-basis:100%; padding:6px 4px 2px;}
+  .pz-add{display:flex; gap:8px; margin-top:10px;}
+  .pz-chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px;}
+  .pz-chip{
+    border:1px solid var(--stroke); background:rgba(255,255,255,0.08); color:var(--text);
+    border-radius:999px; padding:7px 12px; cursor:pointer;
+    font-family:'Nunito',sans-serif; font-weight:800; font-size:.78rem;
+  }
+  .pz-chip.good{background:rgba(127,224,196,0.2); border-color:rgba(127,224,196,0.45);}
+  .pz-chip.bad{background:rgba(255,107,107,0.18); border-color:rgba(255,107,107,0.4);}
+  .pz-seg{display:flex; gap:6px; background:rgba(0,0,0,0.25); border-radius:16px; padding:5px; margin-bottom:14px; flex-wrap:wrap;}
+  .pz-seg button{
+    flex:1 1 auto; border:none; border-radius:12px; padding:10px 8px; cursor:pointer;
+    background:transparent; color:var(--text); font-family:'Nunito',sans-serif; font-weight:800; font-size:.86rem;
+  }
+  .pz-seg button.on{background:rgba(255,200,87,0.22); box-shadow:inset 0 0 0 2px var(--gold);}
+  .pz-seg.small{margin-bottom:8px;}
+  .pz-seg.small button{font-size:.78rem; padding:8px 6px;}
+  .pz-days{display:flex; gap:6px; margin-bottom:10px;}
+  .pz-days button{
+    flex:1; height:44px; border-radius:12px; cursor:pointer;
+    border:1px solid var(--stroke); background:rgba(255,255,255,0.06); color:var(--text);
+    font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1rem; opacity:.55;
+  }
+  .pz-days button.on{background:var(--mint); color:#0c332a; border-color:var(--mint); opacity:1;}
+  .pz-status{font-weight:800; font-size:.85rem; background:rgba(255,200,87,0.12); border-radius:12px; padding:9px 12px; margin:4px 0 2px;}
+  .pz-stats{display:flex; gap:8px; margin-bottom:6px;}
+  .pz-stats div{flex:1; text-align:center; background:rgba(0,0,0,0.2); border-radius:14px; padding:10px 4px;}
+  .pz-stats b{display:block; font-family:'Baloo 2',sans-serif; font-size:1.4rem; color:var(--gold);}
+  .pz-stats span{font-size:.7rem; font-weight:800; opacity:.6;}
+  .pz-toast{
+    position:fixed; left:50%; bottom:calc(24px + var(--safe-bot)); z-index:95;
+    transform:translate(-50%, 20px); opacity:0; pointer-events:none;
+    background:var(--mint); color:#0c332a; font-weight:800; font-size:.9rem;
+    padding:10px 18px; border-radius:999px; box-shadow:0 8px 24px rgba(0,0,0,0.35);
+    transition:opacity .2s ease, transform .2s ease;
+  }
+  .pz-toast.show{opacity:1; transform:translate(-50%, 0);}
+  .emoji-card{max-width:400px;}
+  .emoji-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(44px,1fr)); gap:6px; max-height:46vh; overflow-y:auto; overscroll-behavior-y:contain;}
+  .emoji-grid button{height:46px; font-size:1.5rem; border:none; border-radius:12px; background:rgba(255,255,255,0.08); cursor:pointer; box-shadow:none !important; padding:0 !important;}
+  .emoji-grid button:active{background:rgba(255,200,87,0.35);}
+  .parent-link{
+    position:relative; z-index:1; display:block; margin:10px auto 0; padding:8px 14px;
+    background:none; border:none; color:var(--text); opacity:.4; cursor:pointer;
+    font-family:'Nunito',sans-serif; font-weight:800; font-size:.78rem;
+  }
+
 </style>
 </head>
 <body>
@@ -1237,7 +1410,7 @@
       </div>
     </div>
   </div>
-  <div class="section-label">Play &amp; earn</div>
+  <div class="section-label" id="tilesLabel">Play &amp; earn</div>
   <div class="tiles">
     <div class="tile" id="chess-pad" onclick="openChess()">
       <div class="pad-icon">♟️</div>
@@ -1257,6 +1430,7 @@
   </div>
   <div class="end-day-link" onclick="openEndDay()">🌙 End of Day Summary</div>
   <div class="footer-date" id="todayLabel"></div>
+  <button type="button" class="parent-link" onclick="openParentZone()">⚙️ Parent Zone</button>
 </div>
 
 <!-- ================= MORNING ================= -->
@@ -1436,75 +1610,6 @@
   </div>
 </div>
 
-<div class="celebration-overlay" id="editChessPointsOverlay">
-  <div class="celebration-card" style="text-align:left;">
-    <h3 style="text-align:center; margin-bottom:14px;">✏️ Edit Chess Points</h3>
-    <div style="display:flex; gap:8px; align-items:center; margin:8px 0 14px;">
-      <span style="flex:1; font-weight:700; font-size:.9rem;">Points for a repeat win</span>
-      <input type="number" min="0" id="editChessWinBonus" class="reward-input" style="width:70px; margin-bottom:0; text-align:center; padding:8px;">
-    </div>
-
-    <div class="endday-label" style="margin-top:4px;">Lessons</div>
-    <div style="display:flex; gap:8px; align-items:center; margin:8px 0;">
-      <span style="flex:1; font-weight:700; font-size:.9rem;">Points per lesson finished</span>
-      <input type="number" min="0" id="editLessonPoints" class="reward-input" style="width:70px; margin-bottom:0; text-align:center; padding:8px;">
-    </div>
-    <div style="display:flex; gap:8px; margin:0 0 14px;">
-      <button onclick="unlockAllLessons()" style="flex:1; padding:10px; border-radius:12px; border:none; background:rgba(255,255,255,0.12); color:var(--text); font-family:'Nunito',sans-serif; font-weight:800; font-size:.8rem; cursor:pointer;">🔓 Unlock all</button>
-      <button onclick="resetLessonProgress()" class="danger-btn" style="flex:1; padding:10px; border-radius:12px; border:none; font-family:'Nunito',sans-serif; font-weight:800; font-size:.8rem; cursor:pointer;">↩️ Reset stars</button>
-    </div>
-
-    <div class="endday-label" style="margin-top:4px;">Puzzles</div>
-    <div style="display:flex; gap:8px; align-items:center; margin:8px 0;">
-      <span style="flex:1; font-weight:700; font-size:.9rem;">Points per puzzle solved</span>
-      <input type="number" min="0" id="editPuzzlePoints" class="reward-input" style="width:70px; margin-bottom:0; text-align:center; padding:8px;">
-    </div>
-    <div style="display:flex; gap:8px; align-items:center; margin:0 0 14px;">
-      <span style="flex:1; font-weight:700; font-size:.9rem;">Max chess points per day<br><small style="opacity:.6">lessons, puzzles &amp; repeat wins</small></span>
-      <input type="number" min="0" id="editPuzzleDailyCap" class="reward-input" style="width:70px; margin-bottom:0; text-align:center; padding:8px;">
-    </div>
-
-    <div class="endday-label" style="margin-top:4px;">Piece look</div>
-    <div style="display:flex; gap:8px; margin:8px 0 14px;">
-      <button id="pieceStyleBtn" onclick="togglePieceStyle()" style="flex:1; padding:10px; border-radius:12px; border:none; background:rgba(255,255,255,0.12); color:var(--text); font-family:'Nunito',sans-serif; font-weight:800; font-size:.8rem; cursor:pointer;">♞ Classic pieces</button>
-    </div>
-
-    <div class="endday-label" style="margin-top:4px;">🚀 Battle Opponents</div>
-    <div style="display:flex; gap:8px; align-items:center; margin:8px 0;">
-      <span style="flex:1; font-weight:700; font-size:.9rem;">🛡️ Safety check before risky moves</span>
-      <button type="button" class="slip-btn" id="safetyToggleBtn" style="flex:0 0 74px;" onclick="toggleSafetySetting()">On</button>
-    </div>
-    <div style="display:flex; gap:8px; margin:0 0 6px;">
-      <button type="button" class="slip-btn" style="flex:1;" onclick="unlockAllBots()">🔓 Unlock all</button>
-      <button type="button" class="slip-btn danger-btn" style="flex:1;" onclick="resetBotProgress()">↩️ Reset ladder</button>
-    </div>
-    <div class="bonus-note" style="margin-bottom:14px;">Beating an opponent for the first time pays its own bonus and unlocks the next one. Repeat wins pay the "winning a game" points above, up to the daily chess max.</div>
-
-    <div class="endday-label" style="margin-top:4px;">Screen Time</div>
-    <div style="display:flex; gap:8px; align-items:center; margin:8px 0 4px;">
-      <span style="flex:1; font-weight:700; font-size:.9rem;">Daily time limit (minutes, 0 = no limit)</span>
-      <input type="number" min="0" id="editChessTimeLimit" class="reward-input" style="width:70px; margin-bottom:0; text-align:center; padding:8px;">
-    </div>
-
-    <div class="endday-label" style="margin-top:16px;">Add Time — Today Only</div>
-    <div class="bonus-readout" id="chessBonusReadout"></div>
-    <div class="bonus-slider-wrap">
-      <input type="range" id="chessBonusSlider" class="bonus-slider"
-             min="5" max="60" step="5" value="15"
-             oninput="onBonusSliderInput('chess')">
-      <div class="bonus-slider-val" id="chessBonusSliderVal">15 min</div>
-    </div>
-    <div class="bonus-btn-row">
-      <button type="button" class="bonus-add" onclick="adjustBonusFromSlider('chess',1)">➕ Add time</button>
-      <button type="button" class="bonus-sub" onclick="adjustBonusFromSlider('chess',-1)">➖ Take away</button>
-    </div>
-    <div class="bonus-note">Today only — the daily limit above is unchanged, and this clears overnight.</div>
-    <button type="button" class="cancel-btn" style="width:100%; margin-top:6px;" onclick="clearBonusToday('chess')">Clear today's extra time</button>
-
-    <button onclick="closeEditChessPoints()" class="cancel-btn" style="width:100%;">Done</button>
-  </div>
-</div>
-
 <!-- ================= ACTIVITIES ================= -->
 <div id="activities" class="screen">
   <div class="routine-header">
@@ -1516,56 +1621,6 @@
   <div class="time-badge" id="activitiesTimeBadge" style="display:none;"></div>
   <div class="routine-sub">Move your body, earn points!</div>
   <div class="activity-list" id="activityList"></div>
-</div>
-
-<div class="celebration-overlay" id="activityDetailOverlay">
-  <div class="celebration-card" style="text-align:left; max-height:82vh; overflow-y:auto;">
-    <h3 style="text-align:center; margin-bottom:14px;">⚙️ Activity Settings</h3>
-    <div id="activityDetailBody"></div>
-    <button type="button" onclick="closeActivityDetail()" style="width:100%; margin-top:16px;">Done</button>
-  </div>
-</div>
-
-<div class="celebration-overlay" id="editActivityPointsOverlay">
-  <div class="celebration-card" style="text-align:left; max-height:80vh; overflow-y:auto;">
-    <h3 style="text-align:center; margin-bottom:6px;">✏️ Edit Activities</h3>
-    <p style="opacity:.6; font-size:.8rem; font-weight:700; text-align:center; margin:0 0 14px;">Use ▲▼ to reorder · tap a field to edit</p>
-    <div id="editActivityPointsList"></div>
-
-    <div class="endday-label" style="margin-top:16px;">Add an Activity</div>
-    <div class="add-row-grid">
-      <input type="text" class="reward-input emoji-input" id="newActEmoji" placeholder="⭐" maxlength="4">
-      <input type="text" class="reward-input" id="newActName" placeholder="Activity name">
-    </div>
-    <div id="newActError" style="color:#ffb3b3; font-size:.85rem; font-weight:700; margin:-4px 0 10px; display:none;"></div>
-    <button type="button" onclick="addActivityRow()" style="width:100%;">+ Add Activity</button>
-    <div class="endday-label" style="margin-top:16px;">Overall Daily Cap</div>
-    <div style="display:flex; gap:8px; align-items:center; margin:8px 0 4px;">
-      <span style="flex:1; font-weight:700; font-size:.9rem;">Max points across ALL activities per day (0 = no cap)</span>
-      <input type="number" min="0" id="editGlobalActivityCap" class="reward-input" style="width:70px; margin-bottom:0; text-align:center; padding:8px;">
-    </div>
-    <div class="endday-label" style="margin-top:16px;">Screen Time</div>
-    <div style="display:flex; gap:8px; align-items:center; margin:8px 0 4px;">
-      <span style="flex:1; font-weight:700; font-size:.9rem;">Daily time limit (minutes, 0 = no limit)</span>
-      <input type="number" min="0" id="editActivitiesTimeLimit" class="reward-input" style="width:70px; margin-bottom:0; text-align:center; padding:8px;">
-    </div>
-
-    <div class="endday-label" style="margin-top:16px;">Add Time — Today Only</div>
-    <div class="bonus-readout" id="activitiesBonusReadout"></div>
-    <div class="bonus-slider-wrap">
-      <input type="range" id="activitiesBonusSlider" class="bonus-slider"
-             min="5" max="60" step="5" value="15"
-             oninput="onBonusSliderInput('activities')">
-      <div class="bonus-slider-val" id="activitiesBonusSliderVal">15 min</div>
-    </div>
-    <div class="bonus-btn-row">
-      <button type="button" class="bonus-add" onclick="adjustBonusFromSlider('activities',1)">➕ Add time</button>
-      <button type="button" class="bonus-sub" onclick="adjustBonusFromSlider('activities',-1)">➖ Take away</button>
-    </div>
-    <div class="bonus-note">Today only — the daily limit above is unchanged, and this clears overnight.</div>
-    <button type="button" class="cancel-btn" style="width:100%; margin-top:6px;" onclick="clearBonusToday('activities')">Clear today's extra time</button>
-    <button onclick="closeEditActivityPoints()" class="cancel-btn" style="width:100%; margin-top:14px;">Done</button>
-  </div>
 </div>
 
 <!-- ================= REWARDS ================= -->
@@ -1618,7 +1673,7 @@
 
   <div class="endday-label" style="margin-top:26px;">Parent Settings</div>
   <div class="chess-actions">
-    <button onclick="openChangePasscode()">🔑 Change Passcode</button>
+    <button onclick="openParentZone()">⚙️ Open Parent Zone</button>
   </div>
 </div>
 
@@ -1632,24 +1687,6 @@
     <div id="newPasscodeError" style="display:none; color:#ffb3b3; font-weight:700; font-size:.85rem; margin:-4px 0 10px;"></div>
     <button onclick="saveNewPasscode()" style="width:100%;">Save</button>
     <button onclick="closeChangePasscode()" class="cancel-btn" style="width:100%;">Cancel</button>
-  </div>
-</div>
-
-<div class="celebration-overlay" id="editRewardsOverlay">
-  <div class="celebration-card" style="text-align:left; max-height:82vh; overflow-y:auto;">
-    <h3 style="margin-bottom:6px; text-align:center;">✏️ Edit Rewards</h3>
-    <p style="opacity:.6; font-size:.8rem; font-weight:700; text-align:center; margin:0 0 14px;">Use ▲▼ to reorder · tap a field to edit</p>
-    <div id="editRewardsList"></div>
-
-    <div class="endday-label" style="margin-top:16px;">Add a Reward</div>
-    <div class="add-row-grid">
-      <input type="text" class="reward-input emoji-input" id="newRewardEmoji" placeholder="🎁" maxlength="4">
-      <input type="text" class="reward-input" id="newRewardName" placeholder="Reward name">
-    </div>
-    <input type="number" class="reward-input" id="newRewardPoints" placeholder="Points needed" min="1">
-    <div id="addRewardError" style="color:#ffb3b3; font-size:.85rem; font-weight:700; margin:-4px 0 10px; display:none;"></div>
-    <button onclick="addRewardRow()" style="width:100%;">+ Add Reward</button>
-    <button onclick="closeEditRewards()" class="cancel-btn" style="width:100%;">Done</button>
   </div>
 </div>
 
@@ -1705,39 +1742,6 @@
   </div>
 </div>
 
-<div class="celebration-overlay" id="editRoutineOverlay">
-  <div class="celebration-card" style="text-align:left; max-height:80vh; overflow-y:auto;">
-    <h3 id="editRoutineTitle" style="text-align:center; margin-bottom:6px;">✏️ Edit Checklist</h3>
-    <p style="opacity:.6; font-size:.8rem; font-weight:700; text-align:center; margin:0 0 14px;">Use ▲▼ to reorder · tap a field to edit</p>
-    <div id="editRoutineList"></div>
-    <div class="endday-label" style="margin-top:16px;">Add a Task</div>
-    <div class="add-row-grid">
-      <input type="text" id="editItemEmoji" class="reward-input emoji-input" placeholder="🙂" maxlength="4">
-      <input type="text" id="editItemLabel" class="reward-input" placeholder="New task name">
-    </div>
-    <button onclick="addRoutineItem()" style="width:100%;">+ Add Task</button>
-
-    <div class="endday-label" style="margin-top:20px;">Points</div>
-    <div style="display:flex; gap:8px; align-items:center; margin:8px 0 6px;">
-      <span style="flex:1; font-weight:700; font-size:.9rem;">Points per task</span>
-      <input type="number" min="0" id="editPerItemPoints" class="reward-input" style="width:70px; margin-bottom:0; text-align:center; padding:8px;">
-    </div>
-    <div style="display:flex; gap:8px; align-items:center; margin:0 0 14px;">
-      <span style="flex:1; font-weight:700; font-size:.9rem;">Bonus for finishing all</span>
-      <input type="number" min="0" id="editBonusPoints" class="reward-input" style="width:70px; margin-bottom:0; text-align:center; padding:8px;">
-    </div>
-
-    <div class="endday-label" style="margin-top:20px;">Skip This Routine</div>
-    <button type="button" id="skipToggleBtn" class="skip-toggle-btn" onclick="toggleSkipToday(editingRoutine)">⏭️ Skip today</button>
-    <label class="skip-check">
-      <input type="checkbox" id="autoSkipWeekend">
-      <span>Skip automatically on Saturdays &amp; Sundays</span>
-    </label>
-
-    <button onclick="closeEditRoutine()" class="cancel-btn" style="width:100%;">Done</button>
-  </div>
-</div>
-
 <div class="celebration-overlay" id="repsTimerOverlay">
   <div class="celebration-card">
     <div class="emoji" id="repsTimerEmoji">💪</div>
@@ -1754,6 +1758,30 @@
     <h3 id="celebrationTitle">Routine complete!</h3>
     <p id="celebrationSub">+20 bonus points</p>
     <button onclick="closeCelebration()" style="width:100%;">🚀 Back to base</button>
+  </div>
+</div>
+
+<!-- ================= PARENT ZONE ================= -->
+<div id="parentZone" class="pz-overlay" role="dialog" aria-label="Parent Zone">
+  <div class="pz-header">
+    <button type="button" class="pz-done" onclick="closeParentZone()">✓ Done</button>
+    <h2>🔐 Parent Zone</h2>
+    <button type="button" class="pz-lock" onclick="lockParentZone()" title="Lock and leave">🔒 Lock</button>
+  </div>
+  <div class="pz-tabs" id="pzTabs"></div>
+  <div class="pz-body" id="pzBody"></div>
+</div>
+<div class="pz-toast" id="pzToast">✓ Saved</div>
+
+<div class="celebration-overlay" id="emojiPicker">
+  <div class="celebration-card emoji-card">
+    <h3>Pick an emoji</h3>
+    <div class="emoji-grid" id="emojiGrid"></div>
+    <div class="pz-add" style="margin-top:12px;">
+      <input type="text" class="pz-input" id="emojiCustom" maxlength="4" placeholder="Or type one…" style="text-align:center;">
+      <button type="button" class="pz-btn primary" onclick="emojiChosen(document.getElementById('emojiCustom').value)">Use</button>
+    </div>
+    <button type="button" class="cancel-btn" style="width:100%;" onclick="emojiChosen('')">Cancel</button>
   </div>
 </div>
 
@@ -2038,43 +2066,50 @@ function updateLockedPads(){
   }
 }
 
-/* ---------- skipping a routine for the day ----------
-   Manual skip is date-keyed so it clears overnight. Auto-skip is a standing
-   rule (weekends) and persists. A skipped routine counts as "handled" for the
-   end-of-day check, awards nothing, and greys out on the dashboard. */
+/* ---------- which days a routine runs, and skipping one for today ----------
+   Each routine has a weekly schedule (Sun..Sat). A parent can also skip it
+   for just today, or switch it back on for a day it normally has off; that
+   override is date-keyed so it clears overnight. A skipped (or hidden)
+   routine counts as "handled" for the end-of-day check, awards nothing, and
+   greys out on the dashboard. */
+function getRoutineDays(routine){
+  try{
+    const a = JSON.parse(localStorage.getItem('routineDays_'+routine));
+    if(Array.isArray(a) && a.length === 7) return a.map(Boolean);
+  }catch(e){}
+  // older setting: "skip automatically on weekends"
+  const weekendOff = localStorage.getItem('autoSkipWeekend_'+routine) === 'yes';
+  return [!weekendOff, true, true, true, true, true, !weekendOff];
+}
+function setRoutineDays(routine, days){
+  localStorage.setItem('routineDays_'+routine, JSON.stringify(days.map(Boolean)));
+}
 function loadSkipState(routine){
   let raw;
   try{ raw = JSON.parse(localStorage.getItem('routineSkip_'+routine)); }catch(e){ raw = null; }
   if(!raw || raw.date !== todayKey()){
-    raw = {date: todayKey(), skipped:false};
+    raw = {date: todayKey(), mode:null};
     localStorage.setItem('routineSkip_'+routine, JSON.stringify(raw));
   }
+  if(raw.skipped && !raw.mode) raw.mode = 'skip';      // older format
   return raw;
 }
-function setSkippedToday(routine, val){
-  localStorage.setItem('routineSkip_'+routine, JSON.stringify({date: todayKey(), skipped: !!val}));
+function setSkipMode(routine, mode){
+  localStorage.setItem('routineSkip_'+routine, JSON.stringify({date: todayKey(), mode}));
 }
-function getAutoSkipWeekends(routine){
-  return localStorage.getItem('autoSkipWeekend_'+routine) === 'yes';
-}
-function setAutoSkipWeekends(routine, val){
-  localStorage.setItem('autoSkipWeekend_'+routine, val ? 'yes' : 'no');
-}
-function isWeekendToday(){
-  const d = new Date().getDay();
-  return d === 0 || d === 6; // Sun or Sat
+function isScheduledToday(routine){
+  return getRoutineDays(routine)[new Date().getDay()];
 }
 function isRoutineSkippedToday(routine){
-  if(loadSkipState(routine).skipped) return true;
-  return getAutoSkipWeekends(routine) && isWeekendToday();
+  if(isHiddenOnDashboard(routine)) return true;
+  const mode = loadSkipState(routine).mode;
+  if(mode === 'skip') return true;
+  if(mode === 'on') return false;
+  return !isScheduledToday(routine);
 }
 function toggleSkipToday(routine){
-  // If the weekend rule is what's skipping it, a manual un-skip should win today.
-  const manual = loadSkipState(routine).skipped;
-  const autoOn = getAutoSkipWeekends(routine) && isWeekendToday();
-  if(manual){ setSkippedToday(routine, false); }
-  else if(autoOn){ setAutoSkipWeekends(routine, false); }
-  else { setSkippedToday(routine, true); }
+  if(isRoutineSkippedToday(routine)) setSkipMode(routine, isScheduledToday(routine) ? null : 'on');
+  else setSkipMode(routine, 'skip');
   refreshSkipUI(routine);
   updateDashboardRing(routine);
   updateSkippedPads();
@@ -2091,8 +2126,8 @@ function updateSkippedPads(){
 function checkAllDoneForToday(){
   const routinesDone = Object.keys(ROUTINE_META).every(r =>
     isRoutineSkippedToday(r) || !!loadState(r).bonusAwarded);
-  const chessDone = isPageTimeUp('chess');
-  const activitiesDone = isPageTimeUp('activities');
+  const chessDone = isHiddenOnDashboard('chess') || isPageTimeUp('chess');
+  const activitiesDone = isHiddenOnDashboard('activities') || isPageTimeUp('activities');
   if(routinesDone && chessDone && activitiesDone){
     const key = 'allDoneShown_'+todayKey();
     if(!localStorage.getItem(key)){
@@ -2173,11 +2208,12 @@ function addPoints(delta){
   updateAllChips();
 }
 function getLevelInfo(points){
-  let current = LEVELS[0];
+  const levels = getLevels();
+  let current = levels[0];
   let next = null;
-  for(let i=0;i<LEVELS.length;i++){
-    if(points >= LEVELS[i].min) current = LEVELS[i];
-    else { next = LEVELS[i]; break; }
+  for(let i=0;i<levels.length;i++){
+    if(points >= levels[i].min) current = levels[i];
+    else { next = levels[i]; break; }
   }
   return {current, next};
 }
@@ -2226,6 +2262,7 @@ function renderList(routine){
     row.innerHTML = `
       <div class="checkbox ${isDone?'checked':''}" id="cb-${routine}-${i}">${isDone?'✓':''}</div>
       <div class="item-label"><span class="item-emoji">${escapeHtml(item.emoji)}</span>${escapeHtml(item.label)}</div>
+      ${typeof item.points === 'number' ? `<div class="item-pts">+${item.points}</div>` : ''}
     `;
     container.appendChild(row);
   });
@@ -2234,7 +2271,8 @@ function renderList(routine){
   const subEl = document.getElementById('sub-'+routine);
   if(subEl){
     const suffixes = {morning:'to launch your day', school:'before free time', bedtime:'before lights out'};
-    subEl.textContent = items.length+' thing'+(items.length===1?'':'s')+' '+(suffixes[routine]||'today')+' · '+getRoutinePoints(routine).perItem+' pts each';
+    const mixed = items.some(it=>typeof it.points === 'number');
+    subEl.textContent = items.length+' thing'+(items.length===1?'':'s')+' '+(suffixes[routine]||'today')+(mixed ? '' : ' · '+getRoutinePoints(routine).perItem+' pts each');
   }
 }
 
@@ -2244,12 +2282,14 @@ function toggleItem(routine, i, evt){
   const pts = getRoutinePoints(routine);
   const wasChecked = !!state.checked[i];
   state.checked[i] = !wasChecked;
+  // A task can carry its own point value; otherwise the routine's default.
+  const val = (items[i] && typeof items[i].points === 'number') ? items[i].points : pts.perItem;
 
   if(!wasChecked){
-    addPoints(pts.perItem);
-    spawnFloatingPoints(routine, i, '+'+pts.perItem);
+    addPoints(val);
+    spawnFloatingPoints(routine, i, '+'+val);
   } else {
-    addPoints(-pts.perItem);
+    addPoints(-val);
   }
 
   const doneCount = items.filter((_,idx)=>state.checked[idx]).length;
@@ -2285,9 +2325,8 @@ function spawnFloatingPoints(routine, i, text){
 }
 
 function showCelebration(routine){
-  const names = {morning:'Morning routine', school:'After School routine', bedtime:'Bedtime routine'};
   const bonus = getRoutinePoints(routine).bonus;
-  document.getElementById('celebrationTitle').textContent = names[routine]+' complete!';
+  document.getElementById('celebrationTitle').textContent = ROUTINE_META[routine].label+' complete!';
   // Bonus defaults to 0, and "+0 bonus points" reads like a let-down.
   document.getElementById('celebrationSub').textContent = bonus > 0 ? '+'+bonus+' bonus points' : 'Mission accomplished, astronaut!';
   document.getElementById('celebrationOverlay').classList.add('show');
@@ -2345,16 +2384,12 @@ function refreshSkipUI(routine){
   const list = document.getElementById('list-'+routine);
   if(banner){
     banner.style.display = skipped ? 'block' : 'none';
-    const auto = getAutoSkipWeekends(routine) && isWeekendToday() && !loadSkipState(routine).skipped;
-    banner.textContent = auto
-      ? '🌤️ Weekend — no ' + ROUTINE_META[routine].label + ' today!'
+    const dayOff = loadSkipState(routine).mode !== 'skip' && !isScheduledToday(routine);
+    banner.textContent = dayOff
+      ? '🌤️ Day off — no ' + ROUTINE_META[routine].label + ' today!'
       : '⏭️ Skipped for today!';
   }
   if(list) list.style.display = skipped ? 'none' : '';
-  const btn = document.getElementById('skipToggleBtn');
-  if(btn && editingRoutine === routine){
-    btn.textContent = skipped ? '↩️ Un-skip today' : '⏭️ Skip today';
-  }
 }
 
 function openRoutine(routine){
@@ -2406,8 +2441,9 @@ function setDateLabel(){
   document.getElementById('todayLabel').textContent =
     d.toLocaleDateString(undefined,{weekday:'long', month:'long', day:'numeric'});
   const h = d.getHours();
+  const who = (typeof getKidName === 'function' && getKidName()) || 'astronaut';
   document.getElementById('kidName').textContent =
-    h < 12 ? '☀️ Good morning, astronaut!' : h < 17 ? '🛰️ Good afternoon, astronaut!' : '🌙 Good evening, astronaut!';
+    (h < 12 ? '☀️ Good morning, ' : h < 17 ? '🛰️ Good afternoon, ' : '🌙 Good evening, ') + who + '!';
 }
 
 /* A tablet left on overnight kept showing yesterday's ticks until something was
@@ -2684,7 +2720,7 @@ function newChessGame(){
   closeBotEnd();
   hideSafetyBar();
   hideSpeech();
-  undosLeft = UNDO_LIMIT; hintsLeft = HINT_LIMIT;
+  undosLeft = getChessUndoLimit(); hintsLeft = getChessHintLimit();
   setChessPips(0, 0);
   lastPraise = false; quietMoves = 0;
   if(mode === 'robot') document.getElementById('oppAvatar').innerHTML = botFaceSVG(BOTS[currentBotIdx].face, 'happy');
@@ -3091,8 +3127,7 @@ function openChess(){
 
 // Screen time shouldn't drain while the tablet is asleep / app is in the
 // background, or while a parent has a settings or passcode panel open.
-const PARENT_OVERLAYS = ['passcodeOverlay','editChessPointsOverlay','editActivityPointsOverlay',
-                         'activityDetailOverlay','timeUpOverlay','addTimeOverlay'];
+const PARENT_OVERLAYS = ['passcodeOverlay','parentZone','timeUpOverlay','addTimeOverlay','changePasscodeOverlay'];
 function screenTimeShouldTick(){
   if(document.hidden) return false;
   return !PARENT_OVERLAYS.some(id=>{
@@ -3158,32 +3193,7 @@ function addPuzzlePointsToday(amount){
   chessStore.set('puzzlePointsToday', JSON.stringify(log));
 }
 
-function openEditChessPoints(){
-  requirePasscode('Parent Passcode', 'Enter the code to edit chess points.', ()=>{
-    updateSafetyBtn();
-    document.getElementById('editChessWinBonus').value = getChessWinBonus();
-    document.getElementById('editLessonPoints').value = getLessonWinPoints();
-    updatePieceStyleBtn();
-    document.getElementById('editPuzzlePoints').value = getPuzzleWinPoints();
-    document.getElementById('editPuzzleDailyCap').value = getPuzzleDailyCap();
-    document.getElementById('editChessTimeLimit').value = getPageTimeLimit('chess');
-    onBonusSliderInput('chess');
-    refreshBonusReadout('chess');
-    document.getElementById('editChessPointsOverlay').classList.add('show');
-  });
-}
-function closeEditChessPoints(){
-  setChessWinBonus(parseInt(document.getElementById('editChessWinBonus').value, 10) || 0);
-  setLessonWinPoints(parseInt(document.getElementById('editLessonPoints').value, 10) || 0);
-  setPuzzleWinPoints(parseInt(document.getElementById('editPuzzlePoints').value, 10) || 0);
-  setPuzzleDailyCap(parseInt(document.getElementById('editPuzzleDailyCap').value, 10) || 0);
-  setPageTimeLimit('chess', parseInt(document.getElementById('editChessTimeLimit').value, 10) || 0);
-  document.getElementById('editChessPointsOverlay').classList.remove('show');
-  updateLockedPads();
-  if(mode==='learn' && !lesson) renderLessonMap();
-  refreshChessMaps();
-  if(document.getElementById('chess').classList.contains('active')) updateChessTimeBadge();
-}
+function openEditChessPoints(){ openParentZone('chess'); }
 
 function opponent(c){ return c==='w' ? 'b' : 'w'; }
 
@@ -4954,7 +4964,6 @@ const BOT_LINES = {
   check:['Check! Watch your king!', 'Check! {sound}'],
   checked:['Eek! My king!', 'Uh oh, check!'],
 };
-const UNDO_LIMIT = 3, HINT_LIMIT = 3;
 
 /* ---------- faces (inline SVG, so they scale and need no image files) ---------- */
 function faceMouth(cx, cy, w, mood, color){
@@ -5192,7 +5201,7 @@ function startBotGame(i){
   enterGameLayout('vs');
   const bot = BOTS[i];
   document.getElementById('oppName').textContent = bot.name;
-  document.getElementById('meName').textContent = 'You';
+  document.getElementById('meName').textContent = getKidName() || 'You';
   document.getElementById('meAvatar').innerHTML = botFaceSVG(KID_FACE, 'happy');
   newChessGame();
   const hello = pickLine(bot.greet, bot);
@@ -5268,7 +5277,7 @@ function updateActionButtons(){
 
 /* ---------- the computer's move ---------- */
 let currentBotIdx = 0;
-let undosLeft = UNDO_LIMIT, hintsLeft = HINT_LIMIT;
+let undosLeft = 3, hintsLeft = 3;   // reset from the parent settings each game
 let lastPraise = false, quietMoves = 0;
 
 function chooseBotMove(bd, color, bot){
@@ -5856,193 +5865,7 @@ function updateActivitiesTimeBadge(){
   el.classList.toggle('low', !!text && getPageTimeRemaining('activities') <= 120);
 }
 
-let editingActivities = [];
-
-function openEditActivityPoints(){
-  requirePasscode('Parent Passcode', 'Enter the code to edit activities.', ()=>{
-    editingActivities = getActivities();
-    renderEditActivitiesList();
-    document.getElementById('newActEmoji').value = '';
-    document.getElementById('newActName').value = '';
-    document.getElementById('newActError').style.display = 'none';
-    document.getElementById('editGlobalActivityCap').value = getGlobalActivityCap();
-    document.getElementById('editActivitiesTimeLimit').value = getPageTimeLimit('activities');
-    onBonusSliderInput('activities');
-    refreshBonusReadout('activities');
-    document.getElementById('editActivityPointsOverlay').classList.add('show');
-  });
-}
-
-function activitySummary(a){
-  const unit = a.type === 'time' ? 'min' : (a.unit || 'reps');
-  const rate = a.unitsPerPoint === 1
-    ? ('1 pt per ' + unit.replace(/s$/,''))
-    : ('1 pt per ' + a.unitsPerPoint + ' ' + unit);
-  const kind = a.type === 'reps' ? '🔢 Counted' : '⏱️ Timed';
-  return kind + ' · ' + rate + ' · max ' + a.cap + '/day';
-}
-
-// Compact list. Details live behind a tap so the modal stays readable on a
-// phone-sized screen instead of stacking six fields per row.
-function renderEditActivitiesList(){
-  const container = document.getElementById('editActivityPointsList');
-  if(editingActivities.length === 0){
-    container.innerHTML = '<div class="endday-row"><div><div class="status">No activities yet — add one below!</div></div></div>';
-    return;
-  }
-  container.innerHTML = editingActivities.map((a,i)=>`
-    <div class="act-row">
-      <div class="reorder-col">
-        <button type="button" class="reorder-btn" ${i===0?'disabled':''} onclick="moveActivity(${i},-1)">▲</button>
-        <button type="button" class="reorder-btn" ${i===editingActivities.length-1?'disabled':''} onclick="moveActivity(${i},1)">▼</button>
-      </div>
-      <button type="button" class="act-row-main" onclick="openActivityDetail(${i})">
-        <span class="act-row-emoji">${escapeHtml(a.emoji)}</span>
-        <span class="act-row-text">
-          <span class="act-row-name">${escapeHtml(a.label)}</span>
-          <span class="act-row-sum">${escapeHtml(activitySummary(a))}</span>
-        </span>
-        <span class="act-row-chev">›</span>
-      </button>
-      <button type="button" class="row-delete-btn" onclick="removeActivityAt(${i})">✕</button>
-    </div>`).join('');
-}
-
-/* ---------- single-activity detail editor ---------- */
-let detailIdx = -1;
-
-function openActivityDetail(i){
-  detailIdx = i;
-  renderActivityDetail();
-  document.getElementById('activityDetailOverlay').classList.add('show');
-}
-function closeActivityDetail(){
-  document.getElementById('activityDetailOverlay').classList.remove('show');
-  detailIdx = -1;
-  renderEditActivitiesList();
-}
-function renderActivityDetail(){
-  const a = editingActivities[detailIdx];
-  if(!a) return;
-  const isReps = a.type === 'reps';
-  document.getElementById('activityDetailBody').innerHTML = `
-    <div class="edit-row-top" style="margin-bottom:14px;">
-      <input type="text" class="reward-input emoji-input" maxlength="4"
-             value="${String(a.emoji).replace(/"/g,'&quot;')}"
-             oninput="updateActivityField(${detailIdx},'emoji',this.value)">
-      <input type="text" class="reward-input name-input"
-             value="${String(a.label).replace(/"/g,'&quot;')}"
-             oninput="updateActivityField(${detailIdx},'label',this.value)">
-    </div>
-
-    <div class="detail-label">How is it measured?</div>
-    <div class="act-type-row" style="margin-bottom:14px;">
-      <button type="button" class="act-type-btn ${isReps?'on':''}" onclick="updateActivityField(${detailIdx},'type','reps')">🔢 Counted</button>
-      <button type="button" class="act-type-btn ${!isReps?'on':''}" onclick="updateActivityField(${detailIdx},'type','time')">⏱️ Timed</button>
-    </div>
-    <div class="detail-hint">${isReps
-      ? 'He taps a button and a timer paces the reps.'
-      : 'He taps Start before playing and Stop when he\'s done.'}</div>
-
-    <div class="detail-label">Earning rate</div>
-    <div class="detail-field">
-      <span>1 point for every</span>
-      <input type="number" min="1" class="reward-input detail-num"
-             value="${a.unitsPerPoint}"
-             oninput="updateActivityField(${detailIdx},'unitsPerPoint',this.value)">
-      ${isReps
-        ? `<input type="text" class="reward-input detail-unit" placeholder="reps"
-                 value="${String(a.unit).replace(/"/g,'&quot;')}"
-                 oninput="updateActivityField(${detailIdx},'unit',this.value)">`
-        : '<span>minutes</span>'}
-    </div>
-
-    <div class="detail-label">Daily limit</div>
-    <div class="detail-field">
-      <span>At most</span>
-      <input type="number" min="0" class="reward-input detail-num"
-             value="${a.cap}"
-             oninput="updateActivityField(${detailIdx},'cap',this.value)">
-      <span>points a day</span>
-    </div>
-
-    ${isReps ? `
-    <div class="detail-label">Tap buttons</div>
-    <div class="detail-field">
-      <input type="text" class="reward-input detail-wide"
-             value="${(a.quick||[]).join(', ')}"
-             oninput="updateActivityField(${detailIdx},'quick',this.value)">
-    </div>
-    <div class="detail-hint">Up to three amounts, separated by commas — these become the buttons he taps.</div>
-    ` : ''}
-  `;
-}
-
-function updateActivityField(i, field, value){
-  const a = editingActivities[i];
-  if(!a) return;
-  if(field === 'quick'){
-    a.quick = String(value).split(/[,\s]+/).map(n=>parseInt(n,10)).filter(n=>n>0).slice(0,3);
-  } else if(field === 'type'){
-    a.type = value;
-    if(value === 'time'){ a.unit = 'min'; }
-    else {
-      if(!a.unit || a.unit === 'min') a.unit = 'reps';
-      if(!a.quick || !a.quick.length) a.quick = [5,10,20];
-      if(!a.pace) a.pace = 3;
-    }
-    if(detailIdx === i) renderActivityDetail(); else renderEditActivitiesList();
-  } else {
-    a[field] = value;
-  }
-}
-
-function moveActivity(i, dir){
-  const j = i + dir;
-  if(j < 0 || j >= editingActivities.length) return;
-  const t = editingActivities[i];
-  editingActivities[i] = editingActivities[j];
-  editingActivities[j] = t;
-  renderEditActivitiesList();
-}
-
-function removeActivityAt(i){
-  editingActivities.splice(i, 1);
-  renderEditActivitiesList();
-}
-
-function addActivityRow(){
-  const emoji = document.getElementById('newActEmoji').value.trim() || '⭐';
-  const name  = document.getElementById('newActName').value.trim();
-  const err   = document.getElementById('newActError');
-  if(!name){
-    err.textContent = 'Please give the activity a name.';
-    err.style.display = 'block';
-    return;
-  }
-  err.style.display = 'none';
-  editingActivities.push(normalizeActivity({
-    id: 'act' + Date.now() + Math.floor(Math.random()*1000),
-    emoji, label: name, type: 'time', unitsPerPoint: 3, cap: 15, unit: 'min'
-  }));
-  document.getElementById('newActEmoji').value = '';
-  document.getElementById('newActName').value = '';
-  renderEditActivitiesList();
-  openActivityDetail(editingActivities.length - 1);
-}
-
-function closeEditActivityPoints(){
-  closeActivityDetail();
-  saveActivities(editingActivities);
-  setGlobalActivityCap(Math.max(0, parseInt(document.getElementById('editGlobalActivityCap').value, 10) || 0));
-  setPageTimeLimit('activities', parseInt(document.getElementById('editActivitiesTimeLimit').value, 10) || 0);
-  document.getElementById('editActivityPointsOverlay').classList.remove('show');
-  updateLockedPads();
-  if(document.getElementById('activities').classList.contains('active')){
-    renderActivities();
-    updateActivitiesTimeBadge();
-  }
-}
+function openEditActivityPoints(){ openParentZone('activities'); }
 
 /* ================= REWARDS ================= */
 function loadRewards(){
@@ -6086,6 +5909,7 @@ function renderRewards(){
       : unlocked
         ? r.threshold+' pts · Ready to redeem!'
         : r.threshold+' pts · '+(r.threshold-points)+' more to save';
+    const repeatNote = r.repeat ? ' · 🔁 again & again' : '';
 
     const row = document.createElement('div');
     row.className = 'reward-row';
@@ -6096,7 +5920,7 @@ function renderRewards(){
       </div>
       <div class="reward-card ${collected?'collected':''}">
         <div class="reward-name">${escapeHtml(r.name)}</div>
-        <div class="reward-meta">${metaText}</div>
+        <div class="reward-meta">${metaText}${repeatNote}</div>
         ${!collected ? `<div class="reward-progress-track"><div class="reward-progress-fill" style="width:${pct}%"></div></div>` : ''}
         <div class="reward-row-flex">
           ${collected
@@ -6172,6 +5996,7 @@ function closeChangePasscode(){
 
 let pendingPasscodeAction = null;
 function requirePasscode(title, sub, onSuccess){
+  if(typeof parentIsUnlocked === 'function' && parentIsUnlocked()){ onSuccess(); return; }
   document.getElementById('passcodeTitle').textContent = title;
   document.getElementById('passcodeSub').textContent = sub;
   document.getElementById('passcodeInput').value = '';
@@ -6186,6 +6011,7 @@ function requirePasscode(title, sub, onSuccess){
 function submitPasscode(){
   const val = document.getElementById('passcodeInput').value;
   if(val === getParentPasscode()){
+    parentUnlockedUntil = Date.now() + 2*60*1000;
     document.getElementById('passcodeOverlay').classList.remove('show');
     const action = pendingPasscodeAction;
     pendingPasscodeAction = null;
@@ -6264,12 +6090,12 @@ function renderEndDay(){
   }).join('');
   document.getElementById('enddayActivities').innerHTML = activityRows || '<div class="endday-row"><div><div class="status">No activities logged today.</div></div></div>';
 
-  const rewardsToday = loadRewards().filter(r => r.collected && r.collectedDate === todayKey());
+  const rewardsToday = getRedeemLog().filter(e => e.date === todayKey());
   const rewardsHtml = rewardsToday.length
     ? rewardsToday.map(r => `<div class="endday-row">
-        <div class="ico">🎁</div>
-        <div style="flex:1;"><div class="name">${escapeHtml(r.name)}</div><div class="status">${r.threshold} pts redeemed</div></div>
-        ${endDayEditUnlocked ? `<span class="reward-remove" onclick="undoRedeemReward(${r.id})">Undo</span>` : ''}
+        <div class="ico">${escapeHtml(r.emoji)}</div>
+        <div style="flex:1;"><div class="name">${escapeHtml(r.name)}</div><div class="status">${r.cost} pts redeemed</div></div>
+        ${endDayEditUnlocked ? `<span class="reward-remove" onclick="undoRedeemReward(${r.ts})">Undo</span>` : ''}
       </div>`).join('')
     : '<div class="endday-row"><div><div class="status">No rewards redeemed today.</div></div></div>';
   document.getElementById('enddayRewards').innerHTML = rewardsHtml;
@@ -6366,6 +6192,7 @@ function performFullReset(){
     localStorage.removeItem('timeBonus_'+page);
   });
   localStorage.removeItem('allDoneShown_'+todayKey());
+  localStorage.removeItem('rewardLog');
   const rewards = loadRewards();
   rewards.forEach(r => { r.collected = false; });
   saveRewards(rewards);
@@ -6380,240 +6207,47 @@ function fullReset(){
   );
 }
 
-/* ---------- checklist editing (parent only) ---------- */
-let editingRoutine = null;
-let editingItems = [];
-let editingRoutineOriginal = [];
-
-function openEditRoutine(routine){
-  requirePasscode('Parent Passcode', 'Enter the code to edit the '+ROUTINE_META[routine].label+' checklist.', ()=>{
-    editingRoutine = routine;
-    editingItems = getRoutineItems(routine).map(it=>({emoji:it.emoji, label:it.label}));
-    editingRoutineOriginal = getRoutineItems(routine).map(it=>({emoji:it.emoji, label:it.label}));
-    document.getElementById('editRoutineTitle').textContent = '✏️ Edit '+ROUTINE_META[routine].label+' Checklist';
-    document.getElementById('editItemEmoji').value = '';
-    document.getElementById('editItemLabel').value = '';
-    const pts = getRoutinePoints(routine);
-    document.getElementById('editPerItemPoints').value = pts.perItem;
-    document.getElementById('editBonusPoints').value = pts.bonus;
-    document.getElementById('autoSkipWeekend').checked = getAutoSkipWeekends(routine);
-    document.getElementById('skipToggleBtn').textContent =
-      isRoutineSkippedToday(routine) ? '↩️ Un-skip today' : '⏭️ Skip today';
-    renderEditRoutineList();
-    document.getElementById('editRoutineOverlay').classList.add('show');
-  });
-}
-function renderEditRoutineList(){
-  const container = document.getElementById('editRoutineList');
-  if(editingItems.length===0){
-    container.innerHTML = '<div class="endday-row"><div><div class="status">No tasks yet — add one below!</div></div></div>';
-    return;
-  }
-  container.innerHTML = editingItems.map((it,i)=>`
-    <div class="edit-item">
-      <div class="reorder-col">
-        <button type="button" class="reorder-btn" ${i===0?'disabled':''} onclick="moveRoutineItem(${i},-1)">▲</button>
-        <button type="button" class="reorder-btn" ${i===editingItems.length-1?'disabled':''} onclick="moveRoutineItem(${i},1)">▼</button>
-      </div>
-      <div class="edit-row-body">
-        <div class="edit-row-top">
-          <input type="text" class="reward-input emoji-input" maxlength="4"
-                 value="${String(it.emoji||'').replace(/"/g,'&quot;')}"
-                 oninput="updateRoutineField(${i},'emoji',this.value)">
-          <input type="text" class="reward-input name-input"
-                 value="${String(it.label||'').replace(/"/g,'&quot;')}"
-                 oninput="updateRoutineField(${i},'label',this.value)">
-        </div>
-      </div>
-      <button type="button" class="row-delete-btn" onclick="removeRoutineItem(${i})">✕</button>
-    </div>
-  `).join('');
-}
-
-function updateRoutineField(i, field, value){
-  if(!editingItems[i]) return;
-  if(field==='emoji') editingItems[i].emoji = value;
-  else editingItems[i].label = value;
-}
-
-function moveRoutineItem(i, dir){
-  const j = i + dir;
-  if(j<0 || j>=editingItems.length) return;
-  const tmp = editingItems[i];
-  editingItems[i] = editingItems[j];
-  editingItems[j] = tmp;
-  renderEditRoutineList();
-}
-
-function addRoutineItem(){
-  const emoji = document.getElementById('editItemEmoji').value.trim() || '✅';
-  const label = document.getElementById('editItemLabel').value.trim();
-  if(!label) return;
-  editingItems.push({emoji, label});
-  document.getElementById('editItemEmoji').value = '';
-  document.getElementById('editItemLabel').value = '';
-  renderEditRoutineList();
-}
-function removeRoutineItem(i){
-  editingItems.splice(i, 1);
-  renderEditRoutineList();
-}
-function closeEditRoutine(){
-  if(editingRoutine){
-    const cleaned = editingItems.map(it=>({
-      emoji: String(it.emoji||'').trim() || '✅',
-      label: String(it.label||'').trim() || 'Task',
-    }));
-    saveRoutineItems(editingRoutine, cleaned);
-    const perItem = Math.max(0, parseInt(document.getElementById('editPerItemPoints').value, 10) || 0);
-    const bonus = Math.max(0, parseInt(document.getElementById('editBonusPoints').value, 10) || 0);
-    saveRoutinePoints(editingRoutine, {perItem, bonus});
-    setAutoSkipWeekends(editingRoutine, document.getElementById('autoSkipWeekend').checked);
-    refreshSkipUI(editingRoutine);
-    updateDashboardRing(editingRoutine);
-    updateSkippedPads();
-    // Keep today's ticks for tasks that still exist (matched by name), instead of
-    // wiping them — wiping let already-earned points be earned a second time.
-    const oldItems = editingRoutineOriginal;
-    const st = loadState(editingRoutine);
-    const checked = {};
-    cleaned.forEach((it, i)=>{
-      const j = oldItems.findIndex((o, k)=>o.label === it.label && st.checked[k]);
-      if(j >= 0){ checked[i] = true; oldItems.splice(j, 1, {}); }
-    });
-    st.checked = checked;
-    saveState(editingRoutine, st);
-    if(document.getElementById(editingRoutine).classList.contains('active')) renderList(editingRoutine);
-  }
-  document.getElementById('editRoutineOverlay').classList.remove('show');
-  editingRoutine = null;
-}
+function openEditRoutine(routine){ openParentZone('checklists', routine); }
 
 function collectReward(id){
   const list = loadRewards();
   const r = list.find(x=>x.id===id);
   if(!r) return;
   requirePasscode('Parent Passcode', 'Enter the code to redeem "'+r.name+'" for '+r.threshold+' points — make sure the real reward has been given!', ()=>{
-    r.collected = true;
-    r.collectedDate = todayKey();
+    if(getSpendable() < r.threshold) return;
+    // Repeatable rewards (ice cream!) stay on the list; one-offs are marked done.
+    if(!r.repeat){ r.collected = true; r.collectedDate = todayKey(); }
     saveRewards(list);
     spendPoints(r.threshold);
+    logRedeem(r);
     renderRewards();
     screenConfetti();
   });
 }
 
-function undoRedeemReward(id){
+function getRedeemLog(){
+  try{ const a = JSON.parse(localStorage.getItem('rewardLog')); return Array.isArray(a) ? a : []; }catch(e){ return []; }
+}
+function logRedeem(r){
+  const log = getRedeemLog();
+  log.push({id:r.id, name:r.name, emoji:r.emoji||'🎁', cost:r.threshold, date:todayKey(), ts:Date.now()});
+  localStorage.setItem('rewardLog', JSON.stringify(log.slice(-200)));
+}
+// Undo one logged redemption: refund it, and make a one-off reward available again.
+function undoRedeemReward(ts){
+  const log = getRedeemLog();
+  const k = log.findIndex(e=>e.ts === ts);
+  if(k < 0) return;
+  const entry = log.splice(k, 1)[0];
+  localStorage.setItem('rewardLog', JSON.stringify(log));
   const list = loadRewards();
-  const r = list.find(x=>x.id===id);
-  if(!r) return;
-  r.collected = false;
-  delete r.collectedDate;
-  saveRewards(list);
-  spendPoints(-r.threshold); // refund
+  const r = list.find(x=>x.id===entry.id);
+  if(r && !r.repeat){ r.collected = false; delete r.collectedDate; saveRewards(list); }
+  spendPoints(-entry.cost);
   renderEndDay();
 }
 
-/* ---------- rewards editor (checklist-style) ---------- */
-let editingRewards = [];
-
-function openEditRewards(){
-  requirePasscode('Parent Passcode', 'Enter the code to edit the rewards list.', ()=>{
-    editingRewards = loadRewards().map(r=>({...r}));
-    document.getElementById('newRewardEmoji').value = '';
-    document.getElementById('newRewardName').value = '';
-    document.getElementById('newRewardPoints').value = '';
-    document.getElementById('addRewardError').style.display = 'none';
-    renderEditRewardsList();
-    document.getElementById('editRewardsOverlay').classList.add('show');
-  });
-}
-
-function renderEditRewardsList(){
-  const container = document.getElementById('editRewardsList');
-  if(editingRewards.length===0){
-    container.innerHTML = '<div class="endday-row"><div><div class="status">No rewards yet — add one below!</div></div></div>';
-    return;
-  }
-  container.innerHTML = editingRewards.map((r,i)=>`
-    <div class="edit-item">
-      <div class="reorder-col">
-        <button type="button" class="reorder-btn" ${i===0?'disabled':''} onclick="moveRewardItem(${i},-1)">▲</button>
-        <button type="button" class="reorder-btn" ${i===editingRewards.length-1?'disabled':''} onclick="moveRewardItem(${i},1)">▼</button>
-      </div>
-      <div class="edit-row-body">
-        <div class="edit-row-top">
-          <input type="text" class="reward-input emoji-input" maxlength="4"
-                 value="${String(r.emoji||'🎁').replace(/"/g,'&quot;')}"
-                 oninput="updateRewardField(${i},'emoji',this.value)">
-          <input type="text" class="reward-input name-input"
-                 value="${String(r.name||'').replace(/"/g,'&quot;')}"
-                 oninput="updateRewardField(${i},'name',this.value)">
-        </div>
-        <div class="edit-row-bottom">
-          <label>Costs
-            <input type="number" min="1" class="reward-input reward-pts-input" value="${r.threshold}"
-                   oninput="updateRewardField(${i},'threshold',this.value)">
-            pts
-          </label>
-          ${r.collected ? '<span class="redeemed-tag">✅ Redeemed</span>' : ''}
-        </div>
-      </div>
-      <button type="button" class="row-delete-btn" onclick="removeRewardAt(${i})">✕</button>
-    </div>
-  `).join('');
-}
-
-function updateRewardField(i, field, value){
-  if(!editingRewards[i]) return;
-  if(field==='threshold') editingRewards[i].threshold = value;
-  else if(field==='emoji') editingRewards[i].emoji = value;
-  else editingRewards[i].name = value;
-}
-
-function moveRewardItem(i, dir){
-  const j = i + dir;
-  if(j<0 || j>=editingRewards.length) return;
-  const tmp = editingRewards[i];
-  editingRewards[i] = editingRewards[j];
-  editingRewards[j] = tmp;
-  renderEditRewardsList();
-}
-
-function removeRewardAt(i){
-  editingRewards.splice(i,1);
-  renderEditRewardsList();
-}
-function addRewardRow(){
-  const emoji = document.getElementById('newRewardEmoji').value.trim() || '🎁';
-  const name = document.getElementById('newRewardName').value.trim();
-  const pts = parseInt(document.getElementById('newRewardPoints').value, 10);
-  const errEl = document.getElementById('addRewardError');
-  if(!name || !pts || pts<=0){
-    errEl.textContent = 'Please enter a reward name and a points goal greater than 0.';
-    errEl.style.display = 'block';
-    return;
-  }
-  errEl.style.display = 'none';
-  const nextId = editingRewards.length ? Math.max(...editingRewards.map(r=>r.id))+1 : 1;
-  editingRewards.push({id:nextId, emoji, name, threshold:pts, collected:false});
-  document.getElementById('newRewardEmoji').value = '';
-  document.getElementById('newRewardName').value = '';
-  document.getElementById('newRewardPoints').value = '';
-  renderEditRewardsList();
-}
-function closeEditRewards(){
-  const cleaned = editingRewards.map(r=>({
-    ...r,
-    emoji: String(r.emoji||'').trim() || '🎁',
-    name: String(r.name||'').trim() || 'Reward',
-    threshold: Math.max(1, parseInt(r.threshold,10) || 1),
-  }));
-  saveRewards(cleaned);
-  document.getElementById('editRewardsOverlay').classList.remove('show');
-  renderRewards();
-}
-
+function openEditRewards(){ openParentZone('rewards'); }
 
 function openRewards(){
   document.getElementById('dashboard').classList.remove('active');
@@ -6622,7 +6256,693 @@ function openRewards(){
   document.getElementById('rewards').scrollTop = 0;
 }
 
+/* ================= PARENT ZONE =================
+   One place for every grown-up setting. Changes save the moment they're made
+   (a small "Saved" toast confirms it), so there's no Done button to forget.
+   The passcode is asked once on the way in; while the zone is open — and for
+   a couple of minutes after — other passcode prompts are skipped. */
+const PZ_TABS = [
+  {id:'kid',        icon:'🧑‍🚀', name:'Kid & App'},
+  {id:'checklists', icon:'✅', name:'Checklists'},
+  {id:'activities', icon:'🏅', name:'Activities'},
+  {id:'rewards',    icon:'🎁', name:'Rewards'},
+  {id:'chess',      icon:'♟️', name:'Chess'},
+  {id:'time',       icon:'⏱️', name:'Screen Time'},
+  {id:'points',     icon:'⭐', name:'Points & Ranks'},
+  {id:'backup',     icon:'💾', name:'Backup & Reset'},
+];
+const EMOJI_CHOICES = ['✅','⭐','🌟','🚀','🪐','👕','🩳','🧦','👟','🪥','🦷','🛁','🚿','🧼','🚽','🛏️','💡','📖','📚','✏️','🎒','🍎','🥣','🥛','🍽️','🧹','🧺','🗑️','🐶','🐱','🌱','🎻','🎹','🥁','🎨','🧩','⚽','🏀','⚾','🏈','🎾','🏊','🚴','🛹','🤸','🧘','🏃','💪','🧗','🥋','🍦','🍕','🎬','🧸','🎮','🎁','🛝','🎡','🏖️','🎟️','🍿','📺','🦖','🤖','👽','🌙','☀️','🌅','🎉','🏆'];
+const TASK_SUGGESTIONS = [
+  ['🦷','Floss'],['🐶','Feed the pet'],['🎹','Practice music'],['🧺','Put laundry away'],
+  ['🍽️','Clear the table'],['🌱','Water the plants'],['🧦','Shoes & socks on'],['💧','Drink water'],
+];
+const ACTIVITY_SUGGESTIONS = [
+  ['🚴','Bike ride','time'],['🏊','Swimming','time'],['🏃','Running','time'],['🧘','Yoga','time'],
+  ['🧗','Climbing','time'],['🤸','Squats','reps'],['🦘','Jump rope','reps'],['🥋','Karate','time'],
+];
+const REWARD_SUGGESTIONS = [
+  ['🍦','Ice cream',60],['🎬','Pick the movie',100],['🍕','Pizza night',150],['🎮','30 min game time',80],
+  ['🧸','New toy',350],['🛝','Park trip',200],['🍿','Movie theater',500],['🎡','Big day out',900],
+];
+const ROUTINE_DEFAULT_META = {
+  morning: {emoji:'🌅', label:'Morning',      sub:'Rise & shine routine'},
+  school:  {emoji:'🎒', label:'After School', sub:'Home base routine'},
+  bedtime: {emoji:'🌙', label:'Bedtime',      sub:'Wind-down routine'},
+};
+
+let pzOpen = false, pzTab = 'kid', pzRoutine = 'morning', pzActOpen = -1;
+let parentUnlockedUntil = 0;
+function parentIsUnlocked(){ return pzOpen || Date.now() < parentUnlockedUntil; }
+
+function openParentZone(tab, routine){
+  requirePasscode('Parent Zone', 'Enter the parent code to change settings.', ()=>{
+    pzOpen = true;
+    if(tab) pzTab = tab;
+    if(routine) pzRoutine = routine;
+    pzActOpen = -1;
+    document.getElementById('parentZone').classList.add('show');
+    renderParentZone();
+  });
+}
+function closeParentZone(){
+  pzOpen = false;
+  parentUnlockedUntil = Date.now() + 2*60*1000;
+  document.getElementById('parentZone').classList.remove('show');
+  refreshEverything();
+}
+function lockParentZone(){
+  closeParentZone();
+  parentUnlockedUntil = 0;
+}
+// Re-draw whatever is on screen so settings changes show up immediately.
+function refreshEverything(){
+  applyRoutineMeta();
+  applyDashVisibility();
+  setDateLabel();
+  updatePointsBar();
+  updateAllChips();
+  updateLockedPads();
+  updateSkippedPads();
+  Object.keys(ROUTINE_META).forEach(r=>{ updateDashboardRing(r); refreshSkipUI(r); });
+  const active = document.querySelector('.screen.active');
+  const id = active ? active.id : '';
+  if(ROUTINE_META[id]) renderList(id);
+  if(id === 'activities'){ renderActivities(); updateActivitiesTimeBadge(); }
+  if(id === 'rewards') renderRewards();
+  if(id === 'endday') renderEndDay();
+  if(id === 'chess'){
+    updateChessTimeBadge();
+    if(mode === 'learn' && !lesson) renderLessonMap();
+    refreshChessMaps();
+    if(board && document.getElementById('chess').classList.contains('in-game')) renderBoard();
+  }
+}
+
+let pzToastTimer = null;
+function pzSaved(msg){
+  const t = document.getElementById('pzToast');
+  t.textContent = msg || '✓ Saved';
+  t.classList.add('show');
+  clearTimeout(pzToastTimer);
+  pzToastTimer = setTimeout(()=>t.classList.remove('show'), 1400);
+}
+
+/* ---------- small building blocks ---------- */
+function pzStepper(value, onchange, opts){
+  opts = opts || {};
+  const min = opts.min !== undefined ? opts.min : 0;
+  const max = opts.max !== undefined ? opts.max : 9999;
+  const step = opts.step || 1;
+  return `<div class="stepper">
+    <button type="button" onclick="pzStep(this,-1)" aria-label="less">−</button>
+    <input type="number" inputmode="numeric" value="${value}" min="${min}" max="${max}" step="${step}" onchange="pzClamp(this); ${onchange}">
+    <button type="button" onclick="pzStep(this,1)" aria-label="more">+</button>
+    ${opts.suffix ? `<span class="stepper-suffix">${opts.suffix}</span>` : ''}
+  </div>`;
+}
+function pzClamp(inp){
+  const min = parseFloat(inp.min), max = parseFloat(inp.max);
+  let v = parseInt(inp.value, 10);
+  if(isNaN(v)) v = min;
+  inp.value = Math.min(max, Math.max(min, v));
+}
+function pzStep(btn, dir){
+  const inp = btn.parentElement.querySelector('input');
+  const step = parseFloat(inp.step) || 1;
+  inp.value = (parseInt(inp.value, 10) || 0) + dir*step;
+  pzClamp(inp);
+  inp.dispatchEvent(new Event('change'));
+}
+function pzSwitch(on, onclick){
+  return `<button type="button" class="pz-switch ${on?'on':''}" role="switch" aria-checked="${on}" onclick="${onclick}"><i></i></button>`;
+}
+function pzRow(label, control, hint){
+  return `<div class="pz-row"><div class="pz-row-label">${label}${hint ? `<small>${hint}</small>` : ''}</div><div class="pz-row-ctl">${control}</div></div>`;
+}
+function pzCard(title, inner, extraClass){
+  return `<div class="pz-card ${extraClass||''}">${title ? `<div class="pz-card-title">${title}</div>` : ''}${inner}</div>`;
+}
+function pzAttr(s){ return escapeHtml(s); }
+
+/* ---------- emoji picker ---------- */
+let emojiPickCallback = null;
+function pickEmoji(cb){
+  emojiPickCallback = cb;
+  document.getElementById('emojiGrid').innerHTML =
+    EMOJI_CHOICES.map(e=>`<button type="button" onclick="emojiChosen('${e}')">${e}</button>`).join('');
+  document.getElementById('emojiCustom').value = '';
+  document.getElementById('emojiPicker').classList.add('show');
+}
+function emojiChosen(e){
+  e = String(e || '').trim();
+  document.getElementById('emojiPicker').classList.remove('show');
+  if(e && emojiPickCallback) emojiPickCallback(e);
+  emojiPickCallback = null;
+}
+
+/* ---------- shell ---------- */
+function setPzTab(id){ pzTab = id; pzActOpen = -1; renderParentZone(); document.getElementById('pzBody').scrollTop = 0; }
+function renderParentZone(){
+  document.getElementById('pzTabs').innerHTML = PZ_TABS.map(t=>
+    `<button type="button" class="pz-tab ${t.id===pzTab?'active':''}" onclick="setPzTab('${t.id}')"><span>${t.icon}</span>${t.name}</button>`).join('');
+  const r = {kid:pzKid, checklists:pzChecklists, activities:pzActivities, rewards:pzRewards,
+             chess:pzChess, time:pzTime, points:pzPoints, backup:pzBackup}[pzTab];
+  document.getElementById('pzBody').innerHTML = r();
+  const active = document.querySelector('.pz-tab.active');
+  if(active) active.scrollIntoView({inline:'center', block:'nearest'});
+}
+
+/* ---------- Kid & App ---------- */
+function getKidName(){ return (localStorage.getItem('kidName') || '').trim(); }
+function getDashHidden(){
+  try{ const o = JSON.parse(localStorage.getItem('dashHidden')); return (o && typeof o === 'object') ? o : {}; }catch(e){ return {}; }
+}
+function isHiddenOnDashboard(key){ return !!getDashHidden()[key]; }
+function applyDashVisibility(){
+  const h = getDashHidden();
+  ['morning','school','bedtime','chess','activities','rewards'].forEach(k=>{
+    const el = document.getElementById(k+'-pad');
+    if(el) el.style.display = h[k] ? 'none' : '';
+  });
+  const tilesHidden = ['chess','activities','rewards'].every(k=>h[k]);
+  document.querySelector('.tiles').style.display = tilesHidden ? 'none' : '';
+  document.getElementById('tilesLabel').style.display = tilesHidden ? 'none' : '';
+  const shown = ['chess','activities','rewards'].filter(k=>!h[k]).length;
+  document.querySelector('.tiles').style.gridTemplateColumns = 'repeat('+Math.max(1,shown)+',1fr)';
+}
+function pzKid(){
+  const h = getDashHidden();
+  const vis = (key, label) => pzRow(label, pzSwitch(!h[key], `pzToggleHidden('${key}')`));
+  return pzCard('👋 About your kid',
+      pzRow('Name', `<input type="text" class="pz-input" maxlength="20" placeholder="e.g. Chance" value="${pzAttr(getKidName())}" oninput="pzSetKidName(this.value)">`,
+            'Used in greetings and on the chess board.'))
+    + pzCard('🏠 Show on the home screen',
+        vis('morning', ROUTINE_META.morning.emoji+' '+escapeHtml(ROUTINE_META.morning.label))
+      + vis('school', ROUTINE_META.school.emoji+' '+escapeHtml(ROUTINE_META.school.label))
+      + vis('bedtime', ROUTINE_META.bedtime.emoji+' '+escapeHtml(ROUTINE_META.bedtime.label))
+      + vis('chess', '♟️ Chess') + vis('activities', '🏅 Activities') + vis('rewards', '🎁 Rewards'))
+    + pzCard('🔊 Sound',
+        pzRow('Read things out loud', pzSwitch(voiceOn, 'pzToggleVoice()'), 'Chess coach, celebrations and time-up messages.'))
+    + pzCard('🔑 Passcode',
+        `<p class="pz-note">The code that opens this Parent Zone, redeems rewards and resets the day.</p>
+         <button type="button" class="pz-btn" onclick="openChangePasscode()">Change passcode</button>`);
+}
+function pzSetKidName(v){ localStorage.setItem('kidName', String(v).trim()); setDateLabel(); pzSaved(); }
+function pzToggleHidden(key){
+  const h = getDashHidden();
+  h[key] = !h[key];
+  localStorage.setItem('dashHidden', JSON.stringify(h));
+  applyDashVisibility(); updateSkippedPads();
+  renderParentZone(); pzSaved();
+}
+function pzToggleVoice(){ toggleVoice(); renderParentZone(); pzSaved(); }
+
+/* ---------- Checklists ---------- */
+function getRoutineMeta(r){
+  let o = null;
+  try{ o = JSON.parse(localStorage.getItem('routineMeta_'+r)); }catch(e){}
+  return Object.assign({}, ROUTINE_DEFAULT_META[r], o || {});
+}
+function applyRoutineMeta(){
+  Object.keys(ROUTINE_DEFAULT_META).forEach(r=>{
+    const m = getRoutineMeta(r);
+    ROUTINE_META[r] = {emoji:m.emoji, label:m.label};
+    const pad = document.getElementById(r+'-pad');
+    if(pad){
+      pad.querySelector('.pad-icon').textContent = m.emoji;
+      pad.querySelector('h2').textContent = m.label;
+      pad.querySelector('.pad-text span').textContent = m.sub;
+    }
+    const title = document.querySelector('#'+r+' .routine-title');
+    if(title) title.textContent = m.emoji+' '+m.label;
+  });
+}
+function pzSetRoutineMeta(r, field, value){
+  const m = getRoutineMeta(r);
+  m[field] = String(value).trim() || ROUTINE_DEFAULT_META[r][field];
+  localStorage.setItem('routineMeta_'+r, JSON.stringify(m));
+  applyRoutineMeta();
+  pzSaved();
+}
+// Edit the task list while keeping today's ticks attached to the same tasks.
+function pzRoutineMutate(r, op){
+  const items = getRoutineItems(r).map(it=>Object.assign({}, it));
+  const st = loadState(r);
+  const ticks = items.map((_,i)=>!!st.checked[i]);
+  op(items, ticks);
+  saveRoutineItems(r, items);
+  st.checked = {};
+  ticks.forEach((v,i)=>{ if(v) st.checked[i] = true; });
+  saveState(r, st);
+  updateDashboardRing(r);
+  if(document.getElementById(r).classList.contains('active')) renderList(r);
+  renderParentZone();
+  pzSaved();
+}
+function pzTaskField(r, i, field, value){
+  // Text edits don't re-render (that would steal the keyboard) — just save.
+  const items = getRoutineItems(r).map(it=>Object.assign({}, it));
+  if(!items[i]) return;
+  if(field === 'points'){
+    const v = parseInt(value, 10);
+    if(isNaN(v) || v === getRoutinePoints(r).perItem) delete items[i].points; else items[i].points = Math.max(0, v);
+  } else items[i][field] = String(value).trim() || (field === 'label' ? 'Task' : '✅');
+  saveRoutineItems(r, items);
+  if(document.getElementById(r).classList.contains('active')) renderList(r);
+  pzSaved();
+}
+function pzTaskEmoji(r, i){ pickEmoji(e=>pzRoutineMutate(r, items=>{ items[i].emoji = e; })); }
+function pzTaskMove(r, i, dir){
+  pzRoutineMutate(r, (items, ticks)=>{
+    const j = i + dir;
+    if(j < 0 || j >= items.length) return;
+    [items[i], items[j]] = [items[j], items[i]];
+    [ticks[i], ticks[j]] = [ticks[j], ticks[i]];
+  });
+}
+function pzTaskDelete(r, i){
+  pzRoutineMutate(r, (items, ticks)=>{ if(items.length > 1){ items.splice(i,1); ticks.splice(i,1); } });
+}
+function pzTaskAdd(r, emoji, label){
+  if(!label){
+    const inp = document.getElementById('pzNewTask');
+    label = inp ? inp.value.trim() : '';
+    if(!label){ if(inp) inp.focus(); return; }
+  }
+  pzRoutineMutate(r, (items, ticks)=>{ items.push({emoji: emoji || '✅', label}); ticks.push(false); });
+}
+function pzRoutineDefaults(r){
+  showConfirm('↩️', 'Reset this checklist?', 'The tasks go back to the original list. Today’s ticks are cleared.', ()=>{
+    localStorage.removeItem('routineItems_'+r);
+    localStorage.removeItem('routine_'+r);
+    pzRoutineMutate(r, ()=>{});
+  });
+}
+function pzSetRoutinePts(r, field, v){
+  const p = getRoutinePoints(r);
+  p[field] = Math.max(0, parseInt(v, 10) || 0);
+  saveRoutinePoints(r, p);
+  if(document.getElementById(r).classList.contains('active')) renderList(r);
+  renderParentZone(); pzSaved();
+}
+function pzToggleDay(r, d){
+  const days = getRoutineDays(r);
+  days[d] = !days[d];
+  setRoutineDays(r, days);
+  refreshSkipUI(r); updateDashboardRing(r); updateSkippedPads();
+  renderParentZone(); pzSaved();
+}
+function pzToggleSkip(r){ toggleSkipToday(r); renderParentZone(); pzSaved(); }
+function pzChecklists(){
+  const r = pzRoutine;
+  const meta = getRoutineMeta(r);
+  const items = getRoutineItems(r);
+  const pts = getRoutinePoints(r);
+  const st = loadState(r);
+  const days = getRoutineDays(r);
+  const seg = Object.keys(ROUTINE_DEFAULT_META).map(k=>
+    `<button type="button" class="${k===r?'on':''}" onclick="pzRoutine='${k}'; renderParentZone();">${getRoutineMeta(k).emoji} ${escapeHtml(getRoutineMeta(k).label)}</button>`).join('');
+  const rows = items.map((it,i)=>`
+    <div class="pz-item">
+      <div class="pz-reorder">
+        <button type="button" ${i===0?'disabled':''} onclick="pzTaskMove('${r}',${i},-1)">▲</button>
+        <button type="button" ${i===items.length-1?'disabled':''} onclick="pzTaskMove('${r}',${i},1)">▼</button>
+      </div>
+      <button type="button" class="pz-emoji" onclick="pzTaskEmoji('${r}',${i})">${escapeHtml(it.emoji)}</button>
+      <div class="pz-item-main">
+        <input type="text" class="pz-input" value="${pzAttr(it.label)}" oninput="pzTaskField('${r}',${i},'label',this.value)">
+        <div class="pz-item-meta">
+          ${st.checked[i] ? '<span class="pz-tag done">✓ done today</span>' : ''}
+          <span class="pz-mini-label">pts</span>
+          ${pzStepper(typeof it.points === 'number' ? it.points : pts.perItem, `pzTaskField('${r}',${i},'points',this.value)`, {min:0, max:100})}
+        </div>
+      </div>
+      <button type="button" class="pz-del" ${items.length<=1?'disabled':''} onclick="pzTaskDelete('${r}',${i})" aria-label="delete">✕</button>
+    </div>`).join('');
+  const sugg = TASK_SUGGESTIONS.filter(([,l])=>!items.some(it=>it.label===l))
+    .map(([e,l])=>`<button type="button" class="pz-chip" onclick="pzTaskAdd('${r}','${e}','${l.replace(/'/g,"\\'")}')">+ ${e} ${escapeHtml(l)}</button>`).join('');
+  const skipped = isRoutineSkippedToday(r);
+  return `<div class="pz-seg">${seg}</div>`
+    + pzCard('🏷️ Name & look',
+        `<div class="pz-item" style="margin:0;">
+           <button type="button" class="pz-emoji" onclick="pickEmoji(e=>{ pzSetRoutineMeta('${r}','emoji',e); renderParentZone(); })">${meta.emoji}</button>
+           <div class="pz-item-main">
+             <input type="text" class="pz-input" maxlength="22" value="${pzAttr(meta.label)}" oninput="pzSetRoutineMeta('${r}','label',this.value)">
+             <input type="text" class="pz-input pz-input-sm" maxlength="40" value="${pzAttr(meta.sub)}" oninput="pzSetRoutineMeta('${r}','sub',this.value)">
+           </div>
+         </div>`)
+    + pzCard('📋 Tasks <span class="pz-count">'+items.length+'</span>',
+        rows
+        + `<div class="pz-add">
+             <input type="text" class="pz-input" id="pzNewTask" placeholder="New task…" onkeydown="if(event.key==='Enter') pzTaskAdd('${r}')">
+             <button type="button" class="pz-btn primary" onclick="pzTaskAdd('${r}')">+ Add</button>
+           </div>`
+        + (sugg ? `<div class="pz-chips">${sugg}</div>` : '')
+        + `<button type="button" class="pz-link" onclick="pzRoutineDefaults('${r}')">Reset to the original list</button>`)
+    + pzCard('⭐ Points',
+        pzRow('Points per task', pzStepper(pts.perItem, `pzSetRoutinePts('${r}','perItem',this.value)`, {min:0,max:100}), 'Any task can override this above.')
+      + pzRow('Bonus for finishing all', pzStepper(pts.bonus, `pzSetRoutinePts('${r}','bonus',this.value)`, {min:0,max:500,step:5})))
+    + pzCard('📅 Which days?',
+        `<div class="pz-days">${['S','M','T','W','T','F','S'].map((d,k)=>
+          `<button type="button" class="${days[k]?'on':''}" onclick="pzToggleDay('${r}',${k})">${d}</button>`).join('')}</div>
+         <p class="pz-note">On days that aren't picked, this routine is greyed out and doesn't count.</p>`
+      + pzRow(skipped ? '⏭️ Off today' : '▶️ On today',
+          `<button type="button" class="pz-btn" onclick="pzToggleSkip('${r}')">${skipped ? 'Turn on for today' : 'Skip today'}</button>`,
+          'Just for today — the schedule above is unchanged.'));
+}
+
+/* ---------- Activities ---------- */
+function pzActMutate(fn, rerender){
+  const list = getActivities().map(a=>Object.assign({}, a, a.quick ? {quick:a.quick.slice()} : {}));
+  fn(list);
+  saveActivities(list);
+  if(document.getElementById('activities').classList.contains('active')) renderActivities();
+  if(rerender !== false) renderParentZone();
+  pzSaved();
+}
+function pzActField(i, field, value){
+  pzActMutate(list=>{
+    const a = list[i];
+    if(!a) return;
+    if(field === 'quick'){
+      const q = String(value).split(/[,\s]+/).map(n=>parseInt(n,10)).filter(n=>n>0).slice(0,3);
+      if(q.length) a.quick = q;
+    } else if(field === 'type'){
+      a.type = value;
+      if(value === 'time') a.unit = 'min';
+      else { if(!a.unit || a.unit === 'min') a.unit = 'reps'; if(!a.quick) a.quick = [5,10,20]; if(!a.pace) a.pace = 3; }
+    } else if(field === 'pace'){
+      a.pace = Math.max(0.5, parseFloat(value) || 3);
+    } else a[field] = value;
+  }, field === 'type' || field === 'emoji');
+}
+function pzActMove(i, dir){ pzActMutate(list=>{ const j=i+dir; if(j<0||j>=list.length) return; [list[i],list[j]]=[list[j],list[i]]; if(pzActOpen===i) pzActOpen=j; }); }
+function pzActDelete(i){
+  const a = getActivities()[i];
+  showConfirm('🗑️', 'Remove '+(a ? a.label : 'this activity')+'?', 'Points already earned are kept.', ()=>{ pzActOpen = -1; pzActMutate(list=>list.splice(i,1)); });
+}
+function pzActAdd(emoji, label, type){
+  if(!label){
+    const inp = document.getElementById('pzNewAct');
+    label = inp ? inp.value.trim() : '';
+    if(!label){ if(inp) inp.focus(); return; }
+  }
+  pzActMutate(list=>{
+    list.push(normalizeActivity({id:'act'+Date.now()+Math.floor(Math.random()*1000), emoji: emoji || '⭐', label,
+      type: type || 'time', unitsPerPoint: type === 'reps' ? 5 : 3, cap: 15, unit: type === 'reps' ? 'reps' : 'min', quick:[10,20,30], pace:2}));
+    pzActOpen = list.length - 1;
+  });
+}
+function pzActivities(){
+  const list = getActivities();
+  const cards = list.map((a,i)=>{
+    const open = pzActOpen === i;
+    const reps = a.type === 'reps';
+    const body = !open ? '' : `
+      <div class="pz-act-body">
+        <div class="pz-seg small">
+          <button type="button" class="${reps?'on':''}" onclick="pzActField(${i},'type','reps')">🔢 Counted (reps)</button>
+          <button type="button" class="${!reps?'on':''}" onclick="pzActField(${i},'type','time')">⏱️ Timed (stopwatch)</button>
+        </div>
+        ${pzRow('1 point for every', pzStepper(a.unitsPerPoint, `pzActField(${i},'unitsPerPoint',this.value)`, {min:1,max:100, suffix: reps ? escapeHtml(a.unit) : 'min'}))}
+        ${pzRow('Most points per day', pzStepper(a.cap, `pzActField(${i},'cap',this.value)`, {min:0,max:200}), '0 = this activity earns nothing.')}
+        ${reps ? pzRow('Counting word', `<input type="text" class="pz-input" style="width:110px" value="${pzAttr(a.unit)}" onchange="pzActField(${i},'unit',this.value.trim()||'reps')">`, 'e.g. reps, jumps, laps')
+               + pzRow('Tap buttons', `<input type="text" class="pz-input" style="width:110px" value="${(a.quick||[]).join(', ')}" onchange="pzActField(${i},'quick',this.value)">`, 'Up to 3 amounts, like 5, 10, 20')
+               + pzRow('Seconds per rep', pzStepper(a.pace || 3, `pzActField(${i},'pace',this.value)`, {min:1,max:20}), 'Paces the countdown so reps aren’t rushed.') : ''}
+      </div>`;
+    const sum = (reps ? '🔢 ' : '⏱️ ') + '1 pt / ' + a.unitsPerPoint + ' ' + (reps ? a.unit : 'min') + ' · max ' + a.cap + '/day';
+    return `<div class="pz-item pz-act ${open?'open':''}">
+      <div class="pz-reorder">
+        <button type="button" ${i===0?'disabled':''} onclick="pzActMove(${i},-1)">▲</button>
+        <button type="button" ${i===list.length-1?'disabled':''} onclick="pzActMove(${i},1)">▼</button>
+      </div>
+      <button type="button" class="pz-emoji" onclick="pickEmoji(e=>pzActField(${i},'emoji',e))">${escapeHtml(a.emoji)}</button>
+      <div class="pz-item-main">
+        <input type="text" class="pz-input" value="${pzAttr(a.label)}" onchange="pzActField(${i},'label',this.value.trim()||'Activity')">
+        <button type="button" class="pz-expand" onclick="pzActOpen = pzActOpen===${i} ? -1 : ${i}; renderParentZone();">${escapeHtml(sum)} <b>${open?'▴':'▾'}</b></button>
+      </div>
+      <button type="button" class="pz-del" onclick="pzActDelete(${i})" aria-label="delete">✕</button>
+      ${body}
+    </div>`;
+  }).join('');
+  const sugg = ACTIVITY_SUGGESTIONS.filter(([,l])=>!list.some(a=>a.label===l))
+    .map(([e,l,t])=>`<button type="button" class="pz-chip" onclick="pzActAdd('${e}','${l}','${t}')">+ ${e} ${l}</button>`).join('');
+  return pzCard('🏅 Activities <span class="pz-count">'+list.length+'</span>',
+      `<p class="pz-note">Tap a row's summary to change how it earns points.</p>` + cards
+      + `<div class="pz-add">
+           <input type="text" class="pz-input" id="pzNewAct" placeholder="New activity…" onkeydown="if(event.key==='Enter') pzActAdd()">
+           <button type="button" class="pz-btn primary" onclick="pzActAdd()">+ Add</button>
+         </div>`
+      + (sugg ? `<div class="pz-chips">${sugg}</div>` : ''))
+    + pzCard('🧢 Daily limit for all activities',
+        pzRow('Most activity points per day', pzStepper(getGlobalActivityCap(), `setGlobalActivityCap(parseInt(this.value,10)||0); pzSaved(); if(document.getElementById('activities').classList.contains('active')) renderActivities();`, {min:0,max:500,step:5}), '0 = no overall limit.'));
+}
+
+/* ---------- Rewards ---------- */
+function pzRewardsMutate(fn){
+  const list = loadRewards().map(r=>Object.assign({}, r));
+  fn(list);
+  saveRewards(list);
+  if(document.getElementById('rewards').classList.contains('active')) renderRewards();
+  updateLockedPads();
+  renderParentZone();
+  pzSaved();
+}
+function pzRewardField(i, field, value){
+  const list = loadRewards();
+  if(!list[i]) return;
+  if(field === 'threshold') list[i].threshold = Math.max(1, parseInt(value, 10) || 1);
+  else list[i][field] = String(value).trim() || 'Reward';
+  saveRewards(list);
+  if(document.getElementById('rewards').classList.contains('active')) renderRewards();
+  updateLockedPads();
+  pzSaved();
+}
+function pzRewardAdd(emoji, name, cost){
+  if(!name){
+    const inp = document.getElementById('pzNewReward');
+    name = inp ? inp.value.trim() : '';
+    if(!name){ if(inp) inp.focus(); return; }
+    cost = parseInt(document.getElementById('pzNewRewardCost').value, 10) || 100;
+  }
+  pzRewardsMutate(list=>{
+    const id = list.length ? Math.max(...list.map(r=>r.id||0)) + 1 : 1;
+    list.push({id, emoji: emoji || '🎁', name, threshold: cost, collected:false, repeat:false});
+  });
+}
+function pzRewards(){
+  const list = loadRewards();
+  const rows = list.map((r,i)=>`
+    <div class="pz-item">
+      <div class="pz-reorder">
+        <button type="button" ${i===0?'disabled':''} onclick="pzRewardsMutate(l=>{[l[${i}],l[${i-1}]]=[l[${i-1}],l[${i}]];})">▲</button>
+        <button type="button" ${i===list.length-1?'disabled':''} onclick="pzRewardsMutate(l=>{[l[${i}],l[${i+1}]]=[l[${i+1}],l[${i}]];})">▼</button>
+      </div>
+      <button type="button" class="pz-emoji" onclick="pickEmoji(e=>pzRewardsMutate(l=>{ l[${i}].emoji = e; }))">${escapeHtml(r.emoji||'🎁')}</button>
+      <div class="pz-item-main">
+        <input type="text" class="pz-input" value="${pzAttr(r.name)}" oninput="pzRewardField(${i},'name',this.value)">
+        <div class="pz-item-meta">
+          <span class="pz-mini-label">costs</span>
+          ${pzStepper(r.threshold, `pzRewardField(${i},'threshold',this.value)`, {min:5,max:10000,step:5})}
+        </div>
+        <div class="pz-item-meta">
+          <label class="pz-inline">${pzSwitch(!!r.repeat, `pzRewardsMutate(l=>{ l[${i}].repeat = !l[${i}].repeat; if(l[${i}].repeat) l[${i}].collected = false; })`)} Can be earned again</label>
+          ${r.collected ? `<button type="button" class="pz-chip" onclick="pzRewardsMutate(l=>{ l[${i}].collected = false; })">↩️ Make available again</button>` : ''}
+        </div>
+      </div>
+      <button type="button" class="pz-del" onclick="showConfirm('🗑️','Remove this reward?','Points already spent are not refunded.',()=>pzRewardsMutate(l=>l.splice(${i},1)))" aria-label="delete">✕</button>
+    </div>`).join('');
+  const sugg = REWARD_SUGGESTIONS.filter(([,n])=>!list.some(r=>r.name===n))
+    .map(([e,n,c])=>`<button type="button" class="pz-chip" onclick="pzRewardAdd('${e}','${n}',${c})">+ ${e} ${n} · ${c}</button>`).join('');
+  return pzCard('🎁 Rewards <span class="pz-count">'+list.length+'</span>',
+      `<p class="pz-note">"Can be earned again" rewards (like ice cream) go back on the list after each redeem.</p>`
+      + (rows || '<p class="pz-note">No rewards yet.</p>')
+      + `<div class="pz-add">
+           <input type="text" class="pz-input" id="pzNewReward" placeholder="New reward…">
+           <input type="number" class="pz-input" id="pzNewRewardCost" placeholder="pts" value="100" min="1" style="width:76px; flex:none; text-align:center;">
+           <button type="button" class="pz-btn primary" onclick="pzRewardAdd()">+ Add</button>
+         </div>`
+      + (sugg ? `<div class="pz-chips">${sugg}</div>` : ''));
+}
+
+/* ---------- Chess ---------- */
+function getChessUndoLimit(){ const v = parseInt(chessStore.get('chessUndoLimit'), 10); return isNaN(v) ? 3 : Math.max(0, v); }
+function getChessHintLimit(){ const v = parseInt(chessStore.get('chessHintLimit'), 10); return isNaN(v) ? 3 : Math.max(0, v); }
+function pzChessSet(key, v){
+  const n = Math.max(0, parseInt(v, 10) || 0);
+  const setters = {win:setChessWinBonus, lesson:setLessonWinPoints, puzzle:setPuzzleWinPoints, cap:setPuzzleDailyCap};
+  if(setters[key]) setters[key](n);
+  else chessStore.set(key, String(n));             // chessUndoLimit / chessHintLimit
+  pzSaved();
+}
+function pzChess(){
+  const beaten = getBotsBeaten().length;
+  return pzCard('🚀 Battle ladder',
+        `<p class="pz-note">${beaten} of ${BOTS.length} opponents beaten. First wins pay each opponent's own bonus (Pip +${BOTS[0].reward} … Vortex +${BOTS[BOTS.length-1].reward}).</p>`
+      + pzRow('🛡️ Safety check', pzSwitch(safetyEnabled(), 'toggleSafetySetting(); renderParentZone(); pzSaved();'), 'Stops and warns before a move that loses a piece.')
+      + pzRow('Undos per game', pzStepper(getChessUndoLimit(), `pzChessSet('chessUndoLimit', this.value)`, {min:0,max:20}))
+      + pzRow('Hints per game', pzStepper(getChessHintLimit(), `pzChessSet('chessHintLimit', this.value)`, {min:0,max:20}))
+      + `<div class="pz-btn-row"><button type="button" class="pz-btn" onclick="unlockAllBots()">🔓 Unlock all</button>
+           <button type="button" class="pz-btn danger" onclick="resetBotProgress()">↩️ Reset ladder</button></div>`)
+    + pzCard('⭐ Chess points',
+        pzRow('Repeat win vs an opponent', pzStepper(getChessWinBonus(), `pzChessSet('win', this.value)`, {min:0,max:100}))
+      + pzRow('Lesson finished (first time)', pzStepper(getLessonWinPoints(), `pzChessSet('lesson', this.value)`, {min:0,max:100}))
+      + pzRow('Puzzle solved', pzStepper(getPuzzleWinPoints(), `pzChessSet('puzzle', this.value)`, {min:0,max:100}))
+      + pzRow('Daily chess max', pzStepper(getPuzzleDailyCap(), `pzChessSet('cap', this.value)`, {min:0,max:500,step:2}), 'Lessons, puzzles and repeat wins share this.'))
+    + pzCard('🎓 Lessons',
+        `<div class="pz-btn-row"><button type="button" class="pz-btn" onclick="unlockAllLessons(); pzSaved('🔓 Lessons unlocked');">🔓 Unlock all lessons</button>
+           <button type="button" class="pz-btn danger" onclick="showConfirm('↩️','Reset lesson stars?','All lessons lock again and stars go back to zero.',()=>{ resetLessonProgress(); pzSaved('Lessons reset'); })">↩️ Reset stars</button></div>`)
+    + pzCard('♞ Pieces',
+        `<div class="pz-seg">
+           <button type="button" class="${getPieceStyle()==='classic'?'on':''}" onclick="if(getPieceStyle()!=='classic') togglePieceStyle(); renderParentZone(); pzSaved();">♞ Classic</button>
+           <button type="button" class="${getPieceStyle()==='chunky'?'on':''}" onclick="if(getPieceStyle()!=='chunky') togglePieceStyle(); renderParentZone(); pzSaved();">♟️ Chunky</button>
+         </div><p class="pz-note">Classic looks like a real chess set. Chunky is bolder on small screens.</p>`);
+}
+
+/* ---------- Screen time ---------- */
+function pzTimeAdjust(page, mins){
+  if(mins === 0) clearBonusToday(page); else addBonusFromSettings(page, mins);
+  renderParentZone(); pzSaved(mins > 0 ? '+'+mins+' min today' : (mins < 0 ? mins+' min today' : 'Extra time cleared'));
+}
+function pzTime(){
+  const block = (page, label) => {
+    const lim = getPageTimeLimit(page);
+    const used = Math.floor(loadPageTimeUsed(page).seconds/60);
+    const bonus = loadTimeBonus(page).minutes;
+    const status = lim <= 0 ? 'No limit — unlimited time.'
+      : `Used ${used} min · ${Math.round(getPageTimeRemaining(page)/60)} min left today` + (bonus ? ` (${bonus>0?'+':''}${bonus} extra)` : '');
+    return pzCard(label,
+        pzRow('Daily limit', pzStepper(lim, `setPageTimeLimit('${page}', parseInt(this.value,10)||0); updateLockedPads(); renderParentZone(); pzSaved();`, {min:0,max:600,step:5, suffix:'min'}), '0 = no limit.')
+      + `<div class="pz-status">${status}</div>`
+      + (lim > 0 ? `<div class="pz-chips">
+          <button type="button" class="pz-chip good" onclick="pzTimeAdjust('${page}',5)">+5 min</button>
+          <button type="button" class="pz-chip good" onclick="pzTimeAdjust('${page}',15)">+15 min</button>
+          <button type="button" class="pz-chip good" onclick="pzTimeAdjust('${page}',30)">+30 min</button>
+          <button type="button" class="pz-chip bad" onclick="pzTimeAdjust('${page}',-5)">−5 min</button>
+          <button type="button" class="pz-chip bad" onclick="pzTimeAdjust('${page}',-15)">−15 min</button>
+          ${bonus ? `<button type="button" class="pz-chip" onclick="pzTimeAdjust('${page}',0)">Clear extra</button>` : ''}
+        </div><p class="pz-note">Extra time is for today only and clears overnight.</p>` : ''));
+  };
+  return block('chess', '♟️ Chess') + block('activities', '🏅 Activities')
+    + `<p class="pz-note" style="text-align:center;">Time pauses while a sport stopwatch is running, while the app is in the background, and while this Parent Zone is open.</p>`;
+}
+
+/* ---------- Points & ranks ---------- */
+function getLevels(){
+  try{
+    const a = JSON.parse(localStorage.getItem('levelsConfig'));
+    if(Array.isArray(a) && a.length) return a.slice().sort((x,y)=>x.min-y.min);
+  }catch(e){}
+  return LEVELS;
+}
+function pzLevelsMutate(fn){
+  const list = getLevels().map(l=>Object.assign({}, l));
+  fn(list);
+  list[0].min = 0;   // the first rank always starts at zero
+  localStorage.setItem('levelsConfig', JSON.stringify(list));
+  updatePointsBar();
+  renderParentZone(); pzSaved();
+}
+function pzLevelField(i, field, value){
+  const list = getLevels().map(l=>Object.assign({}, l));
+  if(!list[i]) return;
+  if(field === 'min') list[i].min = Math.max(0, parseInt(value, 10) || 0);
+  else list[i][field] = String(value).trim() || list[i][field];
+  list[0].min = 0;
+  localStorage.setItem('levelsConfig', JSON.stringify(list.sort((x,y)=>x.min-y.min)));
+  updatePointsBar();
+  if(field === 'min') renderParentZone();
+  pzSaved();
+}
+function pzAdjustPoints(sign){
+  const inp = document.getElementById('pzPointsAmt');
+  const v = parseInt(inp.value, 10) || 0;
+  if(v <= 0) return;
+  addPoints(sign * v);
+  renderParentZone();
+  pzSaved(sign > 0 ? '+'+v+' points' : '−'+v+' points');
+}
+function pzPoints(){
+  const levels = getLevels();
+  const rows = levels.map((l,i)=>`
+    <div class="pz-item">
+      <button type="button" class="pz-emoji" onclick="pickEmoji(e=>pzLevelsMutate(x=>{ x[${i}].emoji = e; }))">${escapeHtml(l.emoji)}</button>
+      <div class="pz-item-main">
+        <input type="text" class="pz-input" maxlength="18" value="${pzAttr(l.title)}" oninput="pzLevelField(${i},'title',this.value)">
+        <div class="pz-item-meta"><span class="pz-mini-label">from</span>
+          ${i===0 ? '<b class="pz-mini-label">0 pts (start)</b>' : pzStepper(l.min, `pzLevelField(${i},'min',this.value)`, {min:1,max:100000,step:10, suffix:'pts'})}</div>
+      </div>
+      <button type="button" class="pz-del" ${levels.length<=1||i===0?'disabled':''} onclick="pzLevelsMutate(x=>x.splice(${i},1))" aria-label="delete">✕</button>
+    </div>`).join('');
+  return pzCard('💰 Points right now',
+        `<div class="pz-stats"><div><b>${getSpendable()}</b><span>to spend</span></div><div><b>${getTotalPoints()}</b><span>lifetime (rank)</span></div><div><b>${getTodaysPoints()}</b><span>earned today</span></div></div>
+         <div class="pz-add">
+           <input type="number" class="pz-input" id="pzPointsAmt" placeholder="Amount" min="1" style="text-align:center;">
+           <button type="button" class="pz-btn primary" onclick="pzAdjustPoints(1)">+ Give</button>
+           <button type="button" class="pz-btn danger" onclick="pzAdjustPoints(-1)">− Take</button>
+         </div>
+         <p class="pz-note">Changes both the spendable and lifetime totals.</p>`)
+    + pzCard('🏅 Ranks',
+        `<p class="pz-note">The rank shown on the home screen, based on lifetime points.</p>` + rows
+        + `<div class="pz-btn-row">
+             <button type="button" class="pz-btn" onclick="pzLevelsMutate(x=>{ const top = x[x.length-1]; x.push({min: top.min + 500, title:'New rank', emoji:'🌠'}); })">+ Add rank</button>
+             <button type="button" class="pz-btn" onclick="localStorage.removeItem('levelsConfig'); updatePointsBar(); renderParentZone(); pzSaved('Ranks reset');">↩️ Original ranks</button>
+           </div>`);
+}
+
+/* ---------- Backup & reset ---------- */
+function exportBackup(){
+  const data = {app:'launchpad', version:1, exported:new Date().toISOString(), store:{}};
+  for(let k=0;k<localStorage.length;k++){
+    const key = localStorage.key(k);
+    if(key && key !== '__chessprobe') data.store[key] = localStorage.getItem(key);
+  }
+  const blob = new Blob([JSON.stringify(data, null, 1)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'launchpad-backup-'+todayKey()+'.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
+  pzSaved('💾 Backup downloaded');
+}
+function importBackup(input){
+  const file = input.files && input.files[0];
+  input.value = '';
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    let data;
+    try{ data = JSON.parse(reader.result); }catch(e){ data = null; }
+    if(!data || data.app !== 'launchpad' || !data.store){
+      showConfirm('⚠️', "That isn't a Launchpad backup", 'Pick a file that was made with "Download backup".', null);
+      return;
+    }
+    showConfirm('📥', 'Restore this backup?', 'Everything on this device is replaced with the backup from '+String(data.exported||'').slice(0,10)+'.', ()=>{
+      localStorage.clear();
+      Object.keys(data.store).forEach(k=>localStorage.setItem(k, data.store[k]));
+      location.reload();
+    });
+  };
+  reader.readAsText(file);
+}
+function pzBackup(){
+  return pzCard('💾 Backup',
+        `<p class="pz-note">Everything lives on this device only. Download a backup to keep it safe, or to move it to a new tablet.</p>
+         <div class="pz-btn-row">
+           <button type="button" class="pz-btn primary" onclick="exportBackup()">⬇️ Download backup</button>
+           <label class="pz-btn">⬆️ Restore backup<input type="file" accept=".json,application/json" style="display:none" onchange="importBackup(this)"></label>
+         </div>`)
+    + pzCard('🌙 Start today over',
+        `<p class="pz-note">Clears today's ticks, activity tallies and screen time used. Points and rank are kept.</p>
+         <button type="button" class="pz-btn" onclick="showConfirm('🔄','Reset today?','Today\\u2019s checklists, activities and screen time start fresh. Points are kept.',()=>{ performDayReset(); pzSaved('Today reset'); renderParentZone(); })">🔄 Reset today</button>`)
+    + pzCard('☢️ Danger zone',
+        `<p class="pz-note">Wipes all points, rank and today's progress back to zero. Your checklists, rewards and settings stay.</p>
+         <button type="button" class="pz-btn danger" onclick="showConfirm('☢️','Reset ALL points?','This can\\u2019t be undone. Consider downloading a backup first.',()=>{ performFullReset(); pzSaved('Everything reset'); renderParentZone(); })">☢️ Reset everything</button>`, 'danger');
+}
+
 /* init */
+applyRoutineMeta();
+applyDashVisibility();
 buildStars();
 setDateLabel();
 Object.keys(DEFAULT_ROUTINES).forEach(r=>{ loadState(r); updateDashboardRing(r); });

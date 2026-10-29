@@ -6416,14 +6416,20 @@ function chooseBotMove(bd, color, bot){
   let depth = b.depth;
   // Busy positions blow up the search on a slow tablet; trim depth so the
   // child never watches "thinking..." for several seconds.
-  if(depth >= 4 && all.length > 26) depth = 3;
   if(depth >= 3 && all.length > 38) depth = 2;
-  const t0 = Date.now();
-  let ranked = rankRootMoves(bd, color, depth);
-  // `deepen`: if that pass was quick (a quiet, emptier board), look one ply
-  // further. Each ply costs roughly ten times the last, so the bar is low
-  // enough that a slow tablet only ever goes deeper in simple endgames.
-  if(b.deepen && Date.now() - t0 < 90) ranked = rankRootMoves(bd, color, depth + 1);
+  // Each ply costs roughly ten times the last, and a slow tablet is several
+  // times slower than a PC. So the depth-4 bots search 3 first and only go to
+  // 4 when that was quick on this device; `deepen` adds a 5th the same way,
+  // which in practice only happens in simple endgames.
+  let t0 = Date.now();
+  let ranked = rankRootMoves(bd, color, Math.min(depth, 3));
+  if(depth >= 4){
+    if(Date.now() - t0 < 80){
+      t0 = Date.now();
+      ranked = rankRootMoves(bd, color, 4);
+      if(b.deepen && Date.now() - t0 < 90) ranked = rankRootMoves(bd, color, 5);
+    } else depth = 3;
+  }
   if(depth >= 2 && ranked[0].score >= 100000) return ranked[0].m;   // always take a mate it can see
   if(Math.random() < b.slip && ranked.length > 1){
     const pool = ranked.slice(Math.floor(ranked.length/2));

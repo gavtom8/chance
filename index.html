@@ -7014,6 +7014,13 @@ function startTrace(L){
   ink.addEventListener('pointermove', traceMove);
   ink.addEventListener('pointerup', traceUp);
   ink.addEventListener('pointercancel', traceUp);
+  // touch-action:none and preventDefault on pointer events don't stop every
+  // tablet browser's swipe-down refresh; cancelling the raw touches does, and
+  // the pointer events above still fire.
+  const box = document.getElementById('traceBox');
+  const noSwipe = e=>{ if(e.cancelable) e.preventDefault(); };
+  box.addEventListener('touchstart', noSwipe, {passive:false});
+  box.addEventListener('touchmove', noSwipe, {passive:false});
 }
 function sayTraceLetter(){
   if(!trace) return;

@@ -992,6 +992,60 @@
   .letter-btn:active{transform:translateY(3px); box-shadow:0 2px 0 rgba(0,0,0,0.35);}
   .letter-btn.used{visibility:hidden;}
   .letter-btn.wrong{animation:wiggle .4s ease;}
+
+  /* level ladder (math + each letters mode) */
+  .learn-levels{display:flex; flex-direction:column; gap:4px;}
+  .lvl-name{text-align:center; font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.05rem; opacity:.9;}
+  .lvl-goal{margin-left:8px; letter-spacing:2px; font-size:.95rem;}
+  .lvl-row{position:relative; display:flex; gap:8px; overflow-x:auto; padding:4px 4px 6px; scrollbar-width:none; overscroll-behavior-x:contain;}
+  .lvl-row::-webkit-scrollbar{display:none;}
+  .lvl{
+    position:relative; flex:0 0 auto; width:48px; height:48px; border-radius:50%; padding:0; cursor:pointer;
+    border:2px solid rgba(255,255,255,0.18); background:rgba(255,255,255,0.08); color:#fff; font-size:1.35rem; line-height:1;
+  }
+  .lvl b{
+    position:absolute; right:-4px; bottom:-4px; min-width:19px; height:19px; border-radius:10px; padding:0 3px;
+    background:#1B2A4A; border:1px solid rgba(255,255,255,0.3); font-family:'Nunito',sans-serif; font-size:.66rem; line-height:17px;
+  }
+  .lvl.cur{border-color:var(--gold); background:rgba(255,200,87,0.22); box-shadow:0 0 0 3px rgba(255,200,87,0.25);}
+  .lvl.locked{opacity:.35; cursor:default; font-size:.95rem;}
+  .learn-q.long{font-size:1.7rem;}
+  .answer-row.four .answer-btn{font-size:2.1rem;}
+  .answer-btn.sm{font-size:1.7rem; padding:20px 0;}
+  .answer-btn.plain{background:rgba(255,255,255,0.12); box-shadow:0 6px 0 rgba(0,0,0,0.3); color:#fff;}
+  .seq{display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin:4px 0;}
+  .seq span{
+    min-width:58px; height:64px; padding:0 8px; border-radius:16px; background:rgba(255,255,255,0.10);
+    display:flex; align-items:center; justify-content:center; font-family:'Baloo 2',sans-serif; font-weight:800; font-size:2rem;
+  }
+  .seq span.hole{border:3px dashed var(--gold); background:rgba(255,200,87,0.12); color:var(--gold);}
+  .tenframes{display:flex; flex-direction:column; align-items:center; gap:8px;}
+  .tenframe{display:grid; grid-template-columns:repeat(5, 40px); grid-auto-rows:40px; border:3px solid rgba(255,255,255,0.5); border-radius:8px; overflow:hidden;}
+  .tenframe i{border:1px solid rgba(255,255,255,0.22); display:flex; align-items:center; justify-content:center;}
+  .tenframe i.on::after{content:''; width:26px; height:26px; border-radius:50%; background:var(--coral);}
+  .blocks{display:flex; align-items:flex-end; justify-content:center; gap:6px; flex-wrap:wrap; min-height:150px;}
+  .blocks .ten{width:16px; height:150px; border-radius:3px; background:repeating-linear-gradient(180deg, #4FC6FF 0 13px, #1F4FBF 13px 15px);}
+  .blocks .ones{display:grid; grid-template-columns:repeat(2, 16px); gap:3px; margin-left:12px;}
+  .blocks .ones i{width:16px; height:16px; border-radius:3px; background:var(--gold);}
+  .clock{display:block; width:190px; height:190px; margin:0 auto;}
+  .trace-count{display:block; font-size:1rem !important; letter-spacing:1px; margin:2px 0 0 !important;}
+  .spell-ear{border:none; background:rgba(255,255,255,0.10); border-radius:50%; width:110px; height:110px; color:#fff; cursor:pointer;}
+  .spell-slots.long{gap:6px;}
+  .spell-slots.long .spell-slot{width:46px; height:58px; font-size:2rem;}
+  .letter-btn.help{box-shadow:0 0 0 4px var(--gold), 0 0 22px rgba(255,200,87,0.8); animation:emojiPop .6s ease infinite alternate;}
+  .letter-btn.right, .pic-choice.right{background:linear-gradient(180deg, #A6F5DC, var(--mint)); color:#0c332a; animation:emojiPop .5s ease;}
+  .letter-btn.nope, .pic-choice.nope{opacity:.3; pointer-events:none; animation:wiggle .4s ease;}
+  .pic-choice{
+    width:92px; height:92px; border-radius:22px; cursor:pointer; font-size:3.2rem; line-height:1;
+    border:3px solid rgba(255,255,255,0.18); background:rgba(255,255,255,0.08); box-shadow:0 5px 0 rgba(0,0,0,0.3);
+  }
+  .big-letter{
+    width:120px; height:120px; margin:4px auto 16px; border-radius:28px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Baloo 2',sans-serif; font-weight:800; font-size:5rem; color:#fff;
+    background:linear-gradient(150deg,#4FC6FF,#2F6BFF); box-shadow:0 6px 0 rgba(0,0,0,0.3);
+  }
+  .rhyme-word{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.8rem; margin:-6px 0 14px; letter-spacing:2px;}
   @media (prefers-reduced-motion: reduce){
     .learn-dots i.on, .answer-btn.right, .answer-btn.wrong, .pile.wrong, .trace-box.oops, .spell-slot.filled, .letter-btn.wrong{animation:none;}
   }
@@ -1973,6 +2027,7 @@
   </div>
   <div class="time-badge" id="mathTimeBadge" style="display:none;"></div>
   <div class="learn-wrap">
+    <div class="learn-levels" id="mathLevels"></div>
     <div class="learn-dots" id="mathDots"></div>
     <div class="learn-card" id="mathCard"></div>
   </div>
@@ -1991,7 +2046,9 @@
     <div class="learn-modes">
       <button type="button" id="lettersModeTrace" onclick="setLettersMode('trace')">✏️ Trace</button>
       <button type="button" id="lettersModeSpell" onclick="setLettersMode('spell')">🔤 Spell</button>
+      <button type="button" id="lettersModeSounds" onclick="setLettersMode('sounds')">🔊 Sounds</button>
     </div>
+    <div class="learn-levels" id="lettersLevels"></div>
     <div class="learn-dots" id="lettersDots"></div>
     <div class="learn-card" id="lettersCard"></div>
   </div>
@@ -6759,6 +6816,79 @@ function learnDotsHtml(done){
     `<i class="${i < done ? 'on' : (i === done ? 'now' : '')}">${i < done ? '⭐' : ''}</i>`).join('');
 }
 
+/* ---- levels ----
+   Every game is a ladder of levels. Two good rounds (one miss or fewer) on
+   the newest level opens the next; he can always tap back to an easier one.
+   Stored per game in localStorage 'learnLevels': {cur, unlocked, good}. */
+const LEVEL_GOOD_ROUNDS = 2;
+function loadLevels(){
+  let o = null;
+  try{ o = JSON.parse(localStorage.getItem('learnLevels')); }catch(e){}
+  return (o && typeof o === 'object') ? o : {};
+}
+// Before levels existed the parent settings said roughly where he was.
+function levelStartGuess(game){
+  const c = getLearnCfg();
+  if(game === 'math') return c.mathSub ? 7 : (c.mathMax >= 10 ? 5 : 1);
+  if(game === 'spell') return c.lettersHint ? 0 : 1;
+  return 0;
+}
+function getLevelState(game, count){
+  const st = Object.assign({cur:-1, unlocked:-1, good:0}, loadLevels()[game] || {});
+  if(st.unlocked < 0){ st.unlocked = levelStartGuess(game); st.cur = st.unlocked; }
+  st.unlocked = Math.max(0, Math.min(count - 1, st.unlocked));
+  st.cur = Math.max(0, Math.min(st.unlocked, st.cur));
+  return st;
+}
+function saveLevelState(game, st){
+  const all = loadLevels();
+  all[game] = st;
+  localStorage.setItem('learnLevels', JSON.stringify(all));
+}
+function setLevel(game, count, i){
+  const st = getLevelState(game, count);
+  if(i < 0 || i > st.unlocked) return false;
+  st.cur = i;
+  saveLevelState(game, st);
+  return true;
+}
+// Returns true when this round opened a new level.
+function levelRoundDone(game, count, misses){
+  const st = getLevelState(game, count);
+  if(st.cur !== st.unlocked || st.unlocked >= count - 1 || misses > 1) return false;
+  st.good++;
+  const up = st.good >= LEVEL_GOOD_ROUNDS;
+  if(up){ st.unlocked++; st.cur = st.unlocked; st.good = 0; }
+  saveLevelState(game, st);
+  return up;
+}
+function finishLevelRound(payGame, game, levels, misses, emoji, title, next){
+  const up = levelRoundDone(game, levels.length, misses);
+  const L = levels[getLevelState(game, levels.length).cur];
+  finishLearnRound(payGame, up ? '🏆' : emoji, up ? 'New level: '+L.name+'!' : title, next);
+  if(up) setTimeout(()=>{
+    if(document.getElementById('actRewardOverlay').classList.contains('show')) speak('New level! '+L.name+'!');
+  }, 2600);
+}
+function levelStripHtml(game, levels, pickFn){
+  const st = getLevelState(game, levels.length);
+  const chips = levels.map((L, i)=>{
+    const locked = i > st.unlocked;
+    return `<button type="button" class="lvl${i === st.cur ? ' cur' : ''}${locked ? ' locked' : ''}" ${locked ? 'disabled' : `onclick="${pickFn}(${i})"`} aria-label="Level ${i+1}: ${escapeHtml(L.name)}"><span>${locked ? '🔒' : L.emoji}</span><b>${i+1}</b></button>`;
+  }).join('');
+  const last = levels.length - 1;
+  let goal = '';
+  if(st.cur === st.unlocked) goal = st.unlocked < last
+    ? `<span class="lvl-goal" title="good rounds to open the next level">${'⭐'.repeat(st.good)}${'☆'.repeat(LEVEL_GOOD_ROUNDS - st.good)}</span>`
+    : '<span class="lvl-goal">🏆</span>';
+  return `<div class="lvl-name">Level ${st.cur+1}: ${escapeHtml(levels[st.cur].name)}${goal}</div><div class="lvl-row">${chips}</div>`;
+}
+function scrollLevelIntoView(id){
+  const row = document.querySelector('#'+id+' .lvl-row');
+  const cur = row && row.querySelector('.cur');
+  if(cur) row.scrollLeft = cur.offsetLeft - row.clientWidth/2 + cur.offsetWidth/2;
+}
+
 /* ---- shared screen plumbing: open, screen-time clock, badge ---- */
 let learnClockHandle = null;
 let learnPage = null;
@@ -6806,60 +6936,284 @@ function updateLearnTimeBadge(page){
 }
 
 /* ================= MATH =================
-   Pictures first, numbers second: every question shows the things to count,
-   and tapping a picture counts it out loud with a little number badge. */
+   A ladder of levels, from counting to 5 up to two-digit sums and telling
+   time. Early levels are pictures he taps to count out loud; later ones move
+   to plain numbers, ten-frames, tens-and-ones blocks and clocks. */
 const MATH_THINGS = [
   ['🍎','apples'], ['🐟','fish'], ['⭐','stars'], ['🚗','cars'], ['🐞','ladybugs'],
   ['🍪','cookies'], ['🎈','balloons'], ['🦆','ducks'], ['🍓','strawberries'], ['⚽','balls'],
 ];
 const MATH_PRAISE = ['Yes!', 'You got it!', 'Great counting!', 'Super!', 'Awesome!', 'Way to go!'];
-let math = null;   // {done, q, tapped, locked}
+const MATH_SHAPES = [['🔺','triangle'], ['🟦','square'], ['🔵','circle'], ['⭐','star'], ['❤️','heart'], ['🔶','diamond']];
+const NUM_WORDS = ['zero','one','two','three','four','five','six','seven','eight','nine','ten'];
+// `choices` = answer buttons for number questions; `half` adds half-past clocks.
+const MATH_LEVELS = [
+  {emoji:'🐣', name:'Count to 5',          kinds:['count','count','numeral','shape'], max:5},
+  {emoji:'🖐️', name:'Count to 10',         kinds:['count','count','numeral','more'], max:10},
+  {emoji:'🔺', name:'Shapes and more',     kinds:['shape','more','fewer','numeral'], max:10},
+  {emoji:'➡️', name:'What comes next?',    kinds:['next','before','missing'], max:10},
+  {emoji:'➕', name:'Add to 5',            kinds:['add'], max:5},
+  {emoji:'🍎', name:'Add to 10',           kinds:['add','add','double'], max:10},
+  {emoji:'➖', name:'Take away from 5',    kinds:['sub'], max:5},
+  {emoji:'🍪', name:'Take away from 10',   kinds:['sub','sub','add'], max:10},
+  {emoji:'⚖️', name:'Bigger number',       kinds:['bigger','smaller','next'], max:20},
+  {emoji:'🧮', name:'Count to 20',         kinds:['tenframe','tenframe','missing'], max:20},
+  {emoji:'🎯', name:'Make 10',             kinds:['make10'], max:10},
+  {emoji:'🔢', name:'Number adding',       kinds:['addNum','subNum'], max:10, choices:4},
+  {emoji:'👯', name:'Doubles',             kinds:['double','nearDouble'], max:20, choices:4},
+  {emoji:'🚀', name:'Add to 20',           kinds:['addNum','addNum','missingAdd'], max:20, choices:4},
+  {emoji:'☄️', name:'Take away from 20',   kinds:['subNum'], max:20, choices:4},
+  {emoji:'🧱', name:'Tens and ones',       kinds:['placeValue'], choices:4},
+  {emoji:'🦘', name:'Skip counting',       kinds:['skip'], choices:4},
+  {emoji:'🕒', name:'Tell time',           kinds:['clock'], choices:3},
+  {emoji:'💯', name:'Add tens',            kinds:['addTens'], choices:4},
+  {emoji:'🕧', name:'Half past',           kinds:['clock'], half:true, choices:4},
+  {emoji:'🧩', name:'Missing number',      kinds:['missingAdd','missingSub'], max:20, choices:4},
+  {emoji:'🪐', name:'Big adding',          kinds:['add2'], choices:4},
+  {emoji:'🌌', name:'Big take away',       kinds:['sub2'], choices:4},
+  {emoji:'🎲', name:'Three numbers',       kinds:['add3'], choices:4},
+  {emoji:'👑', name:'Math champion',       kinds:['addNum','subNum','missingAdd','missingSub','placeValue','skip','clock','add2','sub2','add3'], max:20, half:true, choices:4},
+];
+let math = null;   // {done, misses, q, tapped, locked}
 
 function openMath(){
   openLearn('math');
   newMathRound();
 }
+function pickMathLevel(i){
+  if(setLevel('math', MATH_LEVELS.length, i)) newMathRound();
+}
 function newMathRound(){
-  math = {done:0, q:null, tapped:0, locked:false};
+  math = {done:0, misses:0, q:null, tapped:0, locked:false};
+  document.getElementById('mathLevels').innerHTML = levelStripHtml('math', MATH_LEVELS, 'pickMathLevel');
+  scrollLevelIntoView('mathLevels');
   nextMathQuestion();
 }
-function makeMathQuestion(){
-  const c = getLearnCfg();
-  const max = Math.max(5, Math.min(20, c.mathMax));
-  const [emoji, name] = lgPick(MATH_THINGS);
-  const kinds = ['count','count','count','add','add','add','more'];
-  if(c.mathSub) kinds.push('sub','sub');
-  const kind = lgPick(kinds);
-  if(kind === 'count'){
-    const n = lgRand(1, max);
-    return {kind, emoji, a:n, answer:n, text:'How many?', say:'How many '+name+'?'};
-  }
-  if(kind === 'add'){
-    const a = lgRand(1, max - 1), b = lgRand(1, max - a);
-    return {kind, emoji, a, b, answer:a+b, text:a+' + '+b+' = ?', say:a+' plus '+b+'. How many '+name+' in all?'};
-  }
-  if(kind === 'sub'){
-    const a = lgRand(2, max), b = lgRand(1, a - 1);
-    return {kind, emoji, a, b, answer:a-b, text:a+' − '+b+' = ?', say:a+' take away '+b+'. How many '+name+' are left?'};
-  }
-  // "more": two piles, tap the bigger one
-  let a = lgRand(1, Math.min(max, 10)), b;
-  do{ b = lgRand(1, Math.min(max, 10)); }while(b === a);
-  return {kind, emoji, a, b, answer: a > b ? 0 : 1, text:'Which has MORE?', say:'Which side has more '+name+'?'};
-}
-// The right answer plus two nearby wrong ones, smallest first.
-function mathChoices(answer, max){
+function mathLevel(){ return MATH_LEVELS[getLevelState('math', MATH_LEVELS.length).cur]; }
+
+// The right answer plus nearby wrong ones, smallest first.
+function numChoices(answer, n, spread, lo, hi){
   const set = new Set([answer]);
   let tries = 0;
-  while(set.size < 3 && tries++ < 50){
-    const v = answer + lgPick([-3,-2,-1,1,2,3]);
-    if(v >= 0 && v <= max + 3) set.add(v);
+  while(set.size < n && tries++ < 80){
+    const v = answer + lgRand(1, spread) * (Math.random() < 0.5 ? -1 : 1);
+    if(v >= lo && v <= hi) set.add(v);
   }
-  return [...set].sort((x,y)=>x-y);
+  return [...set].sort((x,y)=>x-y).map(v=>({v, label:String(v)}));
+}
+// Same, but from a hand-picked list of likely mistakes.
+function pickChoices(answer, wrongs, n){
+  const set = new Set([answer]);
+  lgShuffle(wrongs).forEach(v=>{ if(set.size < n && v >= 0 && v !== answer) set.add(v); });
+  return [...set].sort((x,y)=>x-y).map(v=>({v, label:String(v)}));
+}
+function seqHtml(arr, hole){
+  return `<div class="seq">${arr.map((v, i)=>`<span class="${i === hole ? 'hole' : ''}">${i === hole ? '?' : v}</span>`).join('')}</div>`;
+}
+function tenFrameHtml(filled){
+  return `<div class="tenframe">${Array.from({length:10}, (_, i)=>`<i class="${i < filled ? 'on' : ''}"></i>`).join('')}</div>`;
+}
+function blocksHtml(tens, ones){
+  return `<div class="blocks">${'<span class="ten"></span>'.repeat(tens)}`
+    + (ones ? `<span class="ones">${'<i></i>'.repeat(ones)}</span>` : '') + '</div>';
+}
+function clockSvg(h, m){
+  const hand = (deg, len, w, col)=>{
+    const r = (deg - 90) * Math.PI / 180;
+    return `<line x1="60" y1="60" x2="${(60 + len*Math.cos(r)).toFixed(1)}" y2="${(60 + len*Math.sin(r)).toFixed(1)}" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/>`;
+  };
+  let nums = '';
+  for(let i=1;i<=12;i++){
+    const r = (i*30 - 90) * Math.PI / 180;
+    nums += `<text x="${(60 + 44*Math.cos(r)).toFixed(1)}" y="${(60 + 44*Math.sin(r) + 5).toFixed(1)}" text-anchor="middle" font-size="14" font-weight="800" font-family="Nunito, sans-serif" fill="#1B2A4A">${i}</text>`;
+  }
+  return `<svg class="clock" viewBox="0 0 120 120"><circle cx="60" cy="60" r="56" fill="#F4F6FB" stroke="#FFC857" stroke-width="5"/>${nums}`
+    + hand(m*6, 40, 4, '#2F6BFF') + hand(((h % 12) + m/60) * 30, 25, 7, '#FF6B3D')
+    + `<circle cx="60" cy="60" r="4" fill="#1B2A4A"/></svg>`;
+}
+const timeLabel = (h, m) => h + ':' + (m ? '30' : '00');
+const timeSay = (h, m) => m ? 'half past ' + h : h + " o'clock";
+
+function makeMathQuestion(L){
+  const max = L.max || 10;
+  const nc = L.choices || 3;
+  const [emoji, name] = lgPick(MATH_THINGS);
+  const kind = lgPick(L.kinds);
+  const pics = html => `<div class="pics">${html}</div>`;
+  const tryCount = 'Try again! Tap the pictures to count.';
+  switch(kind){
+    case 'count': {
+      const n = lgRand(1, max);
+      return {kind, answer:n, text:'How many?', say:'How many '+name+'?', visual:pics(picGroupHtml(emoji, n, 0)),
+              choices:numChoices(n, nc, 3, 0, max + 3), hint:'Tap the pictures to count them!', wrong:()=>tryCount};
+    }
+    case 'numeral': {
+      const n = lgRand(max > 5 ? 0 : 1, max);
+      return {kind, answer:n, text:'👂 Which number?', say:'Find the number '+n+'.',
+              choices:numChoices(n, max > 5 ? 4 : 3, 4, 0, max), hint:'Tap 🔊 to hear it again.',
+              wrong:v=>'That is '+v+'. Find '+n+'.', right:'Yes! That is '+n+'!'};
+    }
+    case 'shape': {
+      const opts = lgShuffle(MATH_SHAPES).slice(0, max > 5 ? 4 : 3);
+      const t = lgPick(opts);
+      return {kind, answer:t[1], text:'👂 Which shape?', say:'Tap the '+t[1]+'.', btnCls:'plain',
+              choices:opts.map(([e, nm])=>({v:nm, label:e})), hint:'Tap 🔊 to hear it again.',
+              wrong:v=>'That is a '+v+'. Find the '+t[1]+'.', right:'Yes! A '+t[1]+'!'};
+    }
+    case 'more': case 'fewer': {
+      const top = Math.min(max, 10);
+      const a = lgRand(1, top);
+      let b; do{ b = lgRand(1, top); }while(b === a);
+      const more = kind === 'more';
+      const pile = (n, side) => `<button type="button" class="pile" onclick="mathAnswer(${side}, this)">${emoji.repeat(n)}</button>`;
+      return {kind, piles:true, answer:(a > b) === more ? 0 : 1, choices:[{v:0}, {v:1}],
+              text: more ? 'Which has MORE?' : 'Which has FEWER?', say:'Which side has '+(more ? 'more ' : 'fewer ')+name+'?',
+              visual:`<div class="pile-row">${pile(a, 0)}${pile(b, 1)}</div>`, hint: more ? 'Tap the side with more!' : 'Tap the side with fewer!',
+              wrong:()=>'Look again! Which side has '+(more ? 'more?' : 'fewer?'), right:lgPick(MATH_PRAISE)};
+    }
+    case 'next': case 'before': case 'missing': {
+      const s = lgRand(0, max - 3);
+      const arr = [s, s+1, s+2, s+3];
+      const hole = kind === 'next' ? 3 : kind === 'before' ? 0 : lgRand(1, 2);
+      const said = arr.map((v, i)=>i === hole ? 'something' : v).join(', ');
+      return {kind, answer:arr[hole], visual:seqHtml(arr, hole), choices:numChoices(arr[hole], nc, 2, 0, max + 1),
+              text: kind === 'next' ? 'What comes next?' : kind === 'before' ? 'What comes before?' : 'What is missing?',
+              say: kind === 'next' ? 'What number comes next? '+arr.slice(0, 3).join(', ')+', ...'
+                 : kind === 'before' ? 'What number comes before '+arr[1]+'?' : said+'. What number is missing?',
+              hint:'Count along the boxes!', wrong:()=>'Try again! Count along: '+said+'.'};
+    }
+    case 'add': {
+      const a = lgRand(1, max - 1), b = lgRand(1, max - a);
+      return {kind, answer:a+b, text:a+' + '+b+' = ?', say:a+' plus '+b+'. How many '+name+' in all?',
+              visual:pics(picGroupHtml(emoji, a, 0) + '<span class="pic-op">+</span>' + picGroupHtml(emoji, b, a)),
+              choices:numChoices(a+b, nc, 3, 0, max + 3), hint:'Tap the pictures to count them!', wrong:()=>tryCount};
+    }
+    case 'sub': {
+      const a = lgRand(2, max), b = lgRand(1, a - 1);
+      return {kind, answer:a-b, text:a+' − '+b+' = ?', say:a+' take away '+b+'. How many '+name+' are left?',
+              visual:pics(picGroupHtml(emoji, a, 0, a - b)), choices:numChoices(a-b, nc, 3, 0, max),
+              hint:'The ✕ ones went away. Count the ones left!', wrong:()=>tryCount};
+    }
+    case 'double': {
+      const a = lgRand(1, Math.floor(max / 2));
+      const q = {kind, answer:a*2, text:a+' + '+a+' = ?', say:a+' plus '+a+'. Double '+a+'!',
+                 choices:numChoices(a*2, nc, 2, 0, max + 2), hint:'Doubles: the same number twice!', wrong:()=>'Try again! '+a+' and '+a+' more.'};
+      if(a*2 <= 10) q.visual = pics(picGroupHtml(emoji, a, 0) + '<span class="pic-op">+</span>' + picGroupHtml(emoji, a, a));
+      return q;
+    }
+    case 'nearDouble': {
+      const a = lgRand(2, 9);
+      return {kind, answer:2*a+1, text:a+' + '+(a+1)+' = ?', say:a+' plus '+(a+1)+'.',
+              choices:numChoices(2*a+1, nc, 2, 0, 20), hint:a+' + '+a+' = '+(2*a)+'. One more makes…',
+              wrong:()=>a+' plus '+a+' is '+(2*a)+'. Add one more!'};
+    }
+    case 'bigger': case 'smaller': {
+      const a = lgRand(0, max);
+      let b; do{ b = lgRand(0, max); }while(b === a);
+      const big = kind === 'bigger';
+      const ans = big ? Math.max(a, b) : Math.min(a, b), other = ans === a ? b : a;
+      return {kind, answer:ans, text: big ? 'Which is BIGGER?' : 'Which is SMALLER?',
+              say:'Which number is '+(big ? 'bigger' : 'smaller')+', '+a+' or '+b+'?', choices:[{v:a, label:String(a)}, {v:b, label:String(b)}],
+              hint: big ? 'Bigger numbers come later when you count.' : 'Smaller numbers come first when you count.',
+              wrong:()=>'Count up. Which one comes '+(big ? 'later?' : 'first?'), right:'Yes! '+ans+' is '+(big ? 'bigger' : 'smaller')+' than '+other+'!'};
+    }
+    case 'tenframe': {
+      const n = lgRand(11, 20);
+      return {kind, answer:n, text:'How many dots?', say:'How many dots? A full frame is ten.',
+              visual:`<div class="tenframes">${tenFrameHtml(10)}${tenFrameHtml(n - 10)}</div>`,
+              choices:numChoices(n, nc, 2, 10, 20), hint:'A full frame is 10. Count on from 10!', wrong:()=>'Try again! Start at ten and count on.'};
+    }
+    case 'make10': {
+      const a = lgRand(1, 9);
+      return {kind, answer:10-a, text:a+' + ? = 10', say:a+' plus what makes ten? Count the empty boxes!',
+              visual:`<div class="tenframes">${tenFrameHtml(a)}</div>`, choices:numChoices(10-a, nc, 2, 0, 10),
+              hint:'Count the empty boxes!', wrong:()=>'Try again! Count the empty boxes.'};
+    }
+    case 'addNum': {
+      const a = lgRand(1, max - 1), b = lgRand(1, max - a);
+      return {kind, answer:a+b, text:a+' + '+b+' = ?', say:a+' plus '+b+'.', choices:numChoices(a+b, nc, 3, 0, max + 3),
+              hint:'Start at '+Math.max(a, b)+' and count up '+Math.min(a, b)+'!', wrong:()=>'Try again! Start at '+Math.max(a, b)+' and count up.'};
+    }
+    case 'subNum': {
+      const a = lgRand(max > 10 ? 8 : 2, max), b = lgRand(1, Math.min(a - 1, 10));
+      return {kind, answer:a-b, text:a+' − '+b+' = ?', say:a+' take away '+b+'.', choices:numChoices(a-b, nc, 3, 0, max),
+              hint:'Start at '+a+' and count back '+b+'!', wrong:()=>'Try again! Start at '+a+' and count back '+b+'.'};
+    }
+    case 'missingAdd': {
+      const c = lgRand(3, max), a = lgRand(1, c - 1);
+      return {kind, answer:c-a, text:a+' + ? = '+c, say:a+' plus what makes '+c+'?', choices:numChoices(c-a, nc, 3, 0, max),
+              hint:'Count up from '+a+' to '+c+'!', wrong:()=>'Try again! Count up from '+a+' to '+c+'.'};
+    }
+    case 'missingSub': {
+      const c = lgRand(5, max), b = lgRand(1, c - 1);
+      return {kind, answer:b, text:c+' − ? = '+(c-b), say:c+' take away what leaves '+(c-b)+'?', choices:numChoices(b, nc, 3, 0, max),
+              hint:'Count down from '+c+' to '+(c-b)+'!', wrong:()=>'Try again! Count back from '+c+' to '+(c-b)+'.'};
+    }
+    case 'placeValue': {
+      const t = lgRand(1, 9), o = lgRand(0, 9), n = t*10 + o;
+      return {kind, answer:n, text:'How many blocks?', say:'How many blocks? Count the tens, then the ones.',
+              visual:blocksHtml(t, o), choices:pickChoices(n, [o*10 + t, n + 10, n - 10, t + o, n + 1, n - 1].filter(v=>v > 0 && v < 100), nc),
+              hint:'Each tall stick is 10!', wrong:()=>'Try again! Count the tall sticks by tens: 10, 20, 30…',
+              right:t+' tens and '+o+' ones. '+n+'!'};
+    }
+    case 'skip': {
+      const step = lgPick([2, 5, 10]);
+      const k = lgRand(step === 10 ? 1 : 0, step === 2 ? 8 : step === 5 ? 12 : 6);
+      const arr = [0, 1, 2, 3].map(i=>(k + i) * step);
+      const hole = Math.random() < 0.6 ? 3 : lgRand(1, 2);
+      return {kind, answer:arr[hole], text:'Count by '+step+'s', visual:seqHtml(arr, hole),
+              say:'Count by '+step+'s. '+arr.map((v, i)=>i === hole ? 'something' : v).join(', ')+'. What is missing?',
+              choices:pickChoices(arr[hole], [arr[hole] + 1, arr[hole] - 1, arr[hole] + step, arr[hole] - step], nc),
+              hint:'Jump by '+step+' each time!', wrong:()=>'Try again! Jump by '+step+'s.'};
+    }
+    case 'clock': {
+      const h = lgRand(1, 12), m = L.half && Math.random() < 0.6 ? 30 : 0;
+      const nxt = h % 12 + 1, prv = (h + 10) % 12 + 1;
+      const wrongs = m ? [[h, 0], [nxt, 30], [prv, 30], [nxt, 0]] : [[nxt, 0], [prv, 0], [lgRand(1, 12), 0], [h, 30]];
+      const seen = new Set([timeLabel(h, m)]);
+      const choices = [{v:timeLabel(h, m), label:timeLabel(h, m)}];
+      lgShuffle(wrongs).forEach(([wh, wm])=>{
+        const lab = timeLabel(wh, wm);
+        if(choices.length < nc && !seen.has(lab)){ seen.add(lab); choices.push({v:lab, label:lab}); }
+      });
+      return {kind, answer:timeLabel(h, m), text:'What time is it?', btnCls:'sm', visual:clockSvg(h, m),
+              say:'What time is it? Look at the short hand.', choices:lgShuffle(choices),
+              hint: L.half ? 'Short hand = hour. Long hand down at 6 = half past.' : 'The short hand points to the hour.',
+              wrong:()=>'Try again! Look where the short hand points.', right:"Yes! It's "+timeSay(h, m)+'!'};
+    }
+    case 'addTens': {
+      let a, b;
+      if(Math.random() < 0.5){ a = 10 * lgRand(1, 8); b = 10 * lgRand(1, 9 - a/10); }
+      else { a = lgRand(11, 88); if(a % 10 === 9) a--; b = lgRand(1, 9 - a % 10); }
+      const tens = b % 10 === 0;
+      return {kind, answer:a+b, text:a+' + '+b+' = ?', say:a+' plus '+b+'.',
+              choices:pickChoices(a+b, tens ? [a+b+10, a+b-10, a+b+1] : [a+b+1, a+b-1, a+b+10, a+b-10], nc),
+              hint: tens ? 'Count by tens!' : 'Just add the ones!', wrong:()=>tens ? 'Try again! Count up by tens from '+a+'.' : 'Try again! Count up '+b+' from '+a+'.'};
+    }
+    case 'add2': {
+      const t1 = lgRand(1, 7), t2 = lgRand(1, 8 - t1), o1 = lgRand(0, 9), o2 = lgRand(0, 9 - o1);
+      const a = t1*10 + o1, b = t2*10 + o2;
+      return {kind, answer:a+b, text:a+' + '+b+' = ?', say:a+' plus '+b+'.',
+              choices:pickChoices(a+b, [a+b+10, a+b-10, a+b+1, a+b-1], nc),
+              hint:'Add the ones, then add the tens.', wrong:()=>'Try again! Ones first: '+o1+' plus '+o2+'.'};
+    }
+    case 'sub2': {
+      const t1 = lgRand(2, 9), t2 = lgRand(1, t1 - 1), o1 = lgRand(0, 9), o2 = lgRand(0, o1);
+      const a = t1*10 + o1, b = t2*10 + o2;
+      return {kind, answer:a-b, text:a+' − '+b+' = ?', say:a+' take away '+b+'.',
+              choices:pickChoices(a-b, [a-b+10, a-b-10, a-b+1, a-b-1].filter(v=>v > 0), nc),
+              hint:'Take away the ones, then the tens.', wrong:()=>'Try again! Ones first: '+o1+' take away '+o2+'.'};
+    }
+    case 'add3': {
+      const a = lgRand(1, 6), b = lgRand(1, 6), c = lgRand(1, 6);
+      return {kind, answer:a+b+c, text:a+' + '+b+' + '+c+' = ?', say:a+' plus '+b+' plus '+c+'.',
+              choices:numChoices(a+b+c, nc, 3, 0, 20), hint:'Add two numbers first, then add the last one.',
+              wrong:()=>'Try again! '+a+' plus '+b+' is '+(a+b)+'. Now add '+c+'.'};
+    }
+  }
 }
 function nextMathQuestion(){
-  math.q = makeMathQuestion();
-  math.q.choices = math.q.kind === 'more' ? null : mathChoices(math.q.answer, getLearnCfg().mathMax);
+  math.q = makeMathQuestion(mathLevel());
   math.tapped = 0;
   math.locked = false;
   renderMath();
@@ -6878,26 +7232,13 @@ function picGroupHtml(emoji, n, startIdx, goneFrom){
 function renderMath(){
   const q = math.q;
   document.getElementById('mathDots').innerHTML = learnDotsHtml(math.done);
-  let pics, answers, hint = 'Tap the pictures to count them!';
-  if(q.kind === 'more'){
-    const pile = (n, side) => `<button type="button" class="pile" id="mpile${side}" onclick="mathAnswer(${side}, this)">${q.emoji.repeat(n)}</button>`;
-    pics = `<div class="pile-row">${pile(q.a, 0)}${pile(q.b, 1)}</div>`;
-    answers = '';
-    hint = 'Tap the side with more!';
-  } else {
-    if(q.kind === 'count') pics = picGroupHtml(q.emoji, q.a, 0);
-    else if(q.kind === 'add') pics = picGroupHtml(q.emoji, q.a, 0) + '<span class="pic-op">+</span>' + picGroupHtml(q.emoji, q.b, q.a);
-    else pics = picGroupHtml(q.emoji, q.a, 0, q.a - q.b);
-    pics = `<div class="pics">${pics}</div>`;
-    answers = `<div class="answer-row" style="margin-top:18px;">${q.choices.map(v=>
-      `<button type="button" class="answer-btn" onclick="mathAnswer(${v}, this)">${v}</button>`).join('')}</div>`;
-    if(q.kind === 'sub') hint = 'The ✕ ones went away. Count the ones left!';
-  }
+  const answers = q.piles ? '' : `<div class="answer-row${q.choices.length > 3 ? ' four' : ''}" style="margin-top:18px;">${q.choices.map((c, i)=>
+      `<button type="button" class="answer-btn${q.btnCls ? ' '+q.btnCls : ''}" onclick="mathAnswer(${i}, this)">${c.label}</button>`).join('')}</div>`;
   document.getElementById('mathCard').innerHTML = `
     <button type="button" class="learn-say" onclick="speak(math.q.say)" aria-label="say it again">🔊</button>
-    <div class="learn-q">${q.text}</div>
-    ${pics}${answers}
-    <div class="learn-hint">${hint}</div>`;
+    <div class="learn-q${q.text.length > 12 ? ' long' : ''}">${q.text}</div>
+    ${q.visual || ''}${answers}
+    <div class="learn-hint">${q.hint}</div>`;
 }
 function mathCountTap(idx){
   const el = document.getElementById('mpic'+idx);
@@ -6907,29 +7248,32 @@ function mathCountTap(idx){
   el.insertAdjacentHTML('beforeend', `<b>${math.tapped}</b>`);
   speak(String(math.tapped));
 }
-function mathAnswer(val, btn){
+function mathAnswer(i, btn){
   if(math.locked) return;
   const q = math.q;
-  if(val === q.answer){
+  if(q.choices[i].v === q.answer){
     math.locked = true;
     btn.classList.add('right');
     math.done++;
     document.getElementById('mathDots').innerHTML = learnDotsHtml(math.done);
-    speak(lgPick(MATH_PRAISE) + (q.kind === 'more' ? '' : ' '+q.answer+'!'));
+    speak(q.right || lgPick(MATH_PRAISE)+' '+q.answer+'!');
     setTimeout(()=>{
       if(!document.getElementById('math').classList.contains('active')) return;
-      if(math.done >= LEARN_ROUND) finishLearnRound('math', '🔢', 'You did 5 math questions!', newMathRound);
+      if(math.done >= LEARN_ROUND) finishLevelRound('math', 'math', MATH_LEVELS, math.misses, '🔢', 'You did 5 math questions!', newMathRound);
       else nextMathQuestion();
     }, 1300);
   } else {
+    math.misses++;
     btn.classList.add('wrong');
-    speak(q.kind === 'more' ? 'Look again! Which side has more?' : 'Try again! Tap the pictures to count.');
+    speak(q.wrong(q.choices[i].v));
   }
 }
 
 /* ================= LETTERS =================
-   Trace: drag a finger over a big letter until most of it is coloured in.
-   Spell: tap the letters of a picture word in order. */
+   Three ways to play, each with its own ladder of levels:
+   Trace  — drag a finger over a big letter or number until it's coloured in.
+   Spell  — tap the letters of a picture word (or a heard sight word) in order.
+   Sounds — first, last and middle letters, picture hunts and rhymes. */
 const LETTER_WORDS = {
   A:['🍎','Apple'], B:['🏀','Ball'], C:['🐱','Cat'], D:['🐶','Dog'], E:['🥚','Egg'], F:['🐟','Fish'],
   G:['🍇','Grapes'], H:['🎩','Hat'], I:['🍦','Ice cream'], J:['🧃','Juice'], K:['🪁','Kite'], L:['🦁','Lion'],
@@ -6937,15 +7281,101 @@ const LETTER_WORDS = {
   S:['☀️','Sun'], T:['🐯','Tiger'], U:['☂️','Umbrella'], V:['🎻','Violin'], W:['🐋','Whale'], X:['❌','X marks the spot'],
   Y:['🪀','Yo-yo'], Z:['🦓','Zebra'],
 };
-const SPELL_WORDS = [
+const CVC_WORDS = [
   ['CAT','🐱'], ['DOG','🐶'], ['SUN','☀️'], ['PIG','🐷'], ['BUS','🚌'], ['HAT','🎩'], ['BED','🛏️'], ['CUP','☕'],
   ['FOX','🦊'], ['BEE','🐝'], ['CAR','🚗'], ['EGG','🥚'], ['ANT','🐜'], ['OWL','🦉'], ['COW','🐮'], ['BOX','📦'],
   ['BAT','🦇'], ['HEN','🐔'], ['BUG','🐛'], ['WEB','🕸️'], ['PEN','🖊️'], ['MAP','🗺️'], ['NUT','🥜'], ['VAN','🚐'],
-  ['BAG','👜'], ['TOY','🧸'], ['LEG','🦵'], ['JET','✈️'],
+  ['BAG','👜'], ['TOY','🧸'], ['LEG','🦵'], ['JET','✈️'], ['RAT','🐀'], ['CAN','🥫'], ['PAN','🍳'], ['NET','🥅'],
+  ['PIN','📌'], ['SIX','6️⃣'], ['TEN','🔟'], ['KID','🧒'], ['TUB','🛁'], ['GEM','💎'], ['LIP','👄'], ['MAN','👨'],
+  ['RED','🟥'], ['KEY','🔑'], ['LOG','🪵'], ['PIE','🥧'], ['EAR','👂'], ['ARM','💪'], ['ICE','🧊'], ['EYE','👁️'],
 ];
-let letters = null;   // {mode, done, items, letter|word, ...}
+const FOUR_WORDS = [
+  ['FROG','🐸'], ['DRUM','🥁'], ['CRAB','🦀'], ['FLAG','🚩'], ['STAR','⭐'], ['SLED','🛷'], ['GIFT','🎁'], ['TENT','⛺'],
+  ['BELL','🔔'], ['BALL','⚽'], ['DUCK','🦆'], ['SOCK','🧦'], ['HAND','✋'], ['BIRD','🐦'], ['MILK','🥛'], ['BEAR','🐻'],
+  ['LION','🦁'], ['FOOT','🦶'], ['BOOK','📖'], ['MOON','🌙'], ['TREE','🌳'], ['BOAT','⛵'], ['FORK','🍴'], ['CORN','🌽'],
+  ['WOLF','🐺'], ['SWAN','🦢'], ['MASK','🎭'], ['SNOW','❄️'], ['FIRE','🔥'], ['LEAF','🍃'], ['GOAT','🐐'], ['COAT','🧥'],
+];
+const DIGRAPH_WORDS = [
+  ['SHIP','🚢'], ['SHOE','👟'], ['FISH','🐟'], ['DISH','🍽️'], ['SHELL','🐚'], ['SHARK','🦈'], ['SHEEP','🐑'], ['CHICK','🐤'],
+  ['CHAIR','🪑'], ['CHEESE','🧀'], ['CHERRY','🍒'], ['WATCH','⌚'], ['TOOTH','🦷'], ['THUMB','👍'], ['BATH','🛁'], ['WHALE','🐋'],
+  ['RING','💍'], ['KING','🤴'], ['TRUCK','🚚'], ['CLOCK','🕐'], ['THREE','3️⃣'], ['PEACH','🍑'],
+];
+const MAGIC_E_WORDS = [
+  ['CAKE','🎂'], ['KITE','🪁'], ['BIKE','🚲'], ['BONE','🦴'], ['CUBE','🧊'], ['ROSE','🌹'], ['NOSE','👃'], ['HOME','🏠'],
+  ['FIVE','5️⃣'], ['NINE','9️⃣'], ['GRAPE','🍇'], ['PLANE','✈️'], ['SNAKE','🐍'], ['SMILE','😊'], ['SKATE','⛸️'], ['RICE','🍚'],
+  ['FACE','🙂'], ['PINE','🌲'], ['GLOBE','🌍'], ['WAVE','🌊'], ['GAME','🎮'], ['NOTE','🎵'],
+];
+const LONG_WORDS = [
+  ['TRAIN','🚂'], ['PLANT','🌱'], ['CLOUD','☁️'], ['ROBOT','🤖'], ['PIZZA','🍕'], ['ZEBRA','🦓'], ['TIGER','🐯'], ['HORSE','🐴'],
+  ['APPLE','🍎'], ['BREAD','🍞'], ['HEART','❤️'], ['ROCKET','🚀'], ['PLANET','🪐'], ['RABBIT','🐰'], ['MONKEY','🐒'], ['TURTLE','🐢'],
+  ['SPIDER','🕷️'], ['CARROT','🥕'], ['BANANA','🍌'], ['PENCIL','✏️'], ['GUITAR','🎸'], ['DRAGON','🐉'], ['FLOWER','🌸'], ['PANDA','🐼'],
+  ['LEMON','🍋'], ['CAMEL','🐫'], ['SNAIL','🐌'], ['TOMATO','🍅'], ['CASTLE','🏰'], ['SPOON','🥄'], ['GHOST','👻'], ['ALIEN','👽'],
+];
+// Sight words have no picture, so each comes with a sentence to hear it in.
+const SIGHT_WORDS = [
+  ['THE','The dog is big.'], ['AND','Mom and me.'], ['YOU','I love you.'], ['SEE','I see a cat.'], ['LOOK','Look at me!'],
+  ['LIKE','I like pizza.'], ['CAN','I can jump.'], ['ME','Play with me.'], ['MY','This is my toy.'], ['WE','We go out.'],
+  ['IS','It is red.'], ['IT','Kick it.'], ['IN','The cat is in the box.'], ['GO','Ready, set, go!'], ['UP','Look up!'],
+  ['TO','I go to school.'], ['NO','No, thank you.'], ['YES','Yes, please.'], ['SAID','Mom said hi.'], ['PLAY','Let us play.'],
+  ['COME','Come here!'], ['HERE','I am here.'], ['WHAT','What is that?'], ['SHE','She is fast.'], ['HE','He is tall.'],
+  ['FOR','This is for you.'], ['ARE','You are funny.'], ['WAS','It was fun.'], ['HAVE','I have a dog.'], ['OF','A cup of milk.'],
+  ['ONE','I have one nose.'], ['DOWN','Sit down.'], ['BIG','A big truck.'], ['LITTLE','A little bug.'], ['BLUE','The sky is blue.'],
+];
+// Words whose first letter makes its usual sound, with pictures that are hard to misname.
+const SOUND_START = [
+  ['SUN','☀️'], ['DOG','🐶'], ['CAT','🐱'], ['PIG','🐷'], ['BUS','🚌'], ['HAT','🎩'], ['BED','🛏️'], ['FOX','🦊'],
+  ['MOON','🌙'], ['LION','🦁'], ['NOSE','👃'], ['TIGER','🐯'], ['WEB','🕸️'], ['ZEBRA','🦓'], ['GOAT','🐐'], ['JUICE','🧃'],
+  ['KITE','🪁'], ['YO-YO','🪀'], ['APPLE','🍎'], ['EGG','🥚'], ['OCTOPUS','🐙'], ['UMBRELLA','☂️'], ['FISH','🐟'], ['MONKEY','🐒'],
+  ['LEMON','🍋'], ['ROBOT','🤖'], ['PIZZA','🍕'], ['BANANA','🍌'], ['CARROT','🥕'], ['DUCK','🦆'], ['HORSE','🐴'], ['TENT','⛺'],
+  ['RAINBOW','🌈'], ['MOUSE','🐭'], ['SOCK','🧦'], ['BEAR','🐻'], ['DRUM','🥁'], ['VIOLIN','🎻'], ['KEY','🔑'], ['WATCH','⌚'],
+];
+const SOUND_TWINS = {C:'K', K:'C'};   // same sound, so never offered as the wrong answer for each other
+const RHYMES = [
+  [['CAT','🐱'], ['HAT','🎩'], ['BAT','🦇']], [['DOG','🐶'], ['LOG','🪵'], ['FROG','🐸']], [['HEN','🐔'], ['PEN','🖊️'], ['TEN','🔟']],
+  [['BEE','🐝'], ['TREE','🌳'], ['THREE','3️⃣']], [['BOX','📦'], ['FOX','🦊']], [['CAKE','🎂'], ['SNAKE','🐍']],
+  [['RING','💍'], ['KING','🤴']], [['MOON','🌙'], ['SPOON','🥄'], ['BALLOON','🎈']], [['BEAR','🐻'], ['PEAR','🍐'], ['CHAIR','🪑']],
+  [['FISH','🐟'], ['DISH','🍽️']], [['SOCK','🧦'], ['CLOCK','🕐']], [['DUCK','🦆'], ['TRUCK','🚚']], [['BELL','🔔'], ['SHELL','🐚']],
+  [['BOAT','⛵'], ['GOAT','🐐'], ['COAT','🧥']], [['BONE','🦴'], ['PHONE','📱']], [['HOUSE','🏠'], ['MOUSE','🐭']],
+  [['TRAIN','🚂'], ['RAIN','🌧️']], [['CAR','🚗'], ['STAR','⭐']],
+];
+// consonant, short vowel, consonant — good for last and middle sounds
+const CVC_PLAIN = CVC_WORDS.filter(([w])=>/^[^AEIOU][AEIOU][^AEIOUWY]$/.test(w));
 
-function getLettersMode(){ return localStorage.getItem('lettersMode') === 'spell' ? 'spell' : 'trace'; }
+const TRACE_LEVELS = [
+  {emoji:'🅰️', name:'Big A to M',       glyphs:'ABCDEFGHIJKLM'},
+  {emoji:'🦓', name:'Big N to Z',       glyphs:'NOPQRSTUVWXYZ'},
+  {emoji:'🔡', name:'Little a to m',    glyphs:'abcdefghijklm'},
+  {emoji:'🐛', name:'Little n to z',    glyphs:'nopqrstuvwxyz'},
+  {emoji:'🔢', name:'Numbers 0 to 9',   glyphs:'0123456789'},
+  {emoji:'🌈', name:'Everything mixed', glyphs:'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'},
+];
+const SPELL_LEVELS = [
+  {emoji:'🐱', name:'Short words',        words:CVC_WORDS, hint:true, extras:2},
+  {emoji:'👂', name:'Sound it out',       words:CVC_WORDS, hint:false, extras:3},
+  {emoji:'🐸', name:'Four letters',       words:FOUR_WORDS, hint:true, extras:2},
+  {emoji:'🥁', name:'Four, no peeking',   words:FOUR_WORDS, hint:false, extras:3},
+  {emoji:'🐟', name:'SH, CH and TH',      words:DIGRAPH_WORDS, hint:true, extras:3},
+  {emoji:'🎂', name:'Magic E',            words:MAGIC_E_WORDS, hint:true, extras:3},
+  {emoji:'🦈', name:'Tricky, no peeking', words:DIGRAPH_WORDS.concat(MAGIC_E_WORDS), hint:false, extras:3},
+  {emoji:'🚀', name:'Long words',         words:LONG_WORDS, hint:true, extras:3},
+  {emoji:'👀', name:'Sight words',        words:SIGHT_WORDS, sight:true, hint:true, extras:3},
+  {emoji:'🧠', name:'Sight words, no peeking', words:SIGHT_WORDS, sight:true, hint:false, extras:3},
+  {emoji:'👑', name:'Spelling champion',  words:LONG_WORDS.concat(DIGRAPH_WORDS, MAGIC_E_WORDS), hint:false, extras:4},
+];
+const SOUNDS_LEVELS = [
+  {emoji:'🐍', name:'First letter',     kinds:['first'], n:3},
+  {emoji:'🎯', name:'First letter, 4 choices', kinds:['first'], n:4},
+  {emoji:'🖼️', name:'Find the picture', kinds:['findPic'], n:3},
+  {emoji:'🔚', name:'Last letter',      kinds:['last'], n:3},
+  {emoji:'🎈', name:'Middle sound',     kinds:['middle']},
+  {emoji:'🎵', name:'Rhymes',           kinds:['rhyme'], n:3},
+  {emoji:'🌟', name:'Sound mix',        kinds:['first','findPic','last','middle','rhyme'], n:4},
+];
+const LETTERS_LEVELS = {trace:TRACE_LEVELS, spell:SPELL_LEVELS, sounds:SOUNDS_LEVELS};
+const LETTERS_MODES = ['trace','spell','sounds'];
+let letters = null;   // {mode, level, done, misses, items, locked, ...}
+
+function getLettersMode(){ const m = localStorage.getItem('lettersMode'); return LETTERS_MODES.includes(m) ? m : 'trace'; }
 function lettersCase(s){ return getLearnCfg().lettersCase === 'lower' ? s.toLowerCase() : s.toUpperCase(); }
 
 function openLetters(){
@@ -6956,21 +7386,29 @@ function setLettersMode(mode){
   localStorage.setItem('lettersMode', mode);
   newLettersRound();
 }
+function pickLettersLevel(i){
+  const mode = getLettersMode();
+  if(setLevel(mode, LETTERS_LEVELS[mode].length, i)) newLettersRound();
+}
 function newLettersRound(){
   const mode = getLettersMode();
-  document.getElementById('lettersModeTrace').classList.toggle('on', mode === 'trace');
-  document.getElementById('lettersModeSpell').classList.toggle('on', mode === 'spell');
-  const items = mode === 'trace'
-    ? lgShuffle(Object.keys(LETTER_WORDS)).slice(0, LEARN_ROUND)
-    : lgShuffle(SPELL_WORDS).slice(0, LEARN_ROUND);
-  letters = {mode, done:0, items, locked:false};
+  LETTERS_MODES.forEach(m=>document.getElementById('lettersMode'+m[0].toUpperCase()+m.slice(1)).classList.toggle('on', m === mode));
+  const levels = LETTERS_LEVELS[mode];
+  const level = levels[getLevelState(mode, levels.length).cur];
+  document.getElementById('lettersLevels').innerHTML = levelStripHtml(mode, levels, 'pickLettersLevel');
+  scrollLevelIntoView('lettersLevels');
+  const items = mode === 'trace' ? lgShuffle(level.glyphs.split('')).slice(0, LEARN_ROUND)
+    : mode === 'spell' ? lgShuffle(level.words).slice(0, LEARN_ROUND)
+    : [];   // sounds questions are made one at a time
+  letters = {mode, level, done:0, misses:0, items, used:new Set(), locked:false};
   nextLettersItem();
 }
 function nextLettersItem(){
   letters.locked = false;
   document.getElementById('lettersDots').innerHTML = learnDotsHtml(letters.done);
   if(letters.mode === 'trace') startTrace(letters.items[letters.done]);
-  else startSpell(letters.items[letters.done]);
+  else if(letters.mode === 'spell') startSpell(letters.items[letters.done]);
+  else startSound();
 }
 function lettersItemDone(){
   letters.locked = true;
@@ -6979,8 +7417,10 @@ function lettersItemDone(){
   setTimeout(()=>{
     if(!document.getElementById('letters').classList.contains('active')) return;
     if(letters.done >= LEARN_ROUND){
-      finishLearnRound('letters', letters.mode === 'trace' ? '✏️' : '🔤',
-        letters.mode === 'trace' ? 'You traced 5 letters!' : 'You spelled 5 words!', newLettersRound);
+      const m = letters.mode;
+      finishLevelRound('letters', m, LETTERS_LEVELS[m], letters.misses,
+        {trace:'✏️', spell:'🔤', sounds:'🔊'}[m],
+        {trace:'You traced 5!', spell:'You spelled 5 words!', sounds:'You got 5 sounds!'}[m], newLettersRound);
     } else nextLettersItem();
   }, 1600);
 }
@@ -6992,20 +7432,32 @@ function lettersItemDone(){
 let trace = null;
 const TRACE_GRID = 34;
 
-function startTrace(L){
-  const [emoji, word] = LETTER_WORDS[L];
-  const shown = lettersCase(L);
+// What to show and say for a glyph. Letter names are spoken in capitals, or
+// the voice reads a little "a" as the word "uh".
+function traceInfo(g){
+  if(/[0-9]/.test(g)){
+    const w = NUM_WORDS[+g];
+    return {caption:`${g} is ${w} <span class="trace-count">${'⭐'.repeat(+g) || '🚫'}</span>`,
+            say:'Trace the number '+w+'.', win:'Great job! That is '+w+'!'};
+  }
+  const U = g.toUpperCase(), [emoji, word] = LETTER_WORDS[U];
+  return {caption:`<span>${emoji}</span>${g} is for ${escapeHtml(word)}`,
+          say:(g === U ? 'Trace the letter ' : 'Trace little ')+U+'. '+U+' is for '+word+'.',
+          win:'Great job! '+U+' is for '+word+'!'};
+}
+function startTrace(g){
+  const info = traceInfo(g);
   document.getElementById('lettersCard').innerHTML = `
     <button type="button" class="learn-say" onclick="sayTraceLetter()" aria-label="say it again">🔊</button>
-    <div class="trace-word"><span>${emoji}</span>${shown} is for ${escapeHtml(word)}</div>
+    <div class="trace-word">${info.caption}</div>
     <div class="trace-box" id="traceBox">
       <canvas id="traceGuide"></canvas>
       <canvas id="traceInk"></canvas>
     </div>
     <div class="learn-btn-row"><button type="button" class="learn-btn" onclick="clearTrace()">🔄 Start over</button></div>
-    <div class="learn-hint">Color in the whole letter with your finger!</div>`;
-  trace = {L, shown, word, cells:null, maskCount:0, ink:new Set(), drawing:false, last:null};
-  const go = ()=>{ if(trace && trace.L === L) layoutTrace(); };
+    <div class="learn-hint">Color in the whole ${/[0-9]/.test(g) ? 'number' : 'letter'} with your finger!</div>`;
+  trace = {L:g, shown:g, info, cells:null, maskCount:0, ink:new Set(), drawing:false, last:null};
+  const go = ()=>{ if(trace && trace.L === g) layoutTrace(); };
   if(document.fonts && document.fonts.load) document.fonts.load("800 100px 'Baloo 2'").then(go, go);
   else go();
   sayTraceLetter();
@@ -7024,7 +7476,7 @@ function startTrace(L){
 }
 function sayTraceLetter(){
   if(!trace) return;
-  speak('Trace the letter '+trace.L+'. '+trace.L+' is for '+trace.word+'.');
+  speak(trace.info.say);
 }
 function layoutTrace(){
   const box = document.getElementById('traceBox');
@@ -7134,14 +7586,14 @@ function traceUp(){
   const box = document.getElementById('traceBox');
   if(outside > trace.maskCount*0.5){
     box.classList.remove('oops'); void box.offsetWidth; box.classList.add('oops');
-    speak('Oops! Stay on the letter.');
+    speak('Oops! Stay on the line.');
     setTimeout(clearTrace, 500);
     return;
   }
   if(covered >= trace.maskCount*0.75){
     box.classList.add('win');
     screenConfetti();
-    speak('Great job! '+trace.L+' is for '+trace.word+'!');
+    speak(trace.info.win);
     lettersItemDone();
   }
 }
@@ -7158,50 +7610,151 @@ window.addEventListener('resize', ()=>{
 
 /* ---- spelling ---- */
 function startSpell(item){
-  const [word, emoji] = item;
-  const extras = lgShuffle('ABCDEFGHIJKLMNOPRSTUVWY'.split('').filter(ch=>!word.includes(ch))).slice(0, 2);
+  const [word, extra] = item;
+  const L = letters.level;
+  const extras = lgShuffle('ABCDEFGHIJKLMNOPRSTUVWY'.split('').filter(ch=>!word.includes(ch))).slice(0, L.extras);
   letters.word = word;
-  letters.emoji = emoji;
+  letters.emoji = L.sight ? null : extra;
+  letters.sentence = L.sight ? extra : null;
   letters.pos = 0;
+  letters.missHere = 0;
   letters.btns = lgShuffle(word.split('').concat(extras)).map(l=>({l, used:false}));
   trace = null;
   renderSpell();
   sayWord();
 }
 function sayWord(){
-  speak('Spell '+letters.word.toLowerCase()+'!');
+  const w = letters.word.toLowerCase();
+  speak(letters.sentence ? 'Spell, '+w+'. '+letters.sentence+' Spell, '+w+'.' : 'Spell '+w+'!');
 }
 function renderSpell(){
-  const hint = getLearnCfg().lettersHint;
+  const hint = getLearnCfg().lettersHint && letters.level.hint;
   const slots = letters.word.split('').map((l, i)=>{
     const filled = i < letters.pos;
     return `<div class="spell-slot${filled ? ' filled' : (i === letters.pos ? ' next' : '')}">${filled || hint ? lettersCase(l) : ''}</div>`;
   }).join('');
   const btns = letters.btns.map((b, i)=>
     `<button type="button" class="letter-btn${b.used ? ' used' : ''}" id="lbtn${i}" onclick="spellTap(${i})">${lettersCase(b.l)}</button>`).join('');
+  const pic = letters.emoji
+    ? `<div class="spell-pic">${letters.emoji}</div>`
+    : `<button type="button" class="spell-pic spell-ear" onclick="sayWord()" aria-label="hear the word">👂</button>`;
   document.getElementById('lettersCard').innerHTML = `
     <button type="button" class="learn-say" onclick="sayWord()" aria-label="say it again">🔊</button>
-    <div class="spell-pic">${letters.emoji}</div>
-    <div class="spell-slots">${slots}</div>
+    ${pic}
+    <div class="spell-slots${letters.word.length > 5 ? ' long' : ''}">${slots}</div>
     <div class="letter-btns">${btns}</div>
-    <div class="learn-hint">${hint ? 'Find the letters in order!' : 'Sound it out!'}</div>`;
+    <div class="learn-hint">${hint ? 'Find the letters in order!' : letters.sentence ? 'Listen, then spell the word!' : 'Sound it out!'}</div>`;
 }
 function spellTap(i){
   if(letters.locked) return;
   const b = letters.btns[i];
   if(!b || b.used) return;
-  if(b.l === letters.word[letters.pos]){
+  const want = letters.word[letters.pos];
+  if(b.l === want){
     b.used = true;
     letters.pos++;
+    letters.missHere = 0;
     renderSpell();
     if(letters.pos >= letters.word.length){
       speak(letters.word.split('').join(', ')+'. '+letters.word.toLowerCase()+'! You did it!');
       lettersItemDone();
     } else speak(b.l);
   } else {
+    letters.misses++;
+    letters.missHere++;
     const el = document.getElementById('lbtn'+i);
     el.classList.remove('wrong'); void el.offsetWidth; el.classList.add('wrong');
-    speak('Try again!');
+    // Two misses on the same letter: light up the one he needs.
+    if(letters.missHere >= 2){
+      const j = letters.btns.findIndex(x=>!x.used && x.l === want);
+      const help = document.getElementById('lbtn'+j);
+      if(help) help.classList.add('help');
+      speak('Look for '+want+'.');
+    } else speak('Try again!');
+  }
+}
+
+/* ---- sounds ---- */
+function soundPick(list){
+  let item, tries = 0;
+  do{ item = lgPick(list); }while(letters.used.has(item[0]) && tries++ < 30);
+  letters.used.add(item[0]);
+  return item;
+}
+function letterChoices(answer, n, pool){
+  const banned = new Set([answer, SOUND_TWINS[answer], 'Q', 'X']);
+  const wrong = lgShuffle((pool || 'ABCDEFGHIJKLMNOPRSTUVWYZ').split('').filter(ch=>!banned.has(ch))).slice(0, n - 1);
+  return lgShuffle([answer].concat(wrong)).map(ch=>({v:ch, label:lettersCase(ch)}));
+}
+function soundSlotsHtml(word, hole, done){
+  return `<div class="spell-slots">${word.split('').map((l, i)=>
+    `<div class="spell-slot ${i === hole && !done ? 'next' : 'filled'}">${i === hole && !done ? '?' : lettersCase(l)}</div>`).join('')}</div>`;
+}
+function makeSoundQuestion(kind, n){
+  if(kind === 'first'){
+    const [w, e] = soundPick(SOUND_START), lw = w.toLowerCase(), a = w[0];
+    return {answer:a, choices:letterChoices(a, n), visual:`<div class="spell-pic">${e}</div>`,
+            say:lw+'! What letter does '+lw+' start with?', hint:'What sound do you hear first?',
+            right:'Yes! '+lw+' starts with '+a+'!', wrong:c=>'Not '+c.v+'. Listen: '+lw+'. Try again!'};
+  }
+  if(kind === 'last' || kind === 'middle'){
+    const [w, e] = soundPick(CVC_PLAIN), lw = w.toLowerCase();
+    const hole = kind === 'last' ? 2 : 1, a = w[hole];
+    return {answer:a, word:w, hole, visual:`<div class="spell-pic">${e}</div>`,
+            choices: kind === 'middle' ? 'AEIOU'.split('').map(ch=>({v:ch, label:lettersCase(ch)})) : letterChoices(a, n),
+            say: kind === 'last' ? lw+'! What letter does '+lw+' end with?' : lw+'! What is the middle sound in '+lw+'?',
+            hint: kind === 'last' ? 'What sound do you hear at the end?' : 'Say it slowly. What do you hear in the middle?',
+            right:w.split('').join(', ')+'. '+lw+'!', wrong:c=>'Not '+c.v+'. Listen: '+lw+'. Try again!'};
+  }
+  if(kind === 'findPic'){
+    const [w, e] = soundPick(SOUND_START), a = w[0];
+    const others = lgShuffle(SOUND_START.filter(([x])=>x[0] !== a && x[0] !== SOUND_TWINS[a])).slice(0, (n || 3) - 1);
+    return {answer:w, visual:`<div class="big-letter">${lettersCase(a)}</div>`,
+            choices:lgShuffle([[w, e]].concat(others)).map(([x, xe])=>({v:x, label:xe, pic:true})),
+            say:'Which picture starts with '+a+'?', hint:'Say each picture’s name out loud!',
+            right:'Yes! '+w.toLowerCase()+' starts with '+a+'!',
+            wrong:c=>c.v.toLowerCase()+' starts with '+c.v[0]+'. Try again!'};
+  }
+  // rhyme
+  const fam = lgShuffle(lgPick(RHYMES));
+  const [t, te] = fam[0], [r, re] = fam[1];
+  const others = lgShuffle([].concat(...RHYMES.filter(f=>!f.some(([x])=>x === t)))).slice(0, (n || 3) - 1);
+  return {answer:r, visual:`<div class="spell-pic">${te}</div><div class="rhyme-word">${lettersCase(t)}</div>`,
+          choices:lgShuffle([[r, re]].concat(others)).map(([x, xe])=>({v:x, label:xe, pic:true})),
+          say:'Which one rhymes with '+t.toLowerCase()+'?', hint:'Rhymes sound the same at the end!',
+          right:t.toLowerCase()+', '+r.toLowerCase()+'! They rhyme!',
+          wrong:c=>c.v.toLowerCase()+'. '+c.v.toLowerCase()+' and '+t.toLowerCase()+' do not rhyme. Try again!'};
+}
+function startSound(){
+  const L = letters.level;
+  letters.sq = makeSoundQuestion(lgPick(L.kinds), L.n || 3);
+  trace = null;
+  renderSound(false);
+  speak(letters.sq.say);
+}
+function renderSound(done){
+  const q = letters.sq;
+  const btns = q.choices.map((c, i)=>
+    `<button type="button" class="${c.pic ? 'pic-choice' : 'letter-btn'}" id="sbtn${i}" onclick="soundTap(${i})">${c.label}</button>`).join('');
+  document.getElementById('lettersCard').innerHTML = `
+    <button type="button" class="learn-say" onclick="speak(letters.sq.say)" aria-label="say it again">🔊</button>
+    ${q.visual}${q.word ? soundSlotsHtml(q.word, q.hole, done) : ''}
+    <div class="letter-btns">${btns}</div>
+    <div class="learn-hint">${q.hint}</div>`;
+}
+function soundTap(i){
+  if(letters.locked) return;
+  const q = letters.sq, c = q.choices[i];
+  if(c.v === q.answer){
+    if(q.word) renderSound(true);
+    const el = document.getElementById('sbtn'+i);
+    if(el) el.classList.add('right');
+    speak(q.right);
+    lettersItemDone();
+  } else {
+    letters.misses++;
+    document.getElementById('sbtn'+i).classList.add('nope');
+    speak(q.wrong(c));
   }
 }
 
@@ -8215,25 +8768,42 @@ function pzLearnSet(field, value){
   setLearnCfg(field, value);
   renderParentZone(); pzSaved();
 }
+function pzSetUnlocked(game, n){
+  const levels = game === 'math' ? MATH_LEVELS : LETTERS_LEVELS[game];
+  const st = getLevelState(game, levels.length);
+  st.unlocked = Math.max(0, Math.min(levels.length - 1, n - 1));
+  st.cur = st.unlocked;
+  st.good = 0;
+  saveLevelState(game, st);
+  renderParentZone(); pzSaved();
+}
 function pzLearning(){
   const c = getLearnCfg();
   const h = getDashHidden();
   const today = g => { const st = loadLearnState(g); return st.rounds+' round'+(st.rounds===1?'':'s')+' today · '+st.stars+' stars earned'; };
   const seg = (field, opts) => `<div class="pz-seg small">${opts.map(([v, label])=>
     `<button type="button" class="${c[field]===v?'on':''}" onclick="pzLearnSet('${field}', ${typeof v === 'number' ? v : `'${v}'`})">${label}</button>`).join('')}</div>`;
-  return `<p class="pz-note">Two practice games for little learners. Both start switched off — turn one on to put it on the home screen. Each round is 5 questions, and wrong answers never cost anything.</p>`
+  const lvl = (game, levels, label) => {
+    const st = getLevelState(game, levels.length);
+    return pzRow(label, pzStepper(st.unlocked + 1, `pzSetUnlocked('${game}', parseInt(this.value,10)||1)`, {min:1, max:levels.length}),
+      'Unlocked up to level '+(st.unlocked + 1)+' of '+levels.length+' · playing '+(st.cur + 1)+': '+escapeHtml(levels[st.cur].name));
+  };
+  return `<p class="pz-note">Two practice games for little learners. Both start switched off — turn one on to put it on the home screen. Each round is 5 questions, and wrong answers never cost anything. Each game is a ladder of levels: two rounds with one miss or fewer opens the next level, and he can tap back to any level he has opened.</p>`
     + pzCard('🔢 Math',
         pzRow('Show on home screen', pzSwitch(!h.math, `pzToggleHidden('math')`))
-      + pzRow('Numbers up to', seg('mathMax', [[5,'5'],[10,'10'],[20,'20']]), 'Counting, adding with pictures, and “which has more?”')
-      + pzRow('Take-away questions', pzSwitch(c.mathSub, `pzLearnSet('mathSub', ${!c.mathSub})`), 'Adds simple subtraction, like 5 − 2.')
+      + lvl('math', MATH_LEVELS, 'Math levels')
+      + `<p class="pz-note">${MATH_LEVELS.length} levels: counting and shapes, adding and taking away with pictures, ten-frames, make 10, doubles, tens and ones, skip counting, telling time, and two-digit sums.</p>`
       + pzRow('Stars per round', pzStepper(c.mathStars, `pzLearnSet('mathStars', parseInt(this.value,10)||0)`, {min:0,max:50}))
       + pzRow('Most math stars per day', pzStepper(c.mathCap, `pzLearnSet('mathCap', parseInt(this.value,10)||0)`, {min:0,max:500,step:5}), '0 = math earns nothing.')
       + `<div class="pz-status">${today('math')}</div>`)
     + pzCard('✏️ Letters',
         pzRow('Show on home screen', pzSwitch(!h.letters, `pzToggleHidden('letters')`))
-      + `<p class="pz-note">He picks Trace (finger-trace a big letter — A is for Apple) or Spell (tap the letters of a 3-letter picture word).</p>`
-      + pzRow('Letters', seg('lettersCase', [['upper','ABC'],['lower','abc']]))
-      + pzRow('Show the word to copy', pzSwitch(c.lettersHint, `pzLearnSet('lettersHint', ${!c.lettersHint})`), 'Spelling shows faint letters in the boxes. Turn off once he can sound words out.')
+      + `<p class="pz-note">He picks Trace (capitals, little letters, then numbers), Spell (short words up to long words and sight words) or Sounds (first, last and middle letters, picture hunts, rhymes).</p>`
+      + lvl('trace', TRACE_LEVELS, '✏️ Trace levels')
+      + lvl('spell', SPELL_LEVELS, '🔤 Spell levels')
+      + lvl('sounds', SOUNDS_LEVELS, '🔊 Sounds levels')
+      + pzRow('Spelling and sounds letters', seg('lettersCase', [['upper','ABC'],['lower','abc']]), 'Tracing levels set their own capitals or little letters.')
+      + pzRow('Show the word to copy', pzSwitch(c.lettersHint, `pzLearnSet('lettersHint', ${!c.lettersHint})`), 'Easier spelling levels show faint letters in the boxes. Off hides them on every level.')
       + pzRow('Stars per round', pzStepper(c.lettersStars, `pzLearnSet('lettersStars', parseInt(this.value,10)||0)`, {min:0,max:50}))
       + pzRow('Most letter stars per day', pzStepper(c.lettersCap, `pzLearnSet('lettersCap', parseInt(this.value,10)||0)`, {min:0,max:500,step:5}), '0 = letters earn nothing.')
       + `<div class="pz-status">${today('letters')}</div>`)

@@ -7,6 +7,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Launchpad</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -8424,6 +8427,19 @@ window.addEventListener('load', holdPageOffTop);
 holdPageOffTop();
 
 document.addEventListener('visibilitychange', ()=>{ if(!document.hidden){ checkDayRollover(); holdPageOffTop(); } });
+
+/* ---------- installed app ---------- */
+if('serviceWorker' in navigator && location.protocol === 'https:'){
+  window.addEventListener('load', ()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); });
+}
+// Android's Back button/gesture would otherwise close the app. Keep one extra
+// history entry and put it back each time Back uses it up. Chrome's Back skips
+// entries added before the kid has touched the page, so add it on the first tap.
+document.addEventListener('pointerdown', function trapBack(){
+  document.removeEventListener('pointerdown', trapBack, true);
+  history.pushState({launchpad:true}, '');
+}, true);
+window.addEventListener('popstate', ()=>{ history.pushState({launchpad:true}, ''); });
 
 </script>
 </body>

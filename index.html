@@ -41,6 +41,8 @@
     background:var(--space);
     color:var(--text);
     overflow:hidden;
+    /* 1px taller than the screen so holdPageOffTop() has room to work */
+    min-height:calc(100% + 1px);
   }
   button{font-family:'Nunito',sans-serif;}
   .screen{
@@ -3055,15 +3057,56 @@ const GENERAL_TIPS = [
 
 let voiceOn = chessStore.get('chessVoiceOn') !== 'off';
 
+// Android quirks this works around: cancel() then speak() in the same tick
+// silently drops the new line; an utterance with no language or voice can stay
+// mute when the tablet's default language has no voice installed; and an
+// utterance nothing references can be garbage-collected before it plays.
+let speechVoice = null, speechUtter = null, speechLastError = '';
+function pickSpeechVoice(){
+  try{
+    const en = (window.speechSynthesis.getVoices() || []).filter(v=>/^en([-_]|$)/i.test(v.lang));
+    const us = en.filter(v=>/^en[-_]US/i.test(v.lang));
+    speechVoice = us.find(v=>v.localService) || us[0] || en.find(v=>v.localService) || en[0] || null;
+  }catch(e){}
+}
+if('speechSynthesis' in window){
+  pickSpeechVoice();
+  try{ window.speechSynthesis.addEventListener('voiceschanged', pickSpeechVoice); }
+  catch(e){ window.speechSynthesis.onvoiceschanged = pickSpeechVoice; }
+  // Chrome only lets a page talk after a tap; prime it on the very first one so
+  // lines spoken from timers later aren't blocked.
+  document.addEventListener('pointerdown', function primeSpeech(){
+    document.removeEventListener('pointerdown', primeSpeech, true);
+    try{
+      const ss = window.speechSynthesis;
+      if(!ss.speaking && !ss.pending){
+        const u = new SpeechSynthesisUtterance(' ');
+        u.volume = 0;
+        ss.speak(u);
+      }
+    }catch(e){}
+  }, true);
+}
+
 function speak(text){
   if(!voiceOn) return;
   try{
     if(!('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel();
+    const ss = window.speechSynthesis;
+    const busy = ss.speaking || ss.pending;
+    if(busy) ss.cancel();
     const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = speechVoice ? speechVoice.lang : 'en-US';
+    if(speechVoice) utter.voice = speechVoice;
     utter.rate = 0.92;
     utter.pitch = 1.1;
-    window.speechSynthesis.speak(utter);
+    utter.onerror = e=>{ if(e.error !== 'interrupted' && e.error !== 'canceled') speechLastError = e.error || 'error'; };
+    speechUtter = utter;
+    const go = ()=>{
+      if(speechUtter !== utter) return;          // a newer line replaced this one
+      try{ ss.resume(); ss.speak(utter); }catch(e){}
+    };
+    if(busy) setTimeout(go, 120); else go();
   }catch(e){}
 }
 function toggleVoice(){
@@ -7781,7 +7824,9 @@ function pzKid(){
       + vis('chess', '♟️ Chess') + vis('activities', '🏅 Activities')
       + vis('math', '🔢 Math') + vis('letters', '✏️ Letters') + vis('rewards', '🎁 Rewards'))
     + pzCard('🔊 Sound',
-        pzRow('Read things out loud', pzSwitch(voiceOn, 'pzToggleVoice()'), 'Chess coach, celebrations and time-up messages.'))
+        pzRow('Read things out loud', pzSwitch(voiceOn, 'pzToggleVoice()'), 'Chess coach, celebrations and time-up messages.')
+      + pzRow('Test the voice', '<button type="button" class="pz-btn" onclick="pzTestVoice()">▶ Test</button>',
+              '<span id="pzVoiceStatus">No sound? Check the tablet volume first.</span>'))
     + pzCard('🔑 Passcode',
         `<p class="pz-note">The code that opens this Parent Zone, redeems rewards and resets the day.</p>
          <button type="button" class="pz-btn" onclick="openChangePasscode()">Change passcode</button>`);
@@ -7795,6 +7840,23 @@ function pzToggleHidden(key){
   renderParentZone(); pzSaved();
 }
 function pzToggleVoice(){ toggleVoice(); renderParentZone(); pzSaved(); }
+function pzTestVoice(){
+  const out = document.getElementById('pzVoiceStatus');
+  const say = msg=>{ if(out) out.textContent = msg; };
+  if(!('speechSynthesis' in window)){ say("This browser can't talk. Try Chrome."); return; }
+  if(!voiceOn){ say('Turn on "Read things out loud" above first.'); return; }
+  speechLastError = '';
+  pickSpeechVoice();
+  const name = getKidName();
+  speak('Hi'+(name ? ' '+name : '')+'! Can you hear me?');
+  setTimeout(()=>{
+    const n = window.speechSynthesis.getVoices().length;
+    if(speechLastError) say('The tablet refused to talk ('+speechLastError+'). In Android Settings, search "Text-to-speech" and install or update Speech Services by Google.');
+    else if(!n) say('No voices found. In Android Settings, search "Text-to-speech" and install Speech Services by Google, then download English.');
+    else if(!speechVoice) say('No English voice installed. In Android Settings → Text-to-speech, download English (US).');
+    else say('Voice: '+speechVoice.name+'. Still silent? Turn up the media volume, not the ringer.');
+  }, 1500);
+}
 
 /* ---------- Checklists ---------- */
 function getRoutineMeta(r){
@@ -8350,7 +8412,18 @@ document.addEventListener('touchmove', e=>{
   if(e.cancelable) e.preventDefault();
 }, {passive:false});
 
-document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) checkDayRollover(); });
+/* Some tablet browsers and launcher apps refresh on any downward swipe while the
+   page itself is scrolled to the top — and this page never scrolls (each screen
+   scrolls inside itself), so to them it's always at the top. Keep the page
+   nudged 1px down so that check never passes; the screens are position:fixed,
+   so nothing visibly moves. */
+function holdPageOffTop(){ if(window.scrollY < 1) window.scrollTo(0, 1); }
+window.addEventListener('scroll', holdPageOffTop, {passive:true});
+window.addEventListener('resize', holdPageOffTop);
+window.addEventListener('load', holdPageOffTop);
+holdPageOffTop();
+
+document.addEventListener('visibilitychange', ()=>{ if(!document.hidden){ checkDayRollover(); holdPageOffTop(); } });
 
 </script>
 </body>

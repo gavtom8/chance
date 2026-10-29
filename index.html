@@ -1462,8 +1462,8 @@
   .bot-level{font-size:.68rem; font-weight:800; letter-spacing:1px; text-transform:uppercase; opacity:.7;}
   .bot-name{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.2rem; line-height:1.1;}
   .bot-blurb{font-size:.78rem; font-weight:700; opacity:.75; margin-top:2px; line-height:1.25;}
-  .bot-meter{display:flex; gap:3px; margin-top:6px;}
-  .bot-meter i{width:14px; height:6px; border-radius:3px; background:rgba(255,255,255,0.2);}
+  .bot-meter{display:flex; gap:2px; margin-top:6px; max-width:240px;}
+  .bot-meter i{flex:1 1 0; max-width:14px; height:6px; border-radius:3px; background:rgba(255,255,255,0.2);}
   .bot-meter i.on{background:var(--gold);}
   .bot-badge{position:absolute; top:-6px; right:-4px; font-size:.7rem; font-weight:800; padding:3px 8px; border-radius:10px; background:var(--mint); color:#0c332a;}
   .bot-badge.next{background:var(--gold); color:#3a2b17; animation:bubblePulse 1.6s ease-in-out infinite;}
@@ -3368,6 +3368,149 @@ const PUZZLES = [
     why: "Your rook covers his whole column, and your king takes away every square in front of him.",
     hintPieceName: "rook"
   },
+  { // 15: back-rank mate on the other side of the board
+    board: makePuzzleBoard([
+      ['bK',0,1], ['bP',1,0], ['bP',1,1], ['bP',1,2],
+      ['wR',7,7], ['wK',7,6],
+    ]),
+    hint: "His pawns are a wall again — but on the other side! Send the rook up.",
+    why: "Your rook covers the whole top row, and his own pawns stop him from stepping up.",
+    hintPieceName: "rook"
+  },
+  { // 16: queen into the corner, king guards
+    board: makePuzzleBoard([
+      ['bK',7,0], ['wK',6,2], ['wQ',1,7],
+    ]),
+    hint: "He is stuck in the bottom corner. Your king is close by. Bring the queen!",
+    why: "Your king guards the squares beside him, and your queen covers the rest.",
+    hintPieceName: "queen"
+  },
+  { // 17: queen next to the king on the side, king guards her
+    board: makePuzzleBoard([
+      ['bK',4,7], ['wK',4,5], ['wQ',7,3],
+    ]),
+    hint: "Your king is two steps from his. Put the queen right between them!",
+    why: "Your king protects the queen, so he can't eat her — and she covers every square he could run to.",
+    hintPieceName: "queen"
+  },
+  { // 18: two rooks on the edge
+    board: makePuzzleBoard([
+      ['bK',3,0], ['wR',7,1], ['wR',0,7], ['wK',7,7],
+    ]),
+    hint: "One rook guards the line next to him. Send the top rook to his line!",
+    why: "One rook covers his line, the other covers the line next to it. Nowhere to go!",
+    hintPieceName: "top rook"
+  },
+  { // 19: pawn and king box him in, rook finishes
+    board: makePuzzleBoard([
+      ['bK',0,4], ['wP',1,4], ['wK',2,4], ['wR',7,0],
+    ]),
+    hint: "Your pawn and king already box him in. The rook says the last word!",
+    why: "Your pawn guards the squares beside him, your king guards the ones in front, and the rook covers the top row.",
+    hintPieceName: "rook"
+  },
+  { // 20: take the guard on the back row
+    board: makePuzzleBoard([
+      ['bK',0,6], ['bR',0,4], ['bP',1,5], ['bP',1,6], ['bP',1,7], ['bQ',3,0],
+      ['wR',7,4], ['wK',7,6], ['wP',6,5], ['wP',6,6], ['wP',6,7],
+    ]),
+    hint: "His rook is guarding the back row. Can you eat it?",
+    why: "You ate his only guard — and now your rook covers the whole back row!",
+    hintPieceName: "rook"
+  },
+  { // 21: queen lands next to him, the rook guards her
+    board: makePuzzleBoard([
+      ['bK',0,7], ['bP',1,7], ['wR',7,6], ['wQ',5,1], ['wK',7,0],
+    ]),
+    hint: "Your rook guards a square right next to his king. Slide the queen there!",
+    why: "The rook protects the queen, so he can't eat her — and she covers every square around him.",
+    hintPieceName: "queen"
+  },
+  { // 22: pawn eats the rook and becomes a queen
+    board: makePuzzleBoard([
+      ['bK',0,6], ['bR',0,2], ['bP',1,5], ['bP',1,6], ['bP',1,7],
+      ['wP',1,1], ['wK',7,0],
+    ]),
+    hint: "Your pawn is one step from the end. Can it eat its way there?",
+    why: "The pawn ate the rook and turned into a queen — and she covers the whole back row!",
+    hintPieceName: "pawn"
+  },
+  { // 23: rook to the edge, bishop guards the corner
+    board: makePuzzleBoard([
+      ['bK',0,7], ['bP',1,6], ['wB',4,2], ['wR',7,4], ['wK',6,0],
+    ]),
+    hint: "Your bishop guards the square beside him. Send the rook to his line!",
+    why: "The rook covers his whole line, the bishop covers the square next to him, and his pawn blocks the last one.",
+    hintPieceName: "rook"
+  },
+  { // 24: queen to g7, guarded by the knight
+    board: makePuzzleBoard([
+      ['bK',0,6], ['bP',1,5], ['bP',1,7], ['bP',2,6],
+      ['wN',3,5], ['wQ',5,2], ['wK',7,6],
+    ]),
+    hint: "Your knight guards the square right in front of his king. Slide the queen there!",
+    why: "The knight protects the queen, and she covers every square around him.",
+    hintPieceName: "queen"
+  },
+  { // 25: queen eats on h7, guarded by the bishop
+    board: makePuzzleBoard([
+      ['bK',0,6], ['bR',0,5], ['bP',1,5], ['bP',1,6], ['bP',1,7],
+      ['wB',5,3], ['wQ',3,7], ['wK',7,6], ['wP',6,5], ['wP',6,6], ['wP',6,7],
+    ]),
+    hint: "Your bishop and queen both aim at the same pawn. Eat it!",
+    why: "The bishop protects the queen, so he can't eat her. His own rook and pawns block the rest.",
+    hintPieceName: "queen"
+  },
+  { // 26: the fastest checkmate there is (two moves each)
+    board: makePuzzleBoard([
+      ['bR',0,0], ['bN',0,1], ['bB',0,2], ['bQ',0,3], ['bK',0,4], ['bB',0,5], ['bN',0,6], ['bR',0,7],
+      ['bP',1,0], ['bP',1,1], ['bP',1,2], ['bP',1,3], ['bP',1,4], ['bP',2,5], ['bP',3,6], ['bP',1,7],
+      ['wP',6,0], ['wP',6,1], ['wP',6,2], ['wP',4,3], ['wP',4,4], ['wP',6,5], ['wP',6,6], ['wP',6,7],
+      ['wR',7,0], ['wN',7,1], ['wB',7,2], ['wQ',7,3], ['wK',7,4], ['wB',7,5], ['wN',7,6], ['wR',7,7],
+    ]),
+    hint: "Black moved the pawns in front of his king. Look for a long slanted line to him!",
+    why: "Your queen checks him on the slant, and nothing can block it. Checkmate in just three moves!",
+    hintPieceName: "queen"
+  },
+  { // 27: Scholar's mate
+    board: makePuzzleBoard([
+      ['bR',0,0], ['bB',0,2], ['bQ',0,3], ['bK',0,4], ['bB',0,5], ['bR',0,7],
+      ['bP',1,0], ['bP',1,1], ['bP',1,2], ['bP',1,3], ['bP',1,5], ['bP',1,6], ['bP',1,7],
+      ['bN',2,2], ['bN',2,5], ['bP',3,4],
+      ['wQ',3,7], ['wB',4,2], ['wP',4,4],
+      ['wP',6,0], ['wP',6,1], ['wP',6,2], ['wP',6,3], ['wP',6,5], ['wP',6,6], ['wP',6,7],
+      ['wR',7,0], ['wN',7,1], ['wB',7,2], ['wK',7,4], ['wN',7,6], ['wR',7,7],
+    ]),
+    hint: "Your queen and bishop both aim at the same little pawn next to his king.",
+    why: "The bishop protects the queen, so the king can't eat her — and his own pieces block every escape.",
+    hintPieceName: "queen"
+  },
+  { // 28: rook and knight team up in the corner
+    board: makePuzzleBoard([
+      ['bK',1,7], ['bP',1,6], ['bP',1,0], ['bP',1,1],
+      ['wN',1,4], ['wR',3,3], ['wK',7,6],
+    ]),
+    hint: "Your knight guards two squares near his king. Slide the rook to his line!",
+    why: "The rook covers his whole line, and the knight covers the two squares beside it.",
+    hintPieceName: "rook"
+  },
+  { // 29: king, bishop and knight — the knight jumps in
+    board: makePuzzleBoard([
+      ['bK',0,7], ['wK',2,6], ['wB',1,7], ['wN',3,4],
+    ]),
+    hint: "Your king and bishop already guard the squares around him. Only a jumping piece can finish!",
+    why: "The knight checks him, the bishop guards one square, and your king guards the rest.",
+    hintPieceName: "knight"
+  },
+  { // 30: discovered checkmate — the knight steps aside
+    board: makePuzzleBoard([
+      ['bK',0,4], ['bP',1,3], ['bP',1,5], ['bP',1,6], ['bP',1,7],
+      ['wN',3,4], ['wB',5,0], ['wR',7,4], ['wK',7,6],
+    ]),
+    hint: "Your rook is hiding behind the knight. Jump the knight away — but pick the square that guards his last escape!",
+    why: "The knight jumped away so the rook says check, and the knight AND bishop guard every square he could run to.",
+    hintPieceName: "knight"
+  },
 ];
 
 let puzzleIndex = 0;
@@ -4677,6 +4820,14 @@ const CHESS_CHAPTERS = [
   {n:15, icon:'♟️', name:'Endgame skills'},
   {n:16, icon:'🛡️', name:'Defend like a champ'},
   {n:17, icon:'🌱', name:'Opening ideas'},
+  {n:18, icon:'🔍', name:'Look closer'},
+  {n:19, icon:'🤝', name:'Guard & count'},
+  {n:20, icon:'🧩', name:'Mate patterns'},
+  {n:21, icon:'🕸️', name:'Trap it!'},
+  {n:22, icon:'🏃', name:'Pawn races'},
+  {n:23, icon:'🏰', name:'Opening rules'},
+  {n:24, icon:'🪄', name:'Tricky tactics'},
+  {n:25, icon:'🏆', name:'Champion mates'},
 ];
 const PIECE_TIPS_SHORT = {
   P:'Pawn: walks up, eats slanted',
@@ -5018,6 +5169,178 @@ const CHESS_LESSONS = [
    cap:'His knight attacks your pawn — guard it!', sub:'The best guard also brings a new piece into the game.',
    win:'Guarded — and a new piece is out!',
    solutions:[[7,1,5,2],[6,3,5,3],[4,4,3,4]], wrong:'Your middle pawn is under attack. Guard it — a knight would be perfect.'},
+
+  /* --- 18. look closer --- */
+  {id:'k1', ch:18, piece:'K', name:'Safe king steps', type:'tapTargets', hero:[4,3],
+   cap:'Tap EVERY square the king can step to', sub:'The black rook guards a whole row. The king can never step into danger.',
+   win:'Your king stays safe!', pieces:[['wK',4,3],['bR',3,0],['bK',0,7]]},
+  {id:'k2', ch:18, piece:'N', name:'Knight in the corner', type:'tapTargets', hero:[7,7],
+   cap:'Tap EVERY square the knight can jump to', sub:'A knight in the corner has very few jumps. Knights like the middle!',
+   win:'Only two! Corners are sad for knights.', pieces:[['wN',7,7],['wK',7,4],['bK',0,0]]},
+  {id:'k3', ch:18, piece:'P', name:'Blocked pawn', type:'tapTargets', hero:[4,3],
+   cap:'Tap EVERY square the pawn can go to', sub:'It cannot walk forward — something is in the way. But can it eat?',
+   win:'Blocked pawns can still eat slanted!',
+   pieces:[['wP',4,3],['bP',3,3],['bN',3,2],['bB',3,4],['wK',7,4],['bK',0,4]]},
+
+  /* --- 19. guard & count --- */
+  {id:'c1', ch:19, piece:'N', name:'Knight in danger', type:'safe', only:'hero', hero:[4,4],
+   cap:'Your knight is in danger — hop it somewhere safe', sub:'A pawn is attacking it. The bishop watches some squares too.',
+   win:'Safe hop!',
+   pieces:[['wN',4,4],['bP',3,3],['bB',1,4],['wK',7,6],['wP',6,5],['wP',6,6],['wP',6,7],
+           ['bK',0,6],['bP',1,5],['bP',1,6],['bP',1,7]],
+   wrong:'Still in danger there! Look for a square nothing can reach.'},
+  {id:'c2', ch:19, icon:'🛡️', name:'Guard with a pawn', type:'best', only:[[6,2],[6,4]],
+   cap:'The bishop is attacking your knight — guard it with a pawn', sub:'If he eats the knight, your pawn eats right back.',
+   win:'Guarded! Now it is a fair trade.',
+   pieces:[['wN',4,3],['bB',2,1],['wP',6,2],['wP',6,4],['wK',7,6],['wP',6,5],['wP',6,6],['wP',6,7],
+           ['bK',0,6],['bP',1,5],['bP',1,6],['bP',1,7]],
+   solutions:[[6,2,5,2],[6,4,5,4]], wrong:'Move a pawn so it sits slanted from your knight.'},
+  {id:'c3', ch:19, icon:'✌️', name:'Two beat one', type:'best',
+   cap:'Win the black pawn!', sub:'Count! You attack it TWO times. He guards it only ONE time.',
+   win:'Two beats one — the pawn is yours!',
+   pieces:[['bP',3,4],['bN',2,2],['wN',5,5],['wP',4,3],['wK',7,6],['wP',6,5],['wP',6,6],['wP',6,7],
+           ['bK',0,6],['bP',1,5],['bP',1,6],['bP',1,7]],
+   solutions:[[4,3,3,4],[5,5,3,4]], wrong:'Eat the black pawn in the middle. You have two attackers!'},
+  {id:'c4', ch:19, icon:'🤝', name:'Gang up', type:'best',
+   cap:'Get a SECOND attacker on the black pawn', sub:'One attacker against one guard is not enough. Bring a friend first!',
+   win:'Now you have two against one!',
+   pieces:[['bP',3,4],['bN',2,2],['wN',5,5],['wR',7,0],['wK',7,6],
+           ['wP',6,0],['wP',6,1],['wP',6,2],['wP',6,5],['wP',6,6],['wP',6,7],
+           ['bK',0,6],['bP',1,5],['bP',1,6],['bP',1,7]],
+   solutions:[[7,0,7,4]], wrong:'Taking now loses your knight. Line up your rook on the pawn first!'},
+  {id:'c5', ch:19, icon:'🧱', name:'Block it!', type:'escape', only:[[5,2]],
+   cap:'Check! Block it with your knight', sub:'Put the knight in the way of the black rook.',
+   win:'Blocked! The rook cannot see your king now.',
+   pieces:[['wK',7,4],['wN',5,2],['wP',6,3],['wP',6,5],['wB',7,5],['bR',0,4],['bK',0,0]],
+   wrong:'The rook can still see your king. Jump INTO its line.'},
+  {id:'c6', ch:19, icon:'🐴', name:'Smothered danger', type:'defend',
+   cap:'Black wants to checkmate you — stop it!', sub:'His knight wants to jump next to your squished king. Make room, or guard that square.',
+   win:'Safe! No squished king today.',
+   pieces:[['wK',7,7],['wR',7,6],['wP',6,6],['wP',6,7],['wP',6,0],['wP',6,1],
+           ['bN',4,6],['bK',0,6],['bP',1,5],['bP',1,6],['bP',1,7]],
+   wrong:'He can still checkmate you! Look at the red arrow.'},
+
+  /* --- 20. mate patterns --- */
+  {id:'y1', ch:20, icon:'🪜', name:'Queen + rook ladder', type:'mate',
+   cap:'Find checkmate in one move!', sub:'The rook guards one row. The queen takes the row above it.',
+   win:'CHECKMATE!', pieces:[['bK',0,4],['wR',1,0],['wQ',7,7],['wK',7,6]]},
+  {id:'y2', ch:20, icon:'↕️', name:'Side ladder', type:'mate',
+   cap:'Find checkmate in one move!', sub:'A ladder can go sideways too. One rook guards the line next to him.',
+   win:'CHECKMATE!', pieces:[['bK',3,7],['wR',7,6],['wR',0,0],['wK',6,2]]},
+  {id:'y3', ch:20, icon:'🏁', name:'Back rank again', type:'mate',
+   cap:'Find checkmate in one move!', sub:'His pawns are a wall. His rook is too far away to help.',
+   win:'CHECKMATE!',
+   pieces:[['bK',0,6],['bP',1,5],['bP',1,6],['bP',1,7],['bR',1,2],['wR',7,4],['wK',7,6],['wP',6,5],['wP',6,6],['wP',6,7]]},
+  {id:'y4', ch:20, icon:'👑', name:'Queen is born', type:'mate',
+   cap:'Find checkmate in one move!', sub:'Your pawn is one step from the end. What does it turn into?',
+   win:'A new queen — and CHECKMATE!', pieces:[['bK',0,7],['bP',1,6],['bP',1,7],['wP',1,1],['wK',7,0]]},
+  {id:'y5', ch:20, icon:'📐', name:'Corner mate', type:'mate',
+   cap:'Find checkmate in one move!', sub:'The knight guards the squares next to his king. The rook does the rest.',
+   win:'CHECKMATE!', pieces:[['bK',0,7],['bP',1,6],['wN',2,5],['wR',7,0],['wK',5,2]]},
+  {id:'y6', ch:20, icon:'🙈', name:'Peekaboo mate', type:'mate',
+   cap:'Find checkmate in one move!', sub:'Your bishop is in the way of your rook. Move it — peekaboo!',
+   win:'Peekaboo — CHECKMATE!', pieces:[['bK',0,7],['bP',1,6],['bP',1,7],['wR',0,0],['wB',0,2],['wK',7,6]]},
+
+  /* --- 21. trap it! --- */
+  {id:'r1', ch:21, icon:'🕸️', name:'Trap the bishop', type:'best',
+   cap:'Trap the black bishop!', sub:'Attack it with a pawn. Look — it has nowhere safe to run.',
+   win:'Trapped! The bishop is yours next.',
+   pieces:[['bB',3,7],['bK',0,6],['bP',1,5],['bP',2,6],['bP',1,7],
+           ['wP',6,5],['wP',6,6],['wP',5,7],['wK',7,6]],
+   solutions:[[6,6,4,6]], wrong:'Find the pawn push that attacks the bishop — your other pawn guards it.'},
+  {id:'r2', ch:21, icon:'🪤', name:'Trap the knight', type:'best',
+   cap:'Trap the knight on the edge!', sub:'Knights on the edge have few jumps. Attack it where it cannot run.',
+   win:'Trapped! Knights on the edge are in trouble.',
+   pieces:[['bN',3,0],['bP',1,1],['bP',2,2],['bK',0,6],['bP',1,6],['bP',1,7],
+           ['wP',6,0],['wP',6,1],['wP',6,2],['wB',6,4],['wK',7,6],['wP',6,6],['wP',6,7]],
+   solutions:[[6,1,4,1]], wrong:'Push a pawn two steps so it attacks the knight.'},
+
+  /* --- 22. pawn races --- */
+  {id:'n1', ch:22, icon:'🏃', name:'Runaway pawn', type:'best',
+   cap:'Push the pawn the king can NOT catch', sub:'The black king is close to one pawn and far from the other.',
+   win:'Too fast for him — that pawn will be a queen!',
+   pieces:[['wP',2,0],['wP',2,7],['bK',2,6],['wK',7,2]],
+   solutions:[[2,0,1,0]], wrong:'The king can eat that one. Push the pawn that is far away from him.'},
+  {id:'n2', ch:22, icon:'🏎️', name:'Pawn race', type:'best',
+   cap:'Win the race to make a queen!', sub:'Count the steps. You both need three — but YOU go first!',
+   win:'You go first, so you get the first queen!',
+   pieces:[['wP',3,1],['bP',4,6],['wK',7,0],['bK',0,7]],
+   solutions:[[3,1,2,1]], wrong:'No time for that! Push your pawn — every step counts.'},
+  {id:'n3', ch:22, piece:'R', name:'Stop the pawn', type:'best', only:'hero', hero:[1,7],
+   cap:'Stop the black pawn from becoming a queen!', sub:'Get your rook on the line of the pawn, or on the square where it lands.',
+   win:'Your rook is waiting for it!',
+   pieces:[['wR',1,7],['wK',3,6],['bP',6,2],['bK',3,4]],
+   solutions:[[1,7,1,2],[1,7,7,7]], wrong:'The pawn can still make a queen. Watch the square at the end of its line.'},
+  {id:'n4', ch:22, piece:'K', name:'Face-off', type:'best', only:'hero', hero:[5,4],
+   cap:'Make the kings face each other', sub:'Step so there is just ONE square between the kings. Then HE has to step aside!',
+   win:'Face-off! He must step aside, and your king walks in.',
+   pieces:[['wK',5,4],['wP',6,4],['bK',2,4]],
+   solutions:[[5,4,4,4]], wrong:'Go straight toward him, so only one square is left between you.'},
+
+  /* --- 23. opening rules --- */
+  {id:'o3', ch:23, piece:'N', name:'Kick the queen', type:'best',
+   opening:[[6,4,4,4],[1,3,3,3],[4,4,3,3],[0,3,3,3]],
+   cap:'Her queen came out early — attack her!', sub:'Attack her with a piece that ALSO comes out to play.',
+   win:'She has to run — and your knight is out!',
+   solutions:[[7,1,5,2]], wrong:'Attack the queen with a knight — that also brings a new piece out.'},
+  {id:'o4', ch:23, icon:'🏰', name:'Castle in time', type:'best',
+   opening:[[6,4,4,4],[1,4,3,4],[7,6,5,5],[0,1,2,2],[7,5,4,2],[0,6,2,5]],
+   cap:'Keep your king safe — castle!', sub:'Your knight and bishop are out of the way. Tap the king, then two steps toward the rook.',
+   win:'Castled! King safe, rook ready.',
+   solutions:[[7,4,7,6]], wrong:'Tap the king, then the square two steps toward the corner rook.'},
+
+  /* --- 24. tricky tactics --- */
+  {id:'x1', ch:24, piece:'N', name:'Royal fork', type:'best', only:'hero', hero:[4,4],
+   cap:'Check the king AND attack the queen', sub:'One knight hop can hit both. He must save his king!',
+   win:'Royal fork! The queen is next.',
+   pieces:[['wN',4,4],['bK',0,6],['bQ',1,3],['bP',1,5],['bP',1,7],['bP',2,6],
+           ['wK',7,6],['wP',6,5],['wP',6,6],['wP',6,7]],
+   solutions:[[4,4,2,5]], wrong:'Find the hop that checks the king AND hits the queen.'},
+  {id:'x2', ch:24, piece:'N', name:'Rook fork', type:'best', only:'hero', hero:[3,3],
+   cap:'Attack BOTH black rooks with one hop', sub:'Find the square in between, where the knight hits them both.',
+   win:'Fork! He can only save one rook.',
+   pieces:[['wN',3,3],['bR',0,2],['bR',0,6],['bB',0,4],['bP',1,2],['bP',1,3],['bP',1,5],['bP',1,6],['bK',2,7],['wK',7,7]],
+   solutions:[[3,3,1,4]], wrong:'That hits only one. Find the hop that hits BOTH rooks.'},
+  {id:'x3', ch:24, icon:'🎭', name:'Peekaboo attack', type:'best',
+   cap:'Move the bishop with CHECK — and free the rook', sub:'Your bishop hides the rook from the queen. Move it with check, so he has no time to save her!',
+   win:'He must save his king — then the rook eats the queen!',
+   pieces:[['bK',0,6],['bP',1,5],['bP',1,6],['bP',1,7],['bQ',1,3],
+           ['wB',5,3],['wR',7,3],['wK',7,6],['wP',6,5],['wP',6,6],['wP',6,7]],
+   solutions:[[5,3,1,7]], wrong:'The bishop must move WITH CHECK, or the queen just runs away.'},
+  {id:'x4', ch:24, icon:'🍽️', name:'Eat the guard', type:'best',
+   cap:'Eat the piece that guards his king', sub:'His knight stops your queen from checkmating. Eat it first!',
+   win:'Guard gone — checkmate is coming!',
+   pieces:[['bK',0,6],['bR',0,5],['bP',1,5],['bP',1,6],['bP',1,7],['bN',2,5],
+           ['wQ',5,7],['wB',5,3],['wB',3,6],['wK',7,6],['wP',6,5],['wP',6,6],['wP',6,7]],
+   solutions:[[3,6,2,5]], wrong:'First eat the knight that guards the square next to his king.'},
+  {id:'x5', ch:24, icon:'👋', name:'Chase the guard', type:'best',
+   cap:'Chase away the guard — and win a piece', sub:'His knight guards his bishop. Attack the knight with a pawn!',
+   win:'If the knight runs, your rook eats the bishop!',
+   pieces:[['bB',4,3],['bN',3,5],['bK',0,6],['bP',1,5],['bP',1,6],['bP',1,7],
+           ['wR',7,3],['wK',7,6],['wP',6,5],['wP',6,6],['wP',6,7],['wP',6,0],['wP',6,1]],
+   solutions:[[6,6,4,6]], wrong:'Push a pawn that attacks the knight. Then the bishop loses its guard.'},
+  {id:'x6', ch:24, piece:'R', name:'Pin the queen', type:'best', only:'hero', hero:[7,0],
+   cap:'Pin the queen to her king', sub:'Put your rook on her line, with the king behind her. She cannot get away!',
+   win:'Pinned! The queen is stuck.',
+   pieces:[['wR',7,0],['wK',6,5],['wP',6,1],['bQ',3,4],['bK',0,4],['bP',1,3],['bP',1,5]],
+   solutions:[[7,0,7,4]], wrong:'Find the line that goes through the queen AND the king behind her.'},
+
+  /* --- 25. champion mates --- */
+  {id:'z1', ch:25, piece:'B', name:'Two bishops', type:'mate',
+   cap:'Find checkmate in one move!', sub:'One bishop guards a square near him. The other one says checkmate on the long slant.',
+   win:'Bishop teamwork — CHECKMATE!', pieces:[['bK',0,7],['wK',1,5],['wB',5,3],['wB',7,2]]},
+  {id:'z2', ch:25, icon:'🎭', name:'Rook + bishop team', type:'mate',
+   cap:'Find checkmate in one move!', sub:'Your bishop guards a square on the top row. Land the rook there!',
+   win:'CHECKMATE!',
+   pieces:[['bK',0,4],['bB',0,5],['bP',1,5],['bP',1,0],['bP',1,1],['wB',3,6],['wR',7,3],['wK',7,6]]},
+  {id:'z3', ch:25, icon:'🦺', name:'Shoulder pads', type:'mate',
+   cap:'Find checkmate in one move!', sub:'His own rooks sit on his shoulders. Check him from the front!',
+   win:'CHECKMATE!', pieces:[['bK',0,4],['bR',0,3],['bR',0,5],['bP',1,0],['wQ',5,1],['wK',7,6]]},
+  {id:'z4', ch:25, icon:'💥', name:'Queen sacrifice', type:'mate2',
+   cap:'Checkmate in TWO moves', sub:'Give away your queen on his back row! When his rook eats her, your rook finishes.',
+   win:'A queen sacrifice — what a champion!',
+   pieces:[['bK',0,6],['bR',0,3],['bR',0,0],['bP',1,5],['bP',1,6],['bP',1,7],
+           ['wQ',4,3],['wR',7,3],['wK',7,6],['wP',6,5],['wP',6,6],['wP',6,7]]},
 ];
 function lessonBoard(l){
   if(l.full === 'start') return initialBoard();
@@ -5629,7 +5952,7 @@ function nextChessLesson(){
    A ladder of space opponents. Each one is a little stronger than the last,
    and beating one for the first time unlocks the next planet. The weakest
    bots don't search at all (they wander and only sometimes grab a piece);
-   from Beep-Boop up they use the alpha-beta search with a deliberate "slip"
+   from Sputnik up they use the alpha-beta search with a deliberate "slip"
    rate so a win always feels reachable but never free. */
 const BOTS = [
   {id:'pip', name:'Pip', title:'Baby Astronaut', planet:'The Moon', level:1,
@@ -5639,55 +5962,111 @@ const BOTS = [
    blurb:'Just learned how the pieces move!', sound:'Wheee!',
    greet:["Hi! I'm Pip! Is this the horsey?", "Wheee, chess in space!"],
    win:["I won?! Wow! Let's play again!"], lose:["You got me! Good game, buddy!"]},
-  {id:'zorp', name:'Zorp', title:'Moon Blob', planet:'Crater Valley', level:2,
+  {id:'twinkle', name:'Twinkle', title:'Star Scout', planet:'Twinkle Star', level:2,
+   bg:'linear-gradient(135deg,#6B4A8A,#C27BB8)',
+   face:{kind:'astro', helmet:'#FFF4C2', visor:'#FFB3D9', skin:'#8D5524', light:'#FFE066', hair:'#1E1E1E'},
+   brain:{style:'wander', capture:0.35}, reward:5,
+   blurb:'Sometimes eats a piece. Sometimes forgets!', sound:'Ting-ting!',
+   greet:["Twinkle twinkle, let's play chess!", "Hi! I'm Twinkle! I sparkle!"],
+   win:["Ting-ting! I did it!"], lose:["You shine brighter than me! Good game!"]},
+  {id:'zorp', name:'Zorp', title:'Moon Blob', planet:'Crater Valley', level:3,
    bg:'linear-gradient(135deg,#1F5E4A,#3FA97A)',
    face:{kind:'alien', skin:'#86E58F', eyes:1, spots:'#5BC46A'},
    brain:{style:'wander', capture:0.55}, reward:6,
    blurb:'Loves to munch pieces. Keep yours safe!', sound:'Blorp!',
    greet:["Blorp! Zorp is hungry for pieces!", "Zorp greets you, Earthling!"],
    win:["Blorp blorp! Zorp wins!"], lose:["Glorp... you are strong, Earthling!"]},
-  {id:'beep', name:'Beep-Boop', title:'Rover Robot', planet:'Mars', level:3,
+  {id:'munch', name:'Munch', title:'Asteroid Gobbler', planet:'Asteroid Belt', level:4,
+   bg:'linear-gradient(135deg,#7A4A1F,#D9853B)',
+   face:{kind:'alien', skin:'#FFB061', eyes:1, spots:'#E8892E'},
+   brain:{style:'wander', capture:0.9}, reward:7,
+   blurb:'Eats EVERYTHING it can — even guarded pieces!', sound:'Munch munch!',
+   greet:["Munch is SO hungry! Got any snacks?", "Rocks for breakfast, pieces for lunch!"],
+   win:["Munch munch! Yummy win!"], lose:["My tummy is empty... you win!"]},
+  {id:'sputnik', name:'Sputnik', title:'Satellite Bot', planet:'Low Orbit', level:5,
+   bg:'linear-gradient(135deg,#3B4A5C,#7D93A8)',
+   face:{kind:'robot', metal:'#E8D9A8', screen:'#2B1A3F', glow:'#FFD166'},
+   brain:{style:'search', depth:1, slip:0.55, window:120}, reward:7,
+   blurb:'Spots free pieces — but often gets dizzy!', sound:'Bleep!',
+   greet:["BLEEP. SATELLITE ONLINE.", "ORBITING THE BOARD. BLEEP BLEEP."],
+   win:["BLEEP! SIGNAL SAYS: I WIN."], lose:["SIGNAL LOST... YOU WIN!"]},
+  {id:'beep', name:'Beep-Boop', title:'Rover Robot', planet:'Mars', level:6,
    bg:'linear-gradient(135deg,#7A3A2A,#C4623E)',
    face:{kind:'robot', metal:'#C9D3E0', screen:'#14263F', glow:'#5CF2FF'},
    brain:{style:'search', depth:1, slip:0.3, window:60}, reward:8,
    blurb:'Grabs any free piece — but forgets to look back!', sound:'BEEP!',
    greet:["BEEP BOOP. CHESS MODE: ON.", "GREETINGS, HUMAN. LET US COMPUTE."],
    win:["BEEP! VICTORY CALCULATED."], lose:["ERROR... ERROR... YOU WIN!"]},
-  {id:'luna', name:'Luna', title:'Space Explorer', planet:"Saturn's Rings", level:4,
+  {id:'rex', name:'Robo-Rex', title:'Dino Droid', planet:'Jupiter', level:7,
+   bg:'linear-gradient(135deg,#1F5A2E,#4FAF5E)',
+   face:{kind:'robot', metal:'#A7E3B5', screen:'#10261A', glow:'#7CFF8A'},
+   brain:{style:'search', depth:1, slip:0.1, window:15}, reward:9,
+   blurb:'Chomps any piece you leave alone. Keep them guarded!', sound:'RAWR!',
+   greet:["RAWR! Robo-Rex wants to chomp!", "Stomp, stomp! Let's battle!"],
+   win:["RAWR! Rex is the king of Jupiter!"], lose:["Rawr... you are a tough cookie!"]},
+  {id:'nova', name:'Nova', title:'Comet Rider', planet:'Comet Tail', level:8,
+   bg:'linear-gradient(135deg,#8A2A5C,#E0609B)',
+   face:{kind:'alien', skin:'#FF9EC7', eyes:2, spots:'#F27BB0'},
+   brain:{style:'search', depth:2, slip:0.45, window:60}, reward:10,
+   blurb:'Looks one move ahead — when she is not zooming around!', sound:'Zoom!',
+   greet:["Zoom! Nova is here!", "Hop on my comet — let's play!"],
+   win:["Zoom zoom! Nova wins!"], lose:["Whoa, you are faster than a comet!"]},
+  {id:'luna', name:'Luna', title:'Space Explorer', planet:"Saturn's Rings", level:9,
    bg:'linear-gradient(135deg,#5A3A7A,#9C6BC4)',
    face:{kind:'astro', helmet:'#FFE3F0', visor:'#B58CFF', skin:'#C68B59', light:'#FFC857', hair:'#3A2416'},
    brain:{style:'search', depth:2, slip:0.3, window:40}, reward:10,
    blurb:'Looks one move ahead. Guard your pieces!', sound:'Ooh!',
    greet:["Ready to explore the board?", "Let's have a stellar game!"],
    win:["Ha! The rings of Saturn are mine!"], lose:["Wow, you're a real space explorer!"]},
-  {id:'glorp', name:'Glorp', title:'Three-Eyed Alien', planet:'Planet Glorp', level:5,
+  {id:'glorp', name:'Glorp', title:'Three-Eyed Alien', planet:'Planet Glorp', level:10,
    bg:'linear-gradient(135deg,#3A2A6A,#7B4FD0)',
    face:{kind:'alien', skin:'#B98CFF', eyes:3, spots:'#9A6BE8'},
    brain:{style:'search', depth:2, slip:0.12, window:25}, reward:12,
    blurb:'Three eyes see a lot. Never leave a piece alone!', sound:'Zzzorp!',
    greet:["Glorp sees everything with three eyes!", "Three eyes, zero mistakes. Maybe."],
    win:["Glorp's eyes saw it all!"], lose:["All three of my eyes missed that!"]},
-  {id:'orion', name:'Captain Orion', title:'Star Pilot', planet:'Orion Station', level:6,
+  {id:'astra', name:'Commander Astra', title:'Moonbase Boss', planet:'Neptune Base', level:11,
+   bg:'linear-gradient(135deg,#14506B,#3DA3C9)',
+   face:{kind:'astro', helmet:'#CFE8FF', visor:'#3DDC97', skin:'#F1C27D', light:'#B58CFF', hair:'#C0392B'},
+   brain:{style:'search', depth:3, slip:0.3, window:40}, reward:13,
+   blurb:'Thinks three moves deep — but makes a few goofs.', sound:'Copy that!',
+   greet:["Commander Astra on deck. Show me your plan!", "Neptune Base is ready. Your move!"],
+   win:["Mission accomplished! Keep practising, cadet!"], lose:["Great plan, cadet! You win!"]},
+  {id:'orion', name:'Captain Orion', title:'Star Pilot', planet:'Orion Station', level:12,
    bg:'linear-gradient(135deg,#1E3F7A,#3A7BD5)',
    face:{kind:'astro', helmet:'#FFD36B', visor:'#2E3A59', skin:'#FFE0BD', light:'#7FE0C4', star:true},
    brain:{style:'search', depth:3, slip:0.18, window:25}, reward:15,
    blurb:'Plans attacks. Think before every move!', sound:'Roger!',
    greet:["Captain Orion reporting for battle!", "Engines ready. Your move, cadet!"],
    win:["Mission complete! Train hard, cadet!"], lose:["Outstanding flying, cadet! You win!"]},
-  {id:'nebula', name:'Nebula Queen', title:'Ruler of the Stars', planet:'Crystal Nebula', level:7,
+  {id:'nebula', name:'Nebula Queen', title:'Ruler of the Stars', planet:'Crystal Nebula', level:13,
    bg:'linear-gradient(135deg,#0F5C6B,#2FB5B5)',
    face:{kind:'queen', skin:'#7FE0D8', eyes:2, spots:'#5CCBC2'},
    brain:{style:'search', depth:3, slip:0.05, window:12}, reward:20,
    blurb:'Royal and tricky. Only true champions win here.', sound:'Hmph!',
    greet:["Kneel before the Nebula Queen... just kidding! Let's play!", "My crown sparkles. My moves sparkle more."],
    win:["The stars bow to me!"], lose:["You have earned my crown's respect!"]},
-  {id:'vortex', name:'Vortex', title:'The Black Hole', planet:'Edge of the Galaxy', level:8,
+  {id:'quasar', name:'Emperor Quasar', title:'Star Emperor', planet:'Quasar Palace', level:14,
+   bg:'linear-gradient(135deg,#6B3A0F,#D9902F)',
+   face:{kind:'queen', skin:'#FFCF6B', eyes:3, spots:'#F2B13C'},
+   brain:{style:'search', depth:4, slip:0.1, window:20}, reward:25,
+   blurb:'Sees four moves ahead. Every piece needs a guard!', sound:'Behold!',
+   greet:["Behold! The Emperor will play you.", "Three eyes and a crown. Good luck!"],
+   win:["The Emperor wins again! Behold!"], lose:["Hmm! You have earned a royal medal!"]},
+  {id:'vortex', name:'Vortex', title:'The Black Hole', planet:'Edge of the Galaxy', level:15,
    bg:'linear-gradient(135deg,#140A26,#4A1F5C)',
    face:{kind:'hole'},
    brain:{style:'search', depth:4, slip:0, window:0}, reward:30,
-   blurb:'The final boss. Nothing escapes... or does it?', sound:'Whoooosh!',
+   blurb:'A giant black hole. Nothing escapes... or does it?', sound:'Whoooosh!',
    greet:["Nothing escapes the Vortex...", "I will swallow your pieces whole!"],
    win:["Sucked into the Vortex! Whoooosh!"], lose:["IMPOSSIBLE! You escaped the black hole!"]},
+  {id:'supernova', name:'Supernova', title:'The Exploding Star', planet:'Heart of the Universe', level:16,
+   bg:'linear-gradient(135deg,#5C0F0F,#E0502F)',
+   face:{kind:'hole', ring:'#7FD3FF', ring2:'#FFFFFF', eye:'#FFE066', core:'#3A0A0A', edge:'#E0502F', rim:'#FFC857'},
+   brain:{style:'search', depth:4, slip:0, window:0, deepen:true}, reward:40,
+   blurb:'The final boss. Thinks extra deep when the board gets quiet!', sound:'KA-BOOM!',
+   greet:["I am Supernova. Get ready to go KA-BOOM!", "Only the bravest star pilots make it this far."],
+   win:["KA-BOOM! Supernova wins!"], lose:["You beat the brightest star in the universe!"]},
 ];
 const KID_FACE = {kind:'astro', helmet:'#F4F6FB', visor:'#FFC857', skin:'#FFE0BD', light:'#7FE0C4'};
 const PARENT_FACE = {kind:'astro', helmet:'#B9C4D9', visor:'#7FE0C4', skin:'#E0AC69', light:'#FF6B6B', hair:'#4A3222'};
@@ -5771,17 +6150,19 @@ function botFaceSVG(f, mood){
     else s += `<circle cx="37" cy="48" r="6" fill="${f.glow}"/><circle cx="63" cy="48" r="6" fill="${f.glow}"/>`;
     s += faceMouth(50, 63, 9, mood, f.glow);
   } else if(f.kind === 'hole'){
-    s += `<defs><radialGradient id="${id}" cx="50%" cy="45%" r="55%"><stop offset="0" stop-color="#000"/><stop offset=".7" stop-color="#1a0b2e"/><stop offset="1" stop-color="#5b2a86"/></radialGradient></defs>`;
-    s += `<ellipse cx="50" cy="56" rx="47" ry="13" fill="none" stroke="#FF9F43" stroke-width="5" opacity=".75"/>`;
-    s += `<circle cx="50" cy="50" r="33" fill="url(#${id})" stroke="#A79CFF" stroke-width="2"/>`;
-    s += `<path d="M3 56 A47 13 0 0 0 97 56" fill="none" stroke="#FFC857" stroke-width="5"/>`;
-    s += `<ellipse cx="39" cy="44" rx="7" ry="5" fill="#FF4D6D" opacity=".3"/><ellipse cx="61" cy="44" rx="7" ry="5" fill="#FF4D6D" opacity=".3"/>`;
+    // Colours are optional, so one shape serves both the black hole and the supernova.
+    const eye = f.eye || '#FF4D6D';
+    s += `<defs><radialGradient id="${id}" cx="50%" cy="45%" r="55%"><stop offset="0" stop-color="#000"/><stop offset=".7" stop-color="${f.core || '#1a0b2e'}"/><stop offset="1" stop-color="${f.edge || '#5b2a86'}"/></radialGradient></defs>`;
+    s += `<ellipse cx="50" cy="56" rx="47" ry="13" fill="none" stroke="${f.ring || '#FF9F43'}" stroke-width="5" opacity=".75"/>`;
+    s += `<circle cx="50" cy="50" r="33" fill="url(#${id})" stroke="${f.rim || '#A79CFF'}" stroke-width="2"/>`;
+    s += `<path d="M3 56 A47 13 0 0 0 97 56" fill="none" stroke="${f.ring2 || '#FFC857'}" stroke-width="5"/>`;
+    s += `<ellipse cx="39" cy="44" rx="7" ry="5" fill="${eye}" opacity=".3"/><ellipse cx="61" cy="44" rx="7" ry="5" fill="${eye}" opacity=".3"/>`;
     s += mood === 'sad'
-      ? `<path d="M34 41 L44 45 M56 45 L66 41" stroke="#FF4D6D" stroke-width="4" stroke-linecap="round"/>`
-      : `<ellipse cx="39" cy="44" rx="4.5" ry="3" fill="#FF4D6D"/><ellipse cx="61" cy="44" rx="4.5" ry="3" fill="#FF4D6D"/>`;
+      ? `<path d="M34 41 L44 45 M56 45 L66 41" stroke="${eye}" stroke-width="4" stroke-linecap="round"/>`
+      : `<ellipse cx="39" cy="44" rx="4.5" ry="3" fill="${eye}"/><ellipse cx="61" cy="44" rx="4.5" ry="3" fill="${eye}"/>`;
     s += mood === 'happy'
-      ? `<path d="M37 58 Q50 70 63 58 L59 62 L55 59 L50 63 L45 59 L41 62 Z" fill="#FF4D6D"/>`
-      : faceMouth(50, 62, 8, mood, '#FF4D6D');
+      ? `<path d="M37 58 Q50 70 63 58 L59 62 L55 59 L50 63 L45 59 L41 62 Z" fill="${eye}"/>`
+      : faceMouth(50, 62, 8, mood, eye);
   }
   return s + '</svg>';
 }
@@ -5808,7 +6189,10 @@ function recordBotWin(id){
 function allBotsUnlocked(){ return chessStore.get('chessBotsUnlocked') === 'yes'; }
 function botUnlocked(i){
   if(i === 0 || allBotsUnlocked()) return true;
-  return getBotsBeaten().includes(BOTS[i-1].id);
+  // Beating anyone at or past this rung counts too, so opponents added to the
+  // ladder later never lock a planet he has already reached.
+  const beaten = getBotsBeaten();
+  return BOTS.some((b,k)=>k >= i-1 && beaten.includes(b.id));
 }
 function unlockAllBots(){
   chessStore.set('chessBotsUnlocked', 'yes');
@@ -6034,7 +6418,12 @@ function chooseBotMove(bd, color, bot){
   // child never watches "thinking..." for several seconds.
   if(depth >= 4 && all.length > 26) depth = 3;
   if(depth >= 3 && all.length > 38) depth = 2;
-  const ranked = rankRootMoves(bd, color, depth);
+  const t0 = Date.now();
+  let ranked = rankRootMoves(bd, color, depth);
+  // `deepen`: if that pass was quick (a quiet, emptier board), look one ply
+  // further. Each ply costs roughly ten times the last, so the bar is low
+  // enough that a slow tablet only ever goes deeper in simple endgames.
+  if(b.deepen && Date.now() - t0 < 90) ranked = rankRootMoves(bd, color, depth + 1);
   if(depth >= 2 && ranked[0].score >= 100000) return ranked[0].m;   // always take a mate it can see
   if(Math.random() < b.slip && ranked.length > 1){
     const pool = ranked.slice(Math.floor(ranked.length/2));
@@ -6216,11 +6605,12 @@ function settleGame(outcome){       // outcome is from white's (his) side: win |
     if(mode === 'robot'){
       const bot = BOTS[currentBotIdx];
       recordBotWin(bot.id);
+      const nextWasOpen = currentBotIdx < BOTS.length - 1 && botUnlocked(currentBotIdx + 1);
       if(markBotBeaten(bot.id)){
         res.firstBeat = true;
         res.award = bot.reward;
         addPoints(res.award);
-        if(currentBotIdx < BOTS.length - 1) res.unlocked = currentBotIdx + 1;
+        if(currentBotIdx < BOTS.length - 1 && !nextWasOpen) res.unlocked = currentBotIdx + 1;
       }
     }
     if(!res.firstBeat){
@@ -8742,7 +9132,7 @@ function pzChessSet(key, v){
 function pzChess(){
   const beaten = getBotsBeaten().length;
   return pzCard('🚀 Battle ladder',
-        `<p class="pz-note">${beaten} of ${BOTS.length} opponents beaten. First wins pay each opponent's own bonus (Pip +${BOTS[0].reward} … Vortex +${BOTS[BOTS.length-1].reward}).</p>`
+        `<p class="pz-note">${beaten} of ${BOTS.length} opponents beaten. First wins pay each opponent's own bonus (${BOTS[0].name} +${BOTS[0].reward} … ${BOTS[BOTS.length-1].name} +${BOTS[BOTS.length-1].reward}).</p>`
       + pzRow('🛡️ Safety check', pzSwitch(safetyEnabled(), 'toggleSafetySetting(); renderParentZone(); pzSaved();'), 'Stops and warns before a move that loses a piece.')
       + pzRow('Undos per game', pzStepper(getChessUndoLimit(), `pzChessSet('chessUndoLimit', this.value)`, {min:0,max:20}))
       + pzRow('Hints per game', pzStepper(getChessHintLimit(), `pzChessSet('chessHintLimit', this.value)`, {min:0,max:20}))
